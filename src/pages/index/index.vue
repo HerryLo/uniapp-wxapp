@@ -179,12 +179,12 @@ page {
   line-clamp: 2;
   -webkit-box-orient: vertical;
   white-space: normal;
-  line-height: 35upx;
+  line-height: 25upx;
 }
 .countwrapper {
   position: absolute;
   left: 2upx;
-  bottom: -2upx;
+  bottom: 0upx;
   display: flex;
 }
 .rightwrapper .look {
@@ -207,7 +207,7 @@ page {
 .rightwrapper .time {
   position: absolute;
   right: 2upx;
-  bottom: -2upx;
+  bottom: 0upx;
   font-size: 23upx;
   color: rgba(102, 102, 102, 0.502);
 }
