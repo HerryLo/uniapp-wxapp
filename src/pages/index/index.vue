@@ -10,8 +10,15 @@
     </view>
 
     <view class="cardlist" v-for="item in dataList" v-bind:key="item.id">
-      <view class="icon" :style="{ backgroundImage: `url(${item.cover ? item.cover : '../../static/情侣座.png'})` }">
+      <view
+        v-if="item.cover"
+        class="icon"
+        :style="{
+          backgroundImage: `url(${item.cover})`,
+        }"
+      >
       </view>
+      <view v-else class="icon"></view>
       <view class="rightwrapper">
         <view class="title">{{ item.title }}</view>
         <view class="desc">{{ item.description }}</view>
@@ -109,7 +116,7 @@ page {
   border-radius: 12upx;
   padding: 30upx 20upx;
   box-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.01), 0 0 6rpx rgba(0, 0, 0, 0.1),
-    0 8rpx 16rpx rgba(0, 0, 0, 0.2)
+    0 8rpx 16rpx rgba(0, 0, 0, 0.2);
 }
 
 .cardcontent .title {
@@ -128,9 +135,9 @@ page {
 }
 
 .cardcontent .title::before {
-  content: '';
+  content: "";
   display: inline-block;
-  background-image: url('../../static/xing.png');
+  background-image: url("../../static/xing.png");
   width: 48upx;
   height: 48upx;
   background-size: 100%;
@@ -178,6 +185,7 @@ page {
   border: 1upx solid #009fe967;
   border-radius: 15upx;
   margin-right: 10upx;
+  background-image: url("../../static/qyz.png");
 }
 
 .rightwrapper {
