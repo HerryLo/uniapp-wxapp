@@ -24,18 +24,17 @@
 		"selectedColor": "#000",
 		"borderStyle": "black",
 		"backgroundColor": "#F8F8F8",
-		"height": "100px",
 		"list": [
 			{
 				"pagePath": "pages/index/index",
-				"iconPath": "static/icon/index.png",
-				"selectedIconPath": "static/icon/indexactive1.png",
+				"iconPath": "static/index.png",
+				"selectedIconPath": "static/indexactive1.png",
 				"text": "首页"
 			},
 			{
 				"pagePath": "pages/about/about",
-				"iconPath": "static/icon/about.png",
-				"selectedIconPath": "static/icon/aboutactive1.png",
+				"iconPath": "static/about.png",
+				"selectedIconPath": "static/aboutactive1.png",
 				"text": "关于"
 			}
 		]

@@ -7,9 +7,18 @@ const getYuQue = (url, data) => {
             url: `${requestHttp}${url}`,
             data,
             header: {
-                "Content-Type": "application/json",
-                "X-Auth-Token": "d6x2t2riUJrcOKujatJOruBzwxyLEAe7dQuAQtnJ",
-                "User-Agent": "HerryLo的博客",
+                'Content-Type': 'application/json',
+                'X-Auth-Token': 'd6x2t2riUJrcOKujatJOruBzwxyLEAe7dQuAQtnJ'
+            },
+            success: (res) => {
+                if(res.statusCode === 200) {
+                    resolve(res.data);
+                }else {
+                    reject(err)
+                }
+            },
+            fail: (err) => {
+                reject(err)
             }
         });
     });
