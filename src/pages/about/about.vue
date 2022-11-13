@@ -1,5 +1,5 @@
 <template>
-  <div>about</div>
+  <div>about 未完待续。。。</div>
 </template>
 
 <script>

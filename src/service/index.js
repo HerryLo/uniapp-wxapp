@@ -25,11 +25,11 @@ const getYuQue = (url, data) => {
 };
 
 // 获取一个仓库的文档列表
-export const getRepoDocsList = () => {
+export const getRepoDocsList = ({ offset, limit }) => {
     // /repos/:namespace/docs
     return getYuQue(`/repos/${namespace}/docs`, {
-        "offset": 0,
-        "limit": 5,
+        offset,
+        limit,
         "optional_properties": "hits"
     });
 };
