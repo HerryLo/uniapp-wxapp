@@ -1,17 +1,17 @@
 <template>
   <view class="content">
     <view class="cardwrapper">
-      <view class="title">HerryLo的个人博客</view>
-      <view class="subtitle">不是技术的生产者 只是技术的搬运工</view>
-      <view class="desc">工作||生活</view>
-      <view class="desc">前端、数据结构、网络、React框架、随笔分享</view>
+      <view class="cardcontent">
+        <view class="title">HerryLo的个人博客</view>
+        <view class="subtitle"></view>
+        <view class="desc">工作😁生活</view>
+        <view class="desc">持续学习 持续分享</view>
+      </view>
     </view>
 
     <view class="cardlist" v-for="item in dataList" v-bind:key="item.id">
-      <view
-        class="icon"
-        :style="{ backgroundImage: `url(${item.cover})` }"
-      ></view>
+      <view class="icon" :style="{ backgroundImage: `url(${item.cover ? item.cover : '../../static/情侣座.png'})` }">
+      </view>
       <view class="rightwrapper">
         <view class="title">{{ item.title }}</view>
         <view class="desc">{{ item.description }}</view>
@@ -61,7 +61,7 @@ export default {
 
 <style>
 page {
-  background: rgb(0, 160, 233);
+  background: rgba(0, 160, 233, 0.14);
 }
 
 .content {
@@ -84,14 +84,14 @@ page {
 
 .title {
   font-size: 36rpx;
-  color: #8f8f94;
+  font-weight: 800;
 }
 
 .cardwrapper {
   background: #fff;
-  border: 1upx solid rgba(0, 0, 0, 0.05);
+  border: 1upx solid rgba(0, 0, 0, 0.1);
   border-radius: 12upx;
-  padding: 60upx 50upx;
+  padding: 30upx 30upx;
   /* display: flex;
   justify-content: flex-start;
   align-items: center; */
@@ -103,16 +103,38 @@ page {
   position: relative;
 }
 
-.title {
+.cardwrapper .cardcontent {
+  width: 550rpx;
+  background: #fff;
+  border-radius: 12upx;
+  padding: 30upx 20upx;
+  box-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.01), 0 0 6rpx rgba(0, 0, 0, 0.1),
+    0 8rpx 16rpx rgba(0, 0, 0, 0.2)
+}
+
+.cardcontent .title {
+  font-family: cursive;
   max-width: 100%;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
   font-style: normal;
   font-weight: 600;
-  font-size: 35upx;
+  font-size: 37rpx;
   color: #000;
   margin-bottom: 6upx;
+  display: flex;
+  align-items: center;
+}
+
+.cardcontent .title::before {
+  content: '';
+  display: inline-block;
+  background-image: url('../../static/xing.png');
+  width: 48upx;
+  height: 48upx;
+  background-size: 100%;
+  background-position: 50%;
 }
 
 .subtitle {
@@ -125,7 +147,7 @@ page {
   margin-bottom: 20upx;
 }
 
-.desc {
+.cardcontent .desc {
   font-size: 28upx;
   color: rgba(0, 0, 0, 0.8);
   max-width: 100%;
@@ -163,36 +185,45 @@ page {
 }
 
 .rightwrapper .title {
-  font-size: 30upx;
+  font-size: 35upx;
   margin-top: 8upx;
   width: 450upx;
+  max-width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .rightwrapper .desc {
-  width: 450upx;
+  width: 440rpx;
   font-size: 23upx;
+  white-space: nowrap;
   text-overflow: -o-ellipsis-lastline;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: -webkit-box;
+  /* display: -webkit-box;
   -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  white-space: normal;
-  line-height: 25upx;
+  line-clamp: 2; */
+  /* -webkit-box-orient: vertical; */
+  /* white-space: normal; */
+  line-height: 42rpx;
+  color: #666666;
 }
+
 .countwrapper {
   position: absolute;
   left: 2upx;
   bottom: 0upx;
   display: flex;
 }
+
 .rightwrapper .look {
   font-size: 23upx;
   color: rgba(102, 102, 102, 0.502);
   display: flex;
   align-items: center;
 }
+
 .rightwrapper .look .lookicon {
   content: "";
   display: inline-block;
@@ -204,6 +235,7 @@ page {
   height: 28upx;
   margin-right: 5upx;
 }
+
 .rightwrapper .time {
   position: absolute;
   right: 2upx;
