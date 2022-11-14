@@ -83,6 +83,7 @@ page {
 }
 
 .content {
+  width: 100vw;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -122,7 +123,7 @@ page {
 }
 
 .cardwrapper .cardcontent {
-  width: 580rpx;
+  width: 550rpx;
   background: #fff;
   border-radius: 12upx;
   padding: 30upx 20upx;
@@ -179,11 +180,12 @@ page {
 .items_count,
 .hits {
   width: 100%;
-  margin-left: 148rpx;
+  padding-left: 89rpx;
+  box-sizing: border-box;
 }
 .numdesc {
   font-size: 25upx;
-  margin-top: 20upx;
+  padding-top: 20upx;
   color: #888;
 }
 .items_count {

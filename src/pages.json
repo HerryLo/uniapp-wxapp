@@ -29,7 +29,7 @@
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#fff559",
-		"backgroundColor": "#00a0e9"
+		"backgroundColor": "#F8F8F8"
 	},
 	"tabBar": {
 		"color": "#666",
