@@ -14,7 +14,7 @@ const getYuQue = (url, data) => {
                 if(res.statusCode === 200) {
                     resolve(res.data);
                 }else {
-                    reject(err)
+                    reject(res)
                 }
             },
             fail: (err) => {
@@ -32,4 +32,10 @@ export const getRepoDocsList = ({ offset, limit }) => {
         limit,
         "optional_properties": "hits"
     });
+};
+
+// 获取单篇文档的详细信息
+export const getDocsDetail = ({ slug }) => {
+    // /repos/:namespace/docs/:slug
+    return getYuQue(`/repos/${namespace}/docs/${slug}`);
 };

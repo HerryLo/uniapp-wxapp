@@ -4,7 +4,7 @@
       class="cardlist"
       v-for="item in dataList"
       v-bind:key="item.id"
-      @click="clickCard()"
+      @click="clickCard(item)"
     >
       <view
         v-if="item.cover"
@@ -43,9 +43,10 @@ export default {
   },
   props: ["dataList"],
   methods: {
-    clickCard() {
+    clickCard(item) {
+      const { slug } = item
       uni.navigateTo({
-        url: "/pages/detail/detail",
+        url: `/pages/detail/detail?slug=${slug}`,
       });
     },
     handleTime,

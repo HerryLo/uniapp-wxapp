@@ -1,19 +1,13 @@
-# uniapp-blog1
+# uniapp-wxmp
 
-## Project setup
+[uniapp](https://uniapp.dcloud.net.cn/quickstart-cli.html) + [语雀API](https://www.yuque.com/yuque/developer/api) 构建个人博客 微信小程序
+
+## 项目运行
 ```
+npm install -g @vue/cli@4
+
 yarn install
-```
 
-### Compiles and hot-reloads for development
+// 运行
+npm run dev:mp-weixin
 ```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
