@@ -1,5 +1,5 @@
 <template>
-  <view>
+  <view style="margin-bottom:20rpx;">
     <view
       class="cardlist"
       v-for="item in dataList"

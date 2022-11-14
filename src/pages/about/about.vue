@@ -9,5 +9,7 @@ export default {
 </script>
 
 <style>
-
+page {
+  background: rgba(0, 160, 233, 0.14);
+}
 </style>

@@ -1,79 +1,44 @@
 <template>
   <view class="content">
-    <view class="cardwrapper" @click="copyLink()">
-      <view class="cardcontent">
-        <view class="title">HerryLo的个人博客</view>
-        <view class="subtitle"></view>
-        <view class="desc">工作😁生活</view>
-        <view class="desc">持续学习 持续分享</view>
-      </view>
-    </view>
-
-    <view class="numdesc">文档数</view>
-    <view class="items_count">{{ dataDetail.items_count || "--" }}</view>
-
-    <view class="numdesc">查看数</view>
-    <view class="hits">{{ hits || "--" }}</view>
+    <!-- 文章列表卡片 -->
+    <article-card
+      v-if="dataList.length"
+      v-bind:dataList="dataList"
+    ></article-card>
   </view>
 </template>
 
 <script>
-import { getRepoDocsList, getRepos } from "../../service";
+import { getRepoDocsList } from "../../service";
 import { handleTime } from "../../utils/util";
-import ArticleCard from "../../components/ArticleCard/ArticleCard";
-import { reposLink } from "../../utils/constant";
+import ArticleCard from '../../components/ArticleCard/ArticleCard'
 
 export default {
   data() {
     return {
-      hits: 0,
-      dataDetail: {},
+      dataList: [],
     };
   },
   onLoad() {
-    this.getRepos();
-    this.getHits();
+    this.repoDocsList();
   },
   methods: {
-    async getHits() {
+    async repoDocsList() {
       try {
         const res = await getRepoDocsList({
           limit: 100,
           offset: 0,
         });
-        let hits = 0;
-        res.data.forEach((item) => {
-          hits += item.hits;
-        });
-        this.hits = hits;
-      } catch (e) {
-        console.log(e);
-      }
-    },
-    async getRepos() {
-      try {
-        const res = await getRepos();
-        this.dataDetail = res.data;
+        this.dataList = res.data;
         console.log(res);
+        this.dataList = res.data;
       } catch (e) {
         console.log(e);
       }
-    },
-    copyLink() {
-      const data = `${reposLink}`;
-      uni.setClipboardData({
-        data,
-        success: () => {
-          uni.showToast({
-            title: "链接复制成功",
-            duration: 2000,
-          });
-        },
-      });
     },
     handleTime,
   },
-  components: { ArticleCard },
+  components: { ArticleCard }
 };
 </script>
 
@@ -122,7 +87,7 @@ page {
 }
 
 .cardwrapper .cardcontent {
-  width: 580rpx;
+  width: 550rpx;
   background: #fff;
   border-radius: 12upx;
   padding: 30upx 20upx;
@@ -173,23 +138,5 @@ page {
   text-overflow: ellipsis;
   overflow: hidden;
   line-height: 50upx;
-}
-
-.numdesc,
-.items_count,
-.hits {
-  width: 100%;
-  margin-left: 148rpx;
-}
-.numdesc {
-  font-size: 25upx;
-  margin-top: 20upx;
-  color: #888;
-}
-.items_count {
-  font-size: 47upx;
-}
-.hits {
-  font-size: 47upx;
 }
 </style>

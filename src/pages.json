@@ -17,13 +17,19 @@
 			"style": {
 				"navigationBarTitleText": "详情"
 			}
+		},
+		{
+			"path": "pages/article/article",
+			"style": {
+				"navigationBarTitleText": "文章列表"
+			}
 		}
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#fff559",
-		"backgroundColor": "#F8F8F8"
+		"backgroundColor": "#00a0e9"
 	},
 	"tabBar": {
 		"color": "#666",
@@ -36,6 +42,12 @@
 				"iconPath": "static/index.png",
 				"selectedIconPath": "static/indexactive1.png",
 				"text": "首页"
+			},
+			{
+				"pagePath": "pages/article/article",
+				"iconPath": "static/art.png",
+				"selectedIconPath": "static/artactive.png",
+				"text": "文章"
 			},
 			{
 				"pagePath": "pages/about/about",

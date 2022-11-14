@@ -1,5 +1,4 @@
-const requestHttp = "https://www.yuque.com/api/v2";
-const namespace = "yopai/pp6bv5";
+import { requestHttp, namespace } from '../utils/constant.js';
 
 const getYuQue = (url, data) => {
     return new Promise((resolve, reject) => {
@@ -38,4 +37,10 @@ export const getRepoDocsList = ({ offset, limit }) => {
 export const getDocsDetail = ({ slug }) => {
     // /repos/:namespace/docs/:slug
     return getYuQue(`/repos/${namespace}/docs/${slug}`);
+};
+
+// 获取知识库详情
+export const getRepos = () => {
+    // /repos/:namespace
+    return getYuQue(`/repos/${namespace}`);
 };
