@@ -1,6 +1,11 @@
 <template>
   <view>
-    <view class="cardlist" v-for="item in dataList" v-bind:key="item.id">
+    <view
+      class="cardlist"
+      v-for="item in dataList"
+      v-bind:key="item.id"
+      @click="clickCard()"
+    >
       <view
         v-if="item.cover"
         class="icon"
@@ -31,7 +36,6 @@ import { handleTime } from "../../utils/util";
 export default {
   data() {
     return {
-      dataList: this.dataList
     };
   },
   onLoad() {
@@ -39,13 +43,17 @@ export default {
   },
   props: ["dataList"],
   methods: {
+    clickCard() {
+      uni.navigateTo({
+        url: "/pages/detail/detail",
+      });
+    },
     handleTime,
   },
 };
 </script>
 
 <style>
-
 .cardlist {
   background-color: #fff;
   padding: 20upx 30upx;
