@@ -14,6 +14,8 @@
 
     <view class="numdesc">查看数</view>
     <view class="hits">{{ hits || "--" }}</view>
+
+    <slider-card></slider-card>
   </view>
 </template>
 
@@ -21,6 +23,7 @@
 import { getRepoDocsList, getRepos } from "../../service";
 import { handleTime } from "../../utils/util";
 import ArticleCard from "../../components/ArticleCard/ArticleCard";
+import SliderCard from "../../components/SliderCard/SliderCard";
 import { reposLink } from "../../utils/constant";
 
 export default {
@@ -73,7 +76,7 @@ export default {
     },
     handleTime,
   },
-  components: { ArticleCard },
+  components: { ArticleCard, SliderCard },
 };
 </script>
 
