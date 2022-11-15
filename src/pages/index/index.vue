@@ -15,7 +15,7 @@
     <view class="numdesc">查看数</view>
     <view class="hits">{{ hits || "--" }}</view>
 
-    <slider-card></slider-card>
+    <slider-card :dataSource="dataList"></slider-card>
   </view>
 </template>
 
@@ -31,6 +31,7 @@ export default {
     return {
       hits: 0,
       dataDetail: {},
+      dataList: []
     };
   },
   onLoad() {
@@ -48,7 +49,9 @@ export default {
         res.data.forEach((item) => {
           hits += item.hits;
         });
+        this.dataList = res.data;
         this.hits = hits;
+        console.log(res.data)
       } catch (e) {
         console.log(e);
       }
