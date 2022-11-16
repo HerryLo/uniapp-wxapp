@@ -79,6 +79,12 @@ export default {
     handleTime,
   },
   components: { ArticleCard, SliderCard },
+  onShareAppMessage(res) {
+    return {
+      title: 'HerryLo的博客小程序',
+      path: '/pages/index/index'
+    }
+  }
 };
 </script>
 
