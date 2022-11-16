@@ -106,7 +106,7 @@ export default {
 .sildercard {
   width: 100vw;
   box-sizing: border-box;
-  padding-top: 38upx;
+  padding-top: 60upx;
   padding-left: 43rpx;
 }
 .scroll-cardwrapper {

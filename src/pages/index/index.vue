@@ -9,13 +9,13 @@
       </view>
     </view>
 
+    <slider-card :dataSource="dataList"></slider-card>
+
     <view class="numdesc">文档数</view>
     <view class="items_count">{{ dataDetail.items_count || "--" }}</view>
 
     <view class="numdesc">查看数</view>
     <view class="hits">{{ hits || "--" }}</view>
-
-    <slider-card :dataSource="dataList"></slider-card>
   </view>
 </template>
 
@@ -195,9 +195,11 @@ page {
   color: #888;
 }
 .items_count {
-  font-size: 47upx;
+  color: #666;
+  font-size: 30upx;
 }
 .hits {
-  font-size: 47upx;
+  font-size: 32upx;
+  color: #666;
 }
 </style>
