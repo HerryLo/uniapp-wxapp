@@ -11,3 +11,7 @@ yarn install
 // 运行
 npm run dev:mp-weixin
 ```
+
+## 小程序二维码
+
+![](./public/static/gh_4766a66c7f8e_258%20(2).jpg)
