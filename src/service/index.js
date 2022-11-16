@@ -1,4 +1,4 @@
-import { requestHttp, namespace } from '../utils/constant.js';
+import { requestHttp, namespace, AuthToken } from '../utils/constant.js';
 
 const getYuQue = (url, data) => {
     return new Promise((resolve, reject) => {
@@ -7,7 +7,7 @@ const getYuQue = (url, data) => {
             data,
             header: {
                 'Content-Type': 'application/json',
-                'X-Auth-Token': 'd6x2t2riUJrcOKujatJOruBzwxyLEAe7dQuAQtnJ'
+                'X-Auth-Token': AuthToken
             },
             success: (res) => {
                 if(res.statusCode === 200) {

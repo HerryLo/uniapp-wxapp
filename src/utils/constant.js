@@ -1,10 +1,14 @@
-// 语雀接口
-export const requestHttp = "https://www.yuque.com/api/v2";
+import yuque from '../yuque.json';
 
-// 知识库链接 https://www.yuque.com/yopai/pp6bv5
+// 语雀接口
+export const requestHttp = yuque.requestHttp;
+
+// AuthToken
+export const AuthToken = yuque.AuthToken;
+
 // :namespace
-export const namespace = "yopai/pp6bv5";
+export const namespace = yuque.namespace;
 
 // 知识库链接
-export const reposLink = "https://www.yuque.com/yopai/pp6bv5";
+export const reposLink = yuque.reposLink;
 
