@@ -51,7 +51,6 @@ export default {
         });
         this.dataList = res.data;
         this.hits = hits;
-        console.log(res.data)
       } catch (e) {
         console.log(e);
       }
