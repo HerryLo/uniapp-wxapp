@@ -1,9 +1,19 @@
 <template>
   <view class="content">
+    <view class="tabwrapper">
+      <view
+        v-for="(item, index) in tabList"
+        v-bind:key="index"
+        :class="{ item: true, active: index == currentIndex }"
+        @click="handleSwitchTab(index)"
+        >{{ item }}</view
+      >
+    </view>
+    <view class="marginheight"></view>
     <!-- 文章列表卡片 -->
     <article-card
-      v-if="dataList.length"
-      v-bind:dataList="dataList"
+      v-if="currentList.length"
+      v-bind:dataList="currentList"
     ></article-card>
   </view>
 </template>
@@ -11,12 +21,15 @@
 <script>
 import { getRepoDocsList } from "../../service";
 import { handleTime } from "../../utils/util";
-import ArticleCard from '../../components/ArticleCard/ArticleCard'
+import ArticleCard from "../../components/ArticleCard/ArticleCard";
 
 export default {
   data() {
     return {
       dataList: [],
+      currentList: [],
+      currentIndex: 0,
+      tabList: ["最近发布", "技术", "随笔"],
     };
   },
   onLoad() {
@@ -32,13 +45,61 @@ export default {
         this.dataList = res.data;
         console.log(res);
         this.dataList = res.data;
+        this.judgeCurrentList(this.currentIndex);
       } catch (e) {
         console.log(e);
       }
     },
+    handleSwitchTab(index) {
+      this.currentIndex = index;
+      // this.$nextTick(() => {
+      this.judgeCurrentList(index);
+      // });
+    },
+    judgeCurrentList(index) {
+      const currentTime = new Date();
+      const currentYear = currentTime.getFullYear();
+      const recents = [currentYear, currentYear - 1];
+      const telTags = [
+        "React",
+        "react",
+        "设计",
+        "Javascript",
+        "JavaScript",
+        "小程序",
+        "js",
+        "原理",
+        "源码",
+        "数据结构",
+        "设计模式",
+        "扩展-",
+        "this",
+        "图解",
+        "网络协议",
+        "前端",
+        "ES6",
+        "开发"
+      ];
+      const arrTemp = [];
+      this.dataList.forEach((item) => {
+        const time = new Date(item.created_at);
+        const year = time.getFullYear();
+        const title = item.title;
+        const isTags = telTags.find((item1) => title.includes(item1));
+        if (index == 0 && recents.includes(year) && item.hits >= 1) {
+          arrTemp.push(item);
+        } else if (index == 1 && isTags && item.hits >= 1) {
+          arrTemp.push(item);
+        } else if (index == 2 && !isTags) {
+          arrTemp.push(item);
+        }
+      });
+      console.log('currentList', arrTemp)
+      this.currentList = arrTemp;
+    },
     handleTime,
   },
-  components: { ArticleCard }
+  components: { ArticleCard },
 };
 </script>
 
@@ -138,5 +199,35 @@ page {
   text-overflow: ellipsis;
   overflow: hidden;
   line-height: 50upx;
+}
+.marginheight {
+  height: 100upx;
+}
+.tabwrapper {
+  width: 100vw;
+  height: 100upx;
+  display: flex;
+  align-items: center;
+  background: #fff559;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  /* justify-content: center; */
+}
+.tabwrapper .item {
+  width: 140upx;
+  padding: 10upx 20upx;
+  text-align: center;
+  font-size: 35upx;
+  color: rgb(39, 35, 35);
+  background: #fff;
+  background-color: #fff;
+  border-radius: 4upx;
+  margin: 0 30upx;
+}
+.tabwrapper .item.active {
+  color: rgb(39, 35, 35);
+  background: rgba(0, 160, 233, 0.2);
 }
 </style>
