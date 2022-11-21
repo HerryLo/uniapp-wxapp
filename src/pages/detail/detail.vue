@@ -30,6 +30,9 @@ export default {
         const res = await getDocsDetail({ slug });
         console.log(res);
         this.nodes = res.data.body_html.replace("<!doctype html>", "");
+        uni.setNavigationBarTitle({
+          title: res.data.title
+        })
       } catch (e) {
         console.log(e);
       }
@@ -58,6 +61,7 @@ page {
 .detailwrapper {
   padding: 10upx 20upx;
   font-size: 32rpx;
+  margin-bottom: 10upx;
 }
 .copytext {
   color: #0400ff;

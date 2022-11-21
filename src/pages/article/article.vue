@@ -86,9 +86,9 @@ export default {
         const year = time.getFullYear();
         const title = item.title;
         const isTags = telTags.find((item1) => title.includes(item1));
-        if (index == 0 && recents.includes(year) && item.hits >= 1) {
+        if (index == 0 && recents.includes(year)) {
           arrTemp.push(item);
-        } else if (index == 1 && isTags && item.hits >= 1) {
+        } else if (index == 1 && isTags) {
           arrTemp.push(item);
         } else if (index == 2 && !isTags) {
           arrTemp.push(item);
@@ -201,11 +201,11 @@ page {
   line-height: 50upx;
 }
 .marginheight {
-  height: 100upx;
+  height: 90upx;
 }
 .tabwrapper {
   width: 100vw;
-  height: 100upx;
+  height: 90upx;
   display: flex;
   align-items: center;
   background: #fff559;
@@ -213,13 +213,13 @@ page {
   top: 0;
   left: 0;
   z-index: 10;
-  /* justify-content: center; */
+  justify-content: center;
 }
 .tabwrapper .item {
   width: 140upx;
-  padding: 10upx 20upx;
+  padding: 14upx 20upx;
   text-align: center;
-  font-size: 35upx;
+  font-size: 28upx;
   color: rgb(39, 35, 35);
   background: #fff;
   background-color: #fff;

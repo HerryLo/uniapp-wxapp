@@ -43,6 +43,7 @@ export default {
           dataList: [
             { name: "2022前端开发知识归纳", slug: "lwxh4l" },
             { name: "React底层运行简记", slug: "pu72zq" },
+            { name: "个人博客小程序构建", slug: "uopzd2mndlfhmqff" },
           ],
         },
         {
@@ -62,12 +63,13 @@ export default {
             { name: "《乡土中国》阅读小计", slug: "uxnd1e" },
             { name: "卷二——资本的流通过程", slug: "nd9u6n" },
             { name: "卷一——资本的生产过程", slug: "ndevek" },
+            { name: "如何阅读一本书 思维导图", slug: "dif0g5"}
           ],
         },
         {
           title: "生活",
           color: "rgba(130,120,0,65%)",
-          dataList: [{ name: "如何阅读一本书 思维导图", slug: "dif0g5" }],
+          dataList: [],
         },
       ],
     };
@@ -119,6 +121,7 @@ export default {
   height: 400upx;
   box-sizing: border-box;
   border-radius: 20upx;
+  padding-right: 10rpx;
 }
 .scroll-view-item_H {
   display: inline-block;
