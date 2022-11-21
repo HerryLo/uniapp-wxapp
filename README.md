@@ -12,9 +12,10 @@
 
 ## 项目运行
 ```
+// 如果全局安装过vue，如果版本不同可能需要移除下，再全局安装
 npm install -g @vue/cli@4
 
-npm install
+yarn install
 
 // 运行
 npm run dev:mp-weixin
