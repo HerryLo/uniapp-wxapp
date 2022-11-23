@@ -71,5 +71,7 @@
     },
     "mp-qq" : {
         "usingComponents" : true
-    }
+    },
+	"h5": {
+	}
 }
