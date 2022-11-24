@@ -6,7 +6,7 @@
     <view class="title">关于项目</view>
     <view class="indent60"
       >之前一直想构建个人博客小程序，但是懒，不想维护接口服务，想直接用现成，又无。开始只是基于Github
-      Pages + vuepress开发<text class="a" @click="copyText(blogLink)">个人网站</text>。</view
+      Pages + vuepress开发<text class="a" @click="copyText({ link: blogLink })">个人网站</text>。</view
     >
     <view class="indent60"
       >最近在使用语雀，觉得非常的方便，所以文章都转移到了上面，居然发现语雀有提供API接口，使用每个用户（基于
@@ -20,7 +20,7 @@
       >本小程序是基于uniapp +
       语雀API构建完成，目前项目是开源状态。接口详见<text
         class="a"
-        @click="copyText(yuqueLink)"
+        @click="copyText({ link: yuqueLink })"
         > 语雀API文档</text
       >。</view
     >
@@ -37,7 +37,7 @@
     </view>
 
     <view class="title">联系</view>
-    <view class="indent60">有疑问的同学也可私信我：<text class="a" @click="copyText(email)"
+    <view class="indent60">有疑问的同学也可私信我：<text class="a" @click="copyText({ link: email })"
         >我的个人邮箱</text
       ></view>
   </view>
@@ -53,8 +53,8 @@ export default {
       adoutLinks: [
         { name: "垃圾分类小程序跳转", link: "pages/index/index", appId: "wx6a0b834a3839e80d" },
         { name: "此项目GitHub地址", link: "https://github.com/HerryLo/uniapp-wxapp" },
-        { name: "个人博客网站", link: "https://herrylo.github.io/front" },
-        { name: "语雀文档", link: "https://www.yuque.com/yopai/pp6bv5" }
+        { name: "个人博客网站地址", link: "https://herrylo.github.io/front" },
+        { name: "语雀文档地址", link: "https://www.yuque.com/yopai/pp6bv5" }
       ],
     };
   },
@@ -66,7 +66,7 @@ export default {
           appId: appId,
           path: link
         })
-      }else {
+      } else {
         uni.setClipboardData({
           data: link,
           success: () => {
