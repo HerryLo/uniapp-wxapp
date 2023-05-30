@@ -23,6 +23,7 @@ yarn install
 // 运行
 npm run dev:mp-weixin
 ```
+下载[微信小程序开发工具](https://developers.weixin.qq.com/miniprogram/dev/devtools/stable.html)，导入小程序项目时，选择编译好的dist目录文件，即可在开发工具预览.
 
 ## 小程序二维码
 
