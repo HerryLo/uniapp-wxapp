@@ -20,7 +20,8 @@ export default {
 .ne-codeblock.language-plain,
 .ne-codeblock.language-yaml,
 .ne-codeblock.language-java,
-.ne-codeblock.language-json {
+.ne-codeblock.language-json,
+.ne-codeblock.language-bash {
   color: #fff;
   white-space: pre;
   width: 90%;
@@ -31,16 +32,21 @@ export default {
   margin: 5upx 0;
 }
 .ne-text {
-  font-size: 32upx;
+  font-size: 35upx;
   line-height: 70upx;
-  margin-top: 10upx;
+  margin: 40upx 0;
 }
 .ne-p {
   font-size: 32upx;
   margin-top: 10rpx;
+  padding: 0 10upx;
+  line-height: 5upx!important;
 }
 .ne-image {
   margin: 10upx 0;
   width: 100% !important;
+}
+.lake-content h2 {
+  font-size: 20px;
 }
 </style>
