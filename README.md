@@ -6,11 +6,13 @@
 
   支持微信小程序，查看语雀文档、查看阅读总数等功能，后续会开启更多功能;
 
-基于[uniapp](https://uniapp.dcloud.net.cn/quickstart-cli.html) + [语雀API](https://www.yuque.com/yuque/developer/api) 构建个人博客微信小程序。语雀API接口免费使用每个用户（基于Token 关联到的账户），5000次/小时，应该是够用的;
+基于[uniapp](https://uniapp.dcloud.net.cn/quickstart-cli.html) + [语雀API文档](https://www.yuque.com/yuque/developer/api) 构建个人博客微信小程序。语雀API接口免费使用每个用户（基于Token 关联到的账户），5000次/小时，应该是够用的; 
 
 运行注意：
-  - 记得修改`src/yuque.json`下的相关配置，将其改为自己的
+  - 记得修改`src/yuque.json`下就是语雀API的相关配置，将其改为你自己的
   - `manifest.json`中的appid修改为自己的；
+
+如果依然不太理解上面内容，可以先看看我的这篇文章：[个人博客小程序构建，这样还可以吧？](https://juejin.cn/post/7167177950465851406)
 
 ## 项目运行
 ```
@@ -23,6 +25,7 @@ yarn install
 // 运行
 npm run dev:mp-weixin
 ```
+下载[微信小程序开发工具](https://developers.weixin.qq.com/miniprogram/dev/devtools/stable.html)，导入小程序项目时，选择编译好的dist目录文件，即可在开发工具预览.
 
 ## 小程序二维码
 
