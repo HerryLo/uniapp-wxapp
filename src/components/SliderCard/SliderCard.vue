@@ -108,7 +108,7 @@ export default {
 .sildercard {
   width: 100vw;
   box-sizing: border-box;
-  padding-top: 60upx;
+  padding-top: 60rpx;
   padding-left: 43rpx;
 }
 .scroll-cardwrapper {
@@ -118,31 +118,31 @@ export default {
 .scroll-view_H {
   white-space: nowrap;
   width: 100%;
-  height: 400upx;
+  height: 400rpx;
   box-sizing: border-box;
-  border-radius: 20upx;
+  border-radius: 20rpx;
   padding-right: 10rpx;
 }
 .scroll-view-item_H {
   display: inline-block;
       width: 46%;
-  height: 350upx;
-  font-size: 36upx;
-  margin-right: 30upx;
-  border-radius: 20upx;
+  height: 350rpx;
+  font-size: 36rpx;
+  margin-right: 30rpx;
+  border-radius: 20rpx;
   background: #fff;
   color: #000;
-  box-shadow: 0 1upx 3upx rgba(0, 0, 0, 0.01), 0 0 6upx rgba(0, 0, 0, 0.02),
-    0 8upx 16upx rgba(0, 0, 0, 0.02);
-  border: 1upx solid rgba(0, 0, 0, 0.03);
+  box-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.01), 0 0 6rpx rgba(0, 0, 0, 0.02),
+    0 8rpx 16rpx rgba(0, 0, 0, 0.02);
+  border: 1rpx solid rgba(0, 0, 0, 0.03);
       flex: 1 0 auto;
 }
 .title {
-  font-size: 45upx;
+  font-size: 45rpx;
   text-align: left;
-  height: 120upx;
-  line-height: 120upx;
-  padding-left: 30upx;
+  height: 120rpx;
+  line-height: 120rpx;
+  padding-left: 30rpx;
 }
 .desc:before {
   content: "";
@@ -151,8 +151,8 @@ export default {
   height: 4px;
   border-radius: 4px;
   background-color: #8a8f8d;
-  margin-right: 10upx;
-  margin-left: 29upx;
+  margin-right: 10rpx;
+  margin-left: 29rpx;
 }
 .desc {
   display: flex;
@@ -160,7 +160,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 24upx;
+  font-size: 24rpx;
   color: #8a8f8d;
   margin-bottom: 20rpx;
 }

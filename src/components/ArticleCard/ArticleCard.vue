@@ -57,24 +57,24 @@ export default {
 <style>
 .cardlist {
   background-color: #fff;
-  padding: 20upx 30upx;
-  border-bottom: 1upx solid rgba(0, 0, 0, 0.05);
-  /* border: 1upx solid #9f9b44; */
-  margin-top: 30upx;
+  padding: 20rpx 30rpx;
+  border-bottom: 1rpx solid rgba(0, 0, 0, 0.05);
+  /* border: 1rpx solid #9f9b44; */
+  margin-top: 30rpx;
   display: flex;
   justify-content: flex-start;
-  border-radius: 15upx;
+  border-radius: 15rpx;
 }
 
 .cardlist .icon {
   flex: 0 0 auto;
   background-size: cover;
-  width: 140upx;
-  height: 140upx;
+  width: 140rpx;
+  height: 140rpx;
   background-color: rgb(0, 160, 233, 9%);
-  border: 1upx solid #009fe967;
-  border-radius: 15upx;
-  margin-right: 10upx;
+  border: 1rpx solid #009fe967;
+  border-radius: 15rpx;
+  margin-right: 10rpx;
   background-image: url("../../static/qyz.png");
 }
 
@@ -83,9 +83,9 @@ export default {
 }
 
 .rightwrapper .title {
-  font-size: 35upx;
-  margin-top: 8upx;
-  width: 450upx;
+  font-size: 35rpx;
+  margin-top: 8rpx;
+  width: 450rpx;
   max-width: 100%;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -94,7 +94,7 @@ export default {
 
 .rightwrapper .desc {
   width: 440rpx;
-  font-size: 23upx;
+  font-size: 23rpx;
   white-space: nowrap;
   text-overflow: -o-ellipsis-lastline;
   overflow: hidden;
@@ -110,13 +110,13 @@ export default {
 
 .countwrapper {
   position: absolute;
-  left: 2upx;
-  bottom: 0upx;
+  left: 2rpx;
+  bottom: 0rpx;
   display: flex;
 }
 
 .rightwrapper .look {
-  font-size: 23upx;
+  font-size: 23rpx;
   color: rgba(102, 102, 102, 0.502);
   display: flex;
   align-items: center;
@@ -129,16 +129,16 @@ export default {
   background-size: 100%;
   background-position: 50%;
   background-repeat: no-repeat;
-  width: 28upx;
-  height: 28upx;
-  margin-right: 5upx;
+  width: 28rpx;
+  height: 28rpx;
+  margin-right: 5rpx;
 }
 
 .rightwrapper .time {
   position: absolute;
-  right: 2upx;
-  bottom: 0upx;
-  font-size: 23upx;
+  right: 2rpx;
+  bottom: 0rpx;
+  font-size: 23rpx;
   color: rgba(102, 102, 102, 0.502);
 }
 </style>

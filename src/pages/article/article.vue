@@ -133,25 +133,25 @@ page {
 
 .cardwrapper {
   background: #fff;
-  border: 1upx solid rgba(0, 0, 0, 0.1);
-  border-radius: 12upx;
-  padding: 30upx 30upx;
+  border: 1rpx solid rgba(0, 0, 0, 0.1);
+  border-radius: 12rpx;
+  padding: 30rpx 30rpx;
   /* display: flex;
   justify-content: flex-start;
   align-items: center; */
   cursor: pointer;
   /* flex: 1 1; */
-  margin-top: 50upx;
-  box-shadow: 0 1upx 3upx rgba(0, 0, 0, 0.01), 0 0 6upx rgba(0, 0, 0, 0.06),
-    0 8upx 16upx rgba(0, 0, 0, 0.06);
+  margin-top: 50rpx;
+  box-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.01), 0 0 6rpx rgba(0, 0, 0, 0.06),
+    0 8rpx 16rpx rgba(0, 0, 0, 0.06);
   position: relative;
 }
 
 .cardwrapper .cardcontent {
   width: 550rpx;
   background: #fff;
-  border-radius: 12upx;
-  padding: 30upx 20upx;
+  border-radius: 12rpx;
+  padding: 30rpx 20rpx;
   box-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.01), 0 0 6rpx rgba(0, 0, 0, 0.1),
     0 8rpx 16rpx rgba(0, 0, 0, 0.2);
 }
@@ -166,7 +166,7 @@ page {
   font-weight: 600;
   font-size: 37rpx;
   color: #000;
-  margin-bottom: 6upx;
+  margin-bottom: 6rpx;
   display: flex;
   align-items: center;
 }
@@ -175,8 +175,8 @@ page {
   content: "";
   display: inline-block;
   background-image: url("../../static/xing.png");
-  width: 48upx;
-  height: 48upx;
+  width: 48rpx;
+  height: 48rpx;
   background-size: 100%;
   background-position: 50%;
 }
@@ -186,26 +186,26 @@ page {
   overflow: hidden;
   font-style: normal;
   font-weight: 600;
-  font-size: 38upx;
+  font-size: 38rpx;
   color: #000;
-  margin-bottom: 20upx;
+  margin-bottom: 20rpx;
 }
 
 .cardcontent .desc {
-  font-size: 28upx;
+  font-size: 28rpx;
   color: rgba(0, 0, 0, 0.8);
   max-width: 100%;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  line-height: 50upx;
+  line-height: 50rpx;
 }
 .marginheight {
-  height: 90upx;
+  height: 90rpx;
 }
 .tabwrapper {
   width: 100vw;
-  height: 90upx;
+  height: 90rpx;
   display: flex;
   align-items: center;
   background: #fff559;
@@ -216,15 +216,15 @@ page {
   justify-content: center;
 }
 .tabwrapper .item {
-  width: 140upx;
-  padding: 14upx 20upx;
+  width: 140rpx;
+  padding: 14rpx 20rpx;
   text-align: center;
-  font-size: 28upx;
+  font-size: 28rpx;
   color: rgb(39, 35, 35);
   background: #fff;
   background-color: #fff;
-  border-radius: 4upx;
-  margin: 0 30upx;
+  border-radius: 4rpx;
+  margin: 0 30rpx;
 }
 .tabwrapper .item.active {
   color: rgb(39, 35, 35);

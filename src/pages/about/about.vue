@@ -88,8 +88,8 @@ page {
   height: auto;
 }
 .title {
-  font-size: 40upx;
-  line-height: 80upx;
+  font-size: 40rpx;
+  line-height: 80rpx;
   color: #000;
 }
 .flex-center {
@@ -98,26 +98,26 @@ page {
   justify-content: center;
 }
 .gh_wxcode {
-  width: 120upx;
-  height: 120upx;
+  width: 120rpx;
+  height: 120rpx;
   border-radius: 50%;
   background-image: url("../../static/img.png");
   background-size: 100% 100%;
   background-position: 50%;
-  margin-top: 30upx;
-  margin-bottom: 40upx;
+  margin-top: 30rpx;
+  margin-bottom: 40rpx;
 }
 .wrapper {
-  font-size: 30upx;
-  padding: 10upx 30upx;
-  line-height: 60upx;
+  font-size: 30rpx;
+  padding: 10rpx 30rpx;
+  line-height: 60rpx;
   color: #666;
 }
 .indent60 {
-  text-indent: 60upx;
+  text-indent: 60rpx;
 }
 .indent100 {
-  text-indent: 100upx;
+  text-indent: 100rpx;
 }
 .a,
 .abefore {
@@ -130,7 +130,7 @@ page {
   height: 4px;
   border-radius: 4px;
   background-color: #8a8f8d;
-  margin-right: 10upx;
-  margin-left: 29upx;
+  margin-right: 10rpx;
+  margin-left: 29rpx;
 }
 </style>

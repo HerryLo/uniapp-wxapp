@@ -1,8 +1,9 @@
 # 个人博客小程序
 
 ![uniapp](https://img.shields.io/badge/-uniapp-orange)
-![vue/cli@4](https://img.shields.io/badge/-@vue/cli%40v4-brightgreen)
-![npm](https://img.shields.io/badge/-npm-brightgreen)
+![vue3](https://img.shields.io/badge/-Vue%203-42b883)
+![vite](https://img.shields.io/badge/-Vite%205-646cff)
+![yarn](https://img.shields.io/badge/-yarn-2c8ebb)
 
   支持微信小程序，查看语雀文档、查看阅读总数等功能，后续会开启更多功能;
 
@@ -15,17 +16,19 @@
 如果依然不太理解上面内容，可以先看看我的这篇文章：[个人博客小程序构建，这样还可以吧？](https://juejin.cn/post/7167177950465851406)
 
 ## 项目运行
-```
-// 注意：
-// 如果全局安装过vue，如果版本不同可能需要移除下，再全局安装
-npm install -g @vue/cli@4
-
+```bash
 yarn install
 
-// 运行
-npm run dev:mp-weixin
+# 微信小程序开发
+yarn dev:mp-weixin
+
+# H5 开发（仅本地调试）
+yarn dev:h5
 ```
 下载[微信小程序开发工具](https://developers.weixin.qq.com/miniprogram/dev/devtools/stable.html)，导入小程序项目时，选择编译好的dist目录文件，即可在开发工具预览.
+
+> 微信小程序使用微信开发者工具导入 `dist/dev/mp-weixin`。
+> H5 开发环境通过 Vite 代理访问语雀 API；H5 生产构建仍受语雀 API 的 CORS 限制。
 
 ## 小程序二维码
 

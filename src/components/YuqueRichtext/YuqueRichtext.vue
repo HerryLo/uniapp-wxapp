@@ -27,23 +27,23 @@ export default {
   width: 90%;
   overflow-y: scroll;
   background: #000;
-  padding: 20upx 30upx;
-  border-radius: 13upx;
-  margin: 5upx 0;
+  padding: 20rpx 30rpx;
+  border-radius: 13rpx;
+  margin: 5rpx 0;
 }
 .ne-text {
-  font-size: 35upx;
-  line-height: 70upx;
-  margin: 40upx 0;
+  font-size: 35rpx;
+  line-height: 70rpx;
+  margin: 40rpx 0;
 }
 .ne-p {
-  font-size: 32upx;
+  font-size: 32rpx;
   margin-top: 10rpx;
-  padding: 0 10upx;
-  line-height: 5upx!important;
+  padding: 0 10rpx;
+  line-height: 5rpx!important;
 }
 .ne-image {
-  margin: 10upx 0;
+  margin: 10rpx 0;
   width: 100% !important;
 }
 .lake-content h2 {
