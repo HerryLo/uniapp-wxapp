@@ -1,0 +1,39 @@
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { readStorage, writeStorage, removeStorage } from '../src/utils/storage.js'
+
+let store
+
+beforeEach(() => {
+  store = {}
+  vi.stubGlobal('uni', {
+    getStorageSync: vi.fn((key) => (key in store ? store[key] : '')),
+    setStorageSync: vi.fn((key, value) => { store[key] = value }),
+    removeStorageSync: vi.fn((key) => { delete store[key] }),
+  })
+})
+
+afterEach(() => {
+  vi.unstubAllGlobals()
+})
+
+describe('storage', () => {
+  it('returns fallback when key is missing', () => {
+    expect(readStorage('missing', { a: 1 })).toEqual({ a: 1 })
+  })
+
+  it('round-trips objects through JSON', () => {
+    writeStorage('key', { a: 1, b: [2] })
+    expect(readStorage('key', null)).toEqual({ a: 1, b: [2] })
+  })
+
+  it('returns fallback when stored value is invalid JSON', () => {
+    store.bad = '{oops'
+    expect(readStorage('bad', [])).toEqual([])
+  })
+
+  it('removes a key', () => {
+    writeStorage('key', 1)
+    removeStorage('key')
+    expect(readStorage('key', null)).toBe(null)
+  })
+})

@@ -8,7 +8,8 @@
     "dev:h5": "uni",
     "dev:mp-weixin": "uni -p mp-weixin",
     "build:h5": "uni build",
-    "build:mp-weixin": "uni build -p mp-weixin"
+    "build:mp-weixin": "uni build -p mp-weixin",
+    "test": "vitest run"
   },
   "dependencies": {
     "@dcloudio/uni-app": "3.0.0-5020620260917001",
@@ -25,6 +26,7 @@
     "@dcloudio/vite-plugin-uni": "3.0.0-5020620260917001",
     "@vue/runtime-core": "3.4.21",
     "rollup": "4.14.3",
-    "vite": "5.2.8"
+    "vite": "5.2.8",
+    "vitest": "1.6.0"
   }
 }
