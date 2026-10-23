@@ -22,7 +22,6 @@
 <script>
 import { getRepoDocsList, getRepos } from "../../service";
 import { handleTime } from "../../utils/util";
-import ArticleCard from "../../components/ArticleCard/ArticleCard";
 import SliderCard from "../../components/SliderCard/SliderCard";
 import { reposLink } from "../../utils/constant";
 
@@ -78,7 +77,7 @@ export default {
     },
     handleTime,
   },
-  components: { ArticleCard, SliderCard },
+  components: { SliderCard },
   onShareAppMessage(res) {
     return {
       title: 'HerryLo的博客小程序',
