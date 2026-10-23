@@ -59,9 +59,9 @@ page {
   background: rgba(0, 160, 233, 0.14);
 }
 .detailwrapper {
-  padding: 10upx 20upx;
+  padding: 10rpx 20rpx;
   font-size: 32rpx;
-  margin-bottom: 10upx;
+  margin-bottom: 10rpx;
 }
 .copytext {
   color: #0400ff;

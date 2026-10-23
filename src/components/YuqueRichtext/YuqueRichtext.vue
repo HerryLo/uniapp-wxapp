@@ -26,21 +26,21 @@ export default {
   width: 90%;
   overflow-y: scroll;
   background: #000;
-  padding: 20upx 30upx;
-  border-radius: 13upx;
-  margin: 5upx 0;
+  padding: 20rpx 30rpx;
+  border-radius: 13rpx;
+  margin: 5rpx 0;
 }
 .ne-text {
-  font-size: 32upx;
-  line-height: 70upx;
-  margin-top: 10upx;
+  font-size: 32rpx;
+  line-height: 70rpx;
+  margin-top: 10rpx;
 }
 .ne-p {
-  font-size: 32upx;
+  font-size: 32rpx;
   margin-top: 10rpx;
 }
 .ne-image {
-  margin: 10upx 0;
+  margin: 10rpx 0;
   width: 100% !important;
 }
 </style>
