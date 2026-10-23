@@ -54,10 +54,10 @@ export function loadTodos() {
       id: item.id,
       title: item.title,
       done: !!item.done,
-      dueAt: typeof item.dueAt === 'number' ? item.dueAt : null,
+      dueAt: Number.isFinite(item.dueAt) ? item.dueAt : null,
       remind: !!item.remind,
-      createdAt: typeof item.createdAt === 'number' ? item.createdAt : Date.now(),
-      completedAt: typeof item.completedAt === 'number' ? item.completedAt : null,
+      createdAt: Number.isFinite(item.createdAt) ? item.createdAt : 0,
+      completedAt: Number.isFinite(item.completedAt) ? item.completedAt : null,
     }))
 }
 

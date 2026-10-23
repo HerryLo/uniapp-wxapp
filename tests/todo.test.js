@@ -44,6 +44,14 @@ describe('todo', () => {
     expect(toggleTodo(toggled, '1', 10000).find((t) => t.id === '1').completedAt).toBe(null)
   })
 
+  it('does not mutate its input', () => {
+    const list = makeList()
+    const snapshot = JSON.stringify(list)
+    sortTodos(list)
+    toggleTodo(list, '1', 5)
+    expect(JSON.stringify(list)).toBe(snapshot)
+  })
+
   it('formats due labels and overdue state', () => {
     const now = new Date(2026, 0, 2, 10, 0).getTime()
     expect(formatDueLabel(new Date(2026, 0, 2, 18, 30).getTime(), now)).toBe('今天 18:30')
@@ -89,6 +97,26 @@ describe('todo storage and badge', () => {
         completedAt: null,
       },
     ])
+  })
+
+  it('handles non-array and corrupt payloads', () => {
+    store[TODOS_KEY] = '{"a":1}'
+    expect(loadTodos()).toEqual([])
+
+    store[TODOS_KEY] = '{oops'
+    expect(loadTodos()).toEqual([])
+  })
+
+  it('uses a stable fallback for missing timestamps', () => {
+    store[TODOS_KEY] = JSON.stringify([{ id: 'z', title: 'z' }])
+    const first = loadTodos()
+    const second = loadTodos()
+    expect(first[0].createdAt).toBe(0)
+    expect(second[0].createdAt).toBe(0)
+    expect(first[0].dueAt).toBe(null)
+    expect(first[0].completedAt).toBe(null)
+    expect(second[0].dueAt).toBe(null)
+    expect(second[0].completedAt).toBe(null)
   })
 
   it('updates the tab badge', () => {
