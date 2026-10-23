@@ -27,7 +27,8 @@
 
 <script setup>
 import { ref } from 'vue'
-import { onLoad, onShareAppMessage } from '@dcloudio/uni-app'
+import { onLoad, onShow, onShareAppMessage } from '@dcloudio/uni-app'
+import { loadTodos, activeCount, updateTabBadge } from '../../utils/todo.js'
 import VatPanel from '../../components/tools/VatPanel.vue'
 import UnitPanel from '../../components/tools/UnitPanel.vue'
 import TextPanel from '../../components/tools/TextPanel.vue'
@@ -52,6 +53,10 @@ onLoad((options) => {
   if (options && tabs.some((tab) => tab.key === options.tool)) {
     active.value = options.tool
   }
+})
+
+onShow(() => {
+  updateTabBadge(activeCount(loadTodos()))
 })
 
 onShareAppMessage(() => ({
