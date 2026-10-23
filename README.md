@@ -1,8 +1,9 @@
 # 个人博客小程序
 
 ![uniapp](https://img.shields.io/badge/-uniapp-orange)
-![vue/cli@4](https://img.shields.io/badge/-@vue/cli%40v4-brightgreen)
-![npm](https://img.shields.io/badge/-npm-brightgreen)
+![vue3](https://img.shields.io/badge/-Vue%203-42b883)
+![vite](https://img.shields.io/badge/-Vite%205-646cff)
+![yarn](https://img.shields.io/badge/-yarn-2c8ebb)
 
   支持微信小程序，查看语雀文档、查看阅读总数等功能，后续会开启更多功能;
 
