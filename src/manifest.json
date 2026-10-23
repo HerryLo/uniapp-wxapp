@@ -74,5 +74,8 @@
     },
 	"h5": {
 	},
+	"uniStatistics": {
+		"enable": false
+	},
 	"vueVersion": "3"
 }
