@@ -1,38 +1,56 @@
-# 个人博客小程序
+# 计算工具小程序
 
-![uniapp](https://img.shields.io/badge/-uniapp-orange)
-![vue3](https://img.shields.io/badge/-Vue%203-42b883)
-![vite](https://img.shields.io/badge/-Vite%205-646cff)
-![yarn](https://img.shields.io/badge/-yarn-2c8ebb)
+基于 uni-app + Vue 3 + Vite 的微信小程序工具箱，所有计算与数据均在本机完成，无后端依赖。
 
-  支持微信小程序，查看语雀文档、查看阅读总数等功能，后续会开启更多功能;
+## 功能
 
-基于[uniapp](https://uniapp.dcloud.net.cn/quickstart-cli.html) + [语雀API文档](https://www.yuque.com/yuque/developer/api) 构建个人博客微信小程序。语雀API接口免费使用每个用户（基于Token 关联到的账户），5000次/小时，应该是够用的; 
+- 增值税计算：含税/不含税双向换算，支持常用税率与自定义税率
+- 单位换算：长度、重量、温度、存储、面积
+- 文本处理：按行去重、大小写转换
+- 编码工具：Base64、URL 编解码
+- 进制转换：2–36 进制，支持负数与超大整数
+- 时间戳转换：时间戳与日期时间双向转换
+- JSON 格式化：格式化、压缩、校验
+- 待办清单：本地存储、筛选排序、tab 徽标、系统日历提醒（仅微信小程序）
 
-运行注意：
-  - 记得修改`src/yuque.json`下就是语雀API的相关配置，将其改为你自己的
-  - `manifest.json`中的appid修改为自己的；
+## 运行
 
-如果依然不太理解上面内容，可以先看看我的这篇文章：[个人博客小程序构建，这样还可以吧？](https://juejin.cn/post/7167177950465851406)
-
-## 项目运行
 ```bash
 yarn install
 
 # 微信小程序开发
 yarn dev:mp-weixin
 
-# H5 开发（仅本地调试）
+# H5 开发（仅用于本地调试）
 yarn dev:h5
+
+# 单元测试
+yarn test
 ```
-下载[微信小程序开发工具](https://developers.weixin.qq.com/miniprogram/dev/devtools/stable.html)，导入小程序项目时，选择编译好的dist目录文件，即可在开发工具预览.
 
-> 微信小程序使用微信开发者工具导入 `dist/dev/mp-weixin`。
-> H5 开发环境通过 Vite 代理访问语雀 API；H5 生产构建仍受语雀 API 的 CORS 限制。
+微信小程序：使用微信开发者工具导入 `dist/dev/mp-weixin`。
 
-## 小程序二维码
+## 构建
 
-![](./public/static/gh_4766a66c7f8e_258%20(2).jpg)
+```bash
+yarn build:mp-weixin
+yarn build:h5
+```
 
-[MIT License](./LICENSE)
+## 目录结构
 
+- `src/pages/tools/index.vue`：工具页与标签切换
+- `src/pages/todo/index.vue`：待办清单
+- `src/components/tools/*Panel.vue`：各工具面板
+- `src/utils/*.js`：纯函数计算逻辑与本地存储
+- `tests/*.test.js`：Vitest 单元测试
+
+## 说明
+
+- 所有数据仅保存在本机，清理小程序缓存或卸载后会丢失。
+- 日历提醒依赖系统日历授权，修改或删除待办不会同步已写入的日历事件。
+- 增值税计算结果仅供参考，不构成税务建议。
+
+## License
+
+[MIT](./LICENSE)
