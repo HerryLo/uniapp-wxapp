@@ -17,6 +17,7 @@ describe('vat', () => {
     expect(toCents('0')).toBe(0)
     expect(toCents('abc')).toBe(null)
     expect(toCents('-1')).toBe(null)
+    expect(toCents('999999999999999999999999')).toBe(null)
   })
 
   it('parses rates to basis points', () => {
@@ -30,6 +31,7 @@ describe('vat', () => {
     expect(validateAmount('')).toEqual({ error: '请输入金额' })
     expect(validateAmount('0')).toEqual({ error: '金额必须大于 0' })
     expect(validateAmount('100')).toEqual({ cents: 10000 })
+    expect(validateAmount('1000000000.01')).toEqual({ error: '金额过大' })
     expect(validateRate('')).toEqual({ error: '请输入税率' })
     expect(validateRate('101')).toEqual({ error: '请输入 0–100 的税率' })
     expect(validateRate('13')).toEqual({ bp: 1300 })
@@ -43,6 +45,7 @@ describe('vat', () => {
   it('calculates included to excluded', () => {
     expect(calcVat(11300, 1300, 'included')).toEqual({ netCents: 10000, taxCents: 1300, grossCents: 11300 })
     expect(calcVat(10001, 1300, 'included')).toEqual({ netCents: 8850, taxCents: 1151, grossCents: 10001 })
+    expect(calcVat(10000, 0, 'included')).toEqual({ netCents: 10000, taxCents: 0, grossCents: 10000 })
   })
 
   it('formats cents and result text', () => {
