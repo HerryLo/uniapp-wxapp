@@ -22,28 +22,45 @@ function utf8Bytes(text) {
   return bytes
 }
 
+function isContinuation(byte) {
+  return byte !== undefined && (byte & 0xc0) === 0x80
+}
+
 function utf8String(bytes) {
   let result = ''
   for (let i = 0; i < bytes.length;) {
     const first = bytes[i++]
     if (first < 0x80) {
       result += String.fromCodePoint(first)
-    } else if ((first & 0xe0) === 0xc0) {
-      result += String.fromCodePoint(((first & 0x1f) << 6) | (bytes[i++] & 0x3f))
-    } else if ((first & 0xf0) === 0xe0) {
-      result += String.fromCodePoint(
-        ((first & 0x0f) << 12) | ((bytes[i++] & 0x3f) << 6) | (bytes[i++] & 0x3f),
-      )
-    } else if ((first & 0xf8) === 0xf0) {
-      result += String.fromCodePoint(
-        ((first & 0x07) << 18) |
-        ((bytes[i++] & 0x3f) << 12) |
-        ((bytes[i++] & 0x3f) << 6) |
-        (bytes[i++] & 0x3f),
-      )
+      continue
+    }
+    let remaining
+    let code
+    let minCode
+    if (first >= 0xc2 && first <= 0xdf) {
+      remaining = 1
+      code = first & 0x1f
+      minCode = 0x80
+    } else if (first >= 0xe0 && first <= 0xef) {
+      remaining = 2
+      code = first & 0x0f
+      minCode = 0x800
+    } else if (first >= 0xf0 && first <= 0xf4) {
+      remaining = 3
+      code = first & 0x07
+      minCode = 0x10000
     } else {
       throw new Error('invalid utf8')
     }
+    for (let k = 0; k < remaining; k++) {
+      const next = bytes[i++]
+      if (!isContinuation(next)) throw new Error('invalid utf8')
+      code = (code << 6) | (next & 0x3f)
+    }
+    if (code < minCode || code > 0x10ffff || (code >= 0xd800 && code <= 0xdfff)) {
+      throw new Error('invalid utf8')
+    }
+    result += String.fromCodePoint(code)
   }
   return result
 }
