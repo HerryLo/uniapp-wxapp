@@ -1,60 +1,48 @@
 {
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "首页"
-			}
-		},
-		{
-			"path": "pages/about/about",
-			"style": {
-				"navigationBarTitleText": "关于"
-			}
-		},
-		{
-			"path": "pages/detail/detail",
-			"style": {
-				"navigationBarTitleText": "详情"
-			}
-		},
-		{
-			"path": "pages/article/article",
-			"style": {
-				"navigationBarTitleText": "文章列表"
-			}
-		}
-	],
-	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#fff559",
-		"backgroundColor": "#F8F8F8"
-	},
-	"tabBar": {
-		"color": "#666",
-		"selectedColor": "#000",
-		"borderStyle": "black",
-		"backgroundColor": "#F8F8F8",
-		"list": [
-			{
-				"pagePath": "pages/index/index",
-				"iconPath": "static/index.png",
-				"selectedIconPath": "static/indexactive1.png",
-				"text": "首页"
-			},
-			{
-				"pagePath": "pages/article/article",
-				"iconPath": "static/art.png",
-				"selectedIconPath": "static/artactive.png",
-				"text": "文章"
-			},
-			{
-				"pagePath": "pages/about/about",
-				"iconPath": "static/about.png",
-				"selectedIconPath": "static/aboutactive1.png",
-				"text": "关于"
-			}
-		]
-	}
+  "pages": [
+    {
+      "path": "pages/tools/index",
+      "style": {
+        "navigationBarTitleText": "工具箱"
+      }
+    },
+    {
+      "path": "pages/todo/index",
+      "style": {
+        "navigationBarTitleText": "待办"
+      }
+    },
+    {
+      "path": "pages/about/about",
+      "style": {
+        "navigationBarTitleText": "关于"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "工具箱",
+    "navigationBarBackgroundColor": "#F7F8FA",
+    "backgroundColor": "#F7F8FA"
+  },
+  "tabBar": {
+    "color": "#6B7280",
+    "selectedColor": "#4361EE",
+    "borderStyle": "white",
+    "backgroundColor": "#FFFFFF",
+    "list": [
+      {
+        "pagePath": "pages/tools/index",
+        "iconPath": "static/tab-tools.png",
+        "selectedIconPath": "static/tab-tools-active.png",
+        "text": "工具"
+      },
+      {
+        "pagePath": "pages/todo/index",
+        "iconPath": "static/tab-todo.png",
+        "selectedIconPath": "static/tab-todo-active.png",
+        "text": "待办"
+      }
+    ]
+  }
 }
