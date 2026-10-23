@@ -1,14 +1,14 @@
-import yuque from '../yuque.json';
+import yuque from '../yuque.json'
 
-// 语雀接口
-export const requestHttp = yuque.requestHttp;
+// #ifdef H5
+export const requestHttp = import.meta.env.DEV
+  ? '/yuque-api/api/v2'
+  : yuque.requestHttp
+// #endif
+// #ifndef H5
+export const requestHttp = yuque.requestHttp
+// #endif
 
-// AuthToken
-export const AuthToken = yuque.AuthToken;
-
-// :namespace
-export const namespace = yuque.namespace;
-
-// 知识库链接
-export const reposLink = yuque.reposLink;
-
+export const AuthToken = yuque.AuthToken
+export const namespace = yuque.namespace
+export const reposLink = yuque.reposLink
