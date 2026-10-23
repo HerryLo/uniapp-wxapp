@@ -36,4 +36,25 @@ describe('storage', () => {
     removeStorage('key')
     expect(readStorage('key', null)).toBe(null)
   })
+
+  it('returns fallback when getStorageSync throws', () => {
+    uni.getStorageSync = vi.fn(() => { throw new Error('fail') })
+    expect(() => readStorage('k', 'fb')).not.toThrow()
+    expect(readStorage('k', 'fb')).toBe('fb')
+  })
+
+  it('returns false when setStorageSync throws', () => {
+    uni.setStorageSync = vi.fn(() => { throw new Error('fail') })
+    expect(writeStorage('k', 1)).toBe(false)
+  })
+
+  it('returns false when removeStorageSync throws', () => {
+    uni.removeStorageSync = vi.fn(() => { throw new Error('fail') })
+    expect(removeStorage('k')).toBe(false)
+  })
+
+  it('returns true on successful writes and removes', () => {
+    expect(writeStorage('k', 1)).toBe(true)
+    expect(removeStorage('k')).toBe(true)
+  })
 })
