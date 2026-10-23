@@ -10,9 +10,41 @@
 
 ---
 
+## 执行进度（更新于 2026-10-23）
+
+**分支：** `feat/tool-miniapp`（已推送到 `origin`）
+
+| 任务 | 状态 | 提交 |
+|---|---|---|
+| 前置准备（Step 0 / 0.1） | ✅ 完成 | — |
+| Task 1 测试基础设施与存储封装 | ✅ 完成 | `1e849fd`、`5f5ac58` |
+| Task 2 增值税计算逻辑 | ✅ 完成 | `0a14a35`、`fcf8d5d` |
+| Task 3 文本处理逻辑 | ✅ 完成 | `1fb2c3d` |
+| Task 4 进制转换逻辑 | ✅ 完成 | `dbd3355` |
+| Task 5 单位换算逻辑 | ✅ 完成 | `4ed8797` |
+| Task 6 时间戳转换逻辑 | ✅ 完成 | `531ee30` |
+| Task 7 JSON 处理逻辑 | ✅ 完成 | `f8d0b57` |
+| Task 8 编码工具逻辑 | ✅ 完成 | `721803b`、`21967e9` |
+| Task 9 待办数据逻辑 | ✅ 完成 | `c6aecfb`、`768baff` |
+| Task 10 生成 tab 图标 | ✅ 完成 | `54876ce` |
+| Task 11 应用外壳 | ✅ 完成（spec 评审通过；代码质量评审被打断，恢复后可补做） | `3a73cf5` |
+| Task 12–22 | ⬜ 未开始 | — |
+| 最终整体代码评审 | ⬜ 未开始 | — |
+
+**当前测试基线：** 9 个测试文件 / 49 个用例全部通过（`yarn test`）。`yarn build:mp-weixin` 在 Task 11 提交后构建成功。
+
+**下一步：** 从 Task 12（增值税面板）继续。每完成一个任务：实现 → 构建验证 → 提交 → spec 评审 → 代码质量评审 → 勾选本计划对应步骤。
+
+**注意：**
+- 工作区有一个未提交的 `.gitignore` 改动（新增 `.claude/`），与计划无关，请勿提交。
+- 依赖安装需使用 `--registry https://registry.yarnpkg.com`（本机 `~/.npmrc` 私服返回 401）。
+- 微信开发者工具需真机验证日历提醒（Task 19 / 22）。
+
+---
+
 ## 前置准备
 
-- [ ] **Step 0: 创建开发分支**
+- [x] **Step 0: 创建开发分支**
 
 ```bash
 git checkout -b feat/tool-miniapp
@@ -20,7 +52,7 @@ git checkout -b feat/tool-miniapp
 
 Expected: `Switched to a new branch 'feat/tool-miniapp'`。
 
-- [ ] **Step 0.1: 确认基线**
+- [x] **Step 0.1: 确认基线**
 
 ```bash
 yarn test 2>&1 | head -5 || true
@@ -63,7 +95,7 @@ Expected: 此时尚无 `test` 脚本，输出 `command not found` 类错误，�
 - Create: `tests/storage.test.js`
 - Create: `src/utils/storage.js`
 
-- [ ] **Step 1: 配置 Vitest**
+- [x] **Step 1: 配置 Vitest**
 
 `vitest.config.js`：
 
@@ -115,7 +147,7 @@ export default defineConfig({
 }
 ```
 
-- [ ] **Step 2: 安装依赖**
+- [x] **Step 2: 安装依赖**
 
 ```bash
 yarn install --registry https://registry.yarnpkg.com --network-timeout 600000
@@ -123,7 +155,7 @@ yarn install --registry https://registry.yarnpkg.com --network-timeout 600000
 
 Expected: `Done in ...`，`node_modules/vitest` 存在。
 
-- [ ] **Step 3: 写失败的测试**
+- [x] **Step 3: 写失败的测试**
 
 `tests/storage.test.js`：
 
@@ -169,7 +201,7 @@ describe('storage', () => {
 })
 ```
 
-- [ ] **Step 4: 运行测试确认失败**
+- [x] **Step 4: 运行测试确认失败**
 
 ```bash
 yarn test tests/storage.test.js
@@ -177,7 +209,7 @@ yarn test tests/storage.test.js
 
 Expected: FAIL，`Cannot find module '../src/utils/storage.js'`。
 
-- [ ] **Step 5: 实现存储封装**
+- [x] **Step 5: 实现存储封装**
 
 `src/utils/storage.js`：
 
@@ -211,7 +243,7 @@ export function removeStorage(key) {
 }
 ```
 
-- [ ] **Step 6: 运行测试确认通过**
+- [x] **Step 6: 运行测试确认通过**
 
 ```bash
 yarn test tests/storage.test.js
@@ -219,7 +251,7 @@ yarn test tests/storage.test.js
 
 Expected: 4 passed。
 
-- [ ] **Step 7: 提交**
+- [x] **Step 7: 提交**
 
 ```bash
 git add package.json yarn.lock vitest.config.js tests/storage.test.js src/utils/storage.js
@@ -234,7 +266,7 @@ git commit -m "feat 新增存储封装与测试基础设施"
 - Create: `tests/vat.test.js`
 - Create: `src/utils/vat.js`
 
-- [ ] **Step 1: 写失败的测试**
+- [x] **Step 1: 写失败的测试**
 
 `tests/vat.test.js`：
 
@@ -295,7 +327,7 @@ describe('vat', () => {
 })
 ```
 
-- [ ] **Step 2: 运行测试确认失败**
+- [x] **Step 2: 运行测试确认失败**
 
 ```bash
 yarn test tests/vat.test.js
@@ -303,7 +335,7 @@ yarn test tests/vat.test.js
 
 Expected: FAIL，模块不存在。
 
-- [ ] **Step 3: 实现计算逻辑**
+- [x] **Step 3: 实现计算逻辑**
 
 `src/utils/vat.js`：
 
@@ -365,7 +397,7 @@ export function formatVatText({ net, tax, gross }) {
 }
 ```
 
-- [ ] **Step 4: 运行测试确认通过**
+- [x] **Step 4: 运行测试确认通过**
 
 ```bash
 yarn test tests/vat.test.js
@@ -373,7 +405,7 @@ yarn test tests/vat.test.js
 
 Expected: 6 passed。
 
-- [ ] **Step 5: 提交**
+- [x] **Step 5: 提交**
 
 ```bash
 git add src/utils/vat.js tests/vat.test.js
@@ -388,7 +420,7 @@ git commit -m "feat 新增增值税计算逻辑"
 - Create: `tests/text.test.js`
 - Create: `src/utils/text.js`
 
-- [ ] **Step 1: 写失败的测试**
+- [x] **Step 1: 写失败的测试**
 
 `tests/text.test.js`：
 
@@ -430,7 +462,7 @@ describe('text', () => {
 })
 ```
 
-- [ ] **Step 2: 运行测试确认失败**
+- [x] **Step 2: 运行测试确认失败**
 
 ```bash
 yarn test tests/text.test.js
@@ -438,7 +470,7 @@ yarn test tests/text.test.js
 
 Expected: FAIL，模块不存在。
 
-- [ ] **Step 3: 实现处理逻辑**
+- [x] **Step 3: 实现处理逻辑**
 
 `src/utils/text.js`：
 
@@ -483,7 +515,7 @@ export function countText(text) {
 }
 ```
 
-- [ ] **Step 4: 运行测试确认通过**
+- [x] **Step 4: 运行测试确认通过**
 
 ```bash
 yarn test tests/text.test.js
@@ -491,7 +523,7 @@ yarn test tests/text.test.js
 
 Expected: 4 passed。
 
-- [ ] **Step 5: 提交**
+- [x] **Step 5: 提交**
 
 ```bash
 git add src/utils/text.js tests/text.test.js
@@ -506,7 +538,7 @@ git commit -m "feat 新增文本处理逻辑"
 - Create: `tests/radix.test.js`
 - Create: `src/utils/radix.js`
 
-- [ ] **Step 1: 写失败的测试**
+- [x] **Step 1: 写失败的测试**
 
 `tests/radix.test.js`：
 
@@ -546,7 +578,7 @@ describe('radix', () => {
 })
 ```
 
-- [ ] **Step 2: 运行测试确认失败**
+- [x] **Step 2: 运行测试确认失败**
 
 ```bash
 yarn test tests/radix.test.js
@@ -554,7 +586,7 @@ yarn test tests/radix.test.js
 
 Expected: FAIL，模块不存在。
 
-- [ ] **Step 3: 实现转换逻辑**
+- [x] **Step 3: 实现转换逻辑**
 
 `src/utils/radix.js`：
 
@@ -601,7 +633,7 @@ export function convertRadix(input, base) {
 }
 ```
 
-- [ ] **Step 4: 运行测试确认通过**
+- [x] **Step 4: 运行测试确认通过**
 
 ```bash
 yarn test tests/radix.test.js
@@ -609,7 +641,7 @@ yarn test tests/radix.test.js
 
 Expected: 3 passed。
 
-- [ ] **Step 5: 提交**
+- [x] **Step 5: 提交**
 
 ```bash
 git add src/utils/radix.js tests/radix.test.js
@@ -624,7 +656,7 @@ git commit -m "feat 新增进制转换逻辑"
 - Create: `tests/units.test.js`
 - Create: `src/utils/units.js`
 
-- [ ] **Step 1: 写失败的测试**
+- [x] **Step 1: 写失败的测试**
 
 `tests/units.test.js`：
 
@@ -666,7 +698,7 @@ describe('units', () => {
 })
 ```
 
-- [ ] **Step 2: 运行测试确认失败**
+- [x] **Step 2: 运行测试确认失败**
 
 ```bash
 yarn test tests/units.test.js
@@ -674,7 +706,7 @@ yarn test tests/units.test.js
 
 Expected: FAIL，模块不存在。
 
-- [ ] **Step 3: 实现换算逻辑**
+- [x] **Step 3: 实现换算逻辑**
 
 `src/utils/units.js`：
 
@@ -769,7 +801,7 @@ export function formatUnitValue(value) {
 }
 ```
 
-- [ ] **Step 4: 运行测试确认通过**
+- [x] **Step 4: 运行测试确认通过**
 
 ```bash
 yarn test tests/units.test.js
@@ -777,7 +809,7 @@ yarn test tests/units.test.js
 
 Expected: 6 passed。
 
-- [ ] **Step 5: 提交**
+- [x] **Step 5: 提交**
 
 ```bash
 git add src/utils/units.js tests/units.test.js
@@ -792,7 +824,7 @@ git commit -m "feat 新增单位换算逻辑"
 - Create: `tests/timestamp.test.js`
 - Create: `src/utils/timestamp.js`
 
-- [ ] **Step 1: 写失败的测试**
+- [x] **Step 1: 写失败的测试**
 
 `tests/timestamp.test.js`：
 
@@ -849,7 +881,7 @@ describe('timestamp', () => {
 })
 ```
 
-- [ ] **Step 2: 运行测试确认失败**
+- [x] **Step 2: 运行测试确认失败**
 
 ```bash
 yarn test tests/timestamp.test.js
@@ -857,7 +889,7 @@ yarn test tests/timestamp.test.js
 
 Expected: FAIL，模块不存在。
 
-- [ ] **Step 3: 实现转换逻辑**
+- [x] **Step 3: 实现转换逻辑**
 
 `src/utils/timestamp.js`：
 
@@ -921,7 +953,7 @@ export function formatTimeValue(date) {
 }
 ```
 
-- [ ] **Step 4: 运行测试确认通过**
+- [x] **Step 4: 运行测试确认通过**
 
 ```bash
 yarn test tests/timestamp.test.js
@@ -929,7 +961,7 @@ yarn test tests/timestamp.test.js
 
 Expected: 6 passed。
 
-- [ ] **Step 5: 提交**
+- [x] **Step 5: 提交**
 
 ```bash
 git add src/utils/timestamp.js tests/timestamp.test.js
@@ -944,7 +976,7 @@ git commit -m "feat 新增时间戳转换逻辑"
 - Create: `tests/json.test.js`
 - Create: `src/utils/json.js`
 
-- [ ] **Step 1: 写失败的测试**
+- [x] **Step 1: 写失败的测试**
 
 `tests/json.test.js`：
 
@@ -969,7 +1001,7 @@ describe('json', () => {
 })
 ```
 
-- [ ] **Step 2: 运行测试确认失败**
+- [x] **Step 2: 运行测试确认失败**
 
 ```bash
 yarn test tests/json.test.js
@@ -977,7 +1009,7 @@ yarn test tests/json.test.js
 
 Expected: FAIL，模块不存在。
 
-- [ ] **Step 3: 实现 JSON 逻辑**
+- [x] **Step 3: 实现 JSON 逻辑**
 
 `src/utils/json.js`：
 
@@ -1014,7 +1046,7 @@ export function validateJson(input) {
 }
 ```
 
-- [ ] **Step 4: 运行测试确认通过**
+- [x] **Step 4: 运行测试确认通过**
 
 ```bash
 yarn test tests/json.test.js
@@ -1022,7 +1054,7 @@ yarn test tests/json.test.js
 
 Expected: 3 passed。
 
-- [ ] **Step 5: 提交**
+- [x] **Step 5: 提交**
 
 ```bash
 git add src/utils/json.js tests/json.test.js
@@ -1037,7 +1069,7 @@ git commit -m "feat 新增 JSON 处理逻辑"
 - Create: `tests/encode.test.js`
 - Create: `src/utils/encode.js`
 
-- [ ] **Step 1: 写失败的测试**
+- [x] **Step 1: 写失败的测试**
 
 `tests/encode.test.js`：
 
@@ -1069,7 +1101,7 @@ describe('encode', () => {
 })
 ```
 
-- [ ] **Step 2: 运行测试确认失败**
+- [x] **Step 2: 运行测试确认失败**
 
 ```bash
 yarn test tests/encode.test.js
@@ -1077,7 +1109,7 @@ yarn test tests/encode.test.js
 
 Expected: FAIL，模块不存在。
 
-- [ ] **Step 3: 实现编码逻辑**
+- [x] **Step 3: 实现编码逻辑**
 
 `src/utils/encode.js`：
 
@@ -1183,7 +1215,7 @@ export function urlDecode(text) {
 }
 ```
 
-- [ ] **Step 4: 运行测试确认通过**
+- [x] **Step 4: 运行测试确认通过**
 
 ```bash
 yarn test tests/encode.test.js
@@ -1191,7 +1223,7 @@ yarn test tests/encode.test.js
 
 Expected: 4 passed。
 
-- [ ] **Step 5: 提交**
+- [x] **Step 5: 提交**
 
 ```bash
 git add src/utils/encode.js tests/encode.test.js
@@ -1206,7 +1238,7 @@ git commit -m "feat 新增编码工具逻辑"
 - Create: `tests/todo.test.js`
 - Create: `src/utils/todo.js`
 
-- [ ] **Step 1: 写失败的测试**
+- [x] **Step 1: 写失败的测试**
 
 `tests/todo.test.js`：
 
@@ -1313,7 +1345,7 @@ describe('todo storage and badge', () => {
 })
 ```
 
-- [ ] **Step 2: 运行测试确认失败**
+- [x] **Step 2: 运行测试确认失败**
 
 ```bash
 yarn test tests/todo.test.js
@@ -1321,7 +1353,7 @@ yarn test tests/todo.test.js
 
 Expected: FAIL，模块不存在。
 
-- [ ] **Step 3: 实现待办逻辑**
+- [x] **Step 3: 实现待办逻辑**
 
 `src/utils/todo.js`：
 
@@ -1426,7 +1458,7 @@ export function isOverdue(todo, now = Date.now()) {
 }
 ```
 
-- [ ] **Step 4: 运行测试确认通过**
+- [x] **Step 4: 运行测试确认通过**
 
 ```bash
 yarn test tests/todo.test.js
@@ -1434,7 +1466,7 @@ yarn test tests/todo.test.js
 
 Expected: 6 passed。
 
-- [ ] **Step 5: 提交**
+- [x] **Step 5: 提交**
 
 ```bash
 git add src/utils/todo.js tests/todo.test.js
@@ -1449,7 +1481,7 @@ git commit -m "feat 新增待办数据逻辑"
 - Create: `scripts/gen-tab-icons.cjs`
 - Create: `src/static/tab-tools.png`、`src/static/tab-tools-active.png`、`src/static/tab-todo.png`、`src/static/tab-todo-active.png`
 
-- [ ] **Step 1: 编写图标生成脚本**
+- [x] **Step 1: 编写图标生成脚本**
 
 `scripts/gen-tab-icons.cjs`：
 
@@ -1584,7 +1616,7 @@ for (const [name, rgba] of outputs) {
 console.log(`generated ${outputs.map(([name]) => name).join(', ')}`)
 ```
 
-- [ ] **Step 2: 生成并校验文件**
+- [x] **Step 2: 生成并校验文件**
 
 ```bash
 node scripts/gen-tab-icons.cjs && node -e "const fs=require('fs');const files=['tab-tools.png','tab-tools-active.png','tab-todo.png','tab-todo-active.png'];const sig=Buffer.from([137,80,78,71,13,10,26,10]);for(const f of files){const b=fs.readFileSync('src/static/'+f);console.log(f,b.subarray(0,8).equals(sig)?'valid':'invalid',b.length)}"
@@ -1592,7 +1624,7 @@ node scripts/gen-tab-icons.cjs && node -e "const fs=require('fs');const files=['
 
 Expected: 四行均为 `valid`，文件大小大于 0。
 
-- [ ] **Step 3: 提交**
+- [x] **Step 3: 提交**
 
 ```bash
 git add scripts/gen-tab-icons.cjs src/static/tab-tools.png src/static/tab-tools-active.png src/static/tab-todo.png src/static/tab-todo-active.png
@@ -1610,7 +1642,7 @@ git commit -m "feat 生成 tab 图标"
 - Create: `src/pages/todo/index.vue`（占位，Task 19 替换）
 - Create: `src/components/tools/{Vat,Unit,Text,Encode,Radix,Timestamp,Json}Panel.vue`（占位）
 
-- [ ] **Step 1: 全局主题样式**
+- [x] **Step 1: 全局主题样式**
 
 `src/App.vue`：
 
@@ -1843,7 +1875,7 @@ picker {
 </style>
 ```
 
-- [ ] **Step 2: 路由与 tabBar**
+- [x] **Step 2: 路由与 tabBar**
 
 `src/pages.json`：
 
@@ -1898,7 +1930,7 @@ picker {
 }
 ```
 
-- [ ] **Step 3: 工具页**
+- [x] **Step 3: 工具页**
 
 `src/pages/tools/index.vue`：
 
@@ -2025,7 +2057,7 @@ function openAbout() {
 </style>
 ```
 
-- [ ] **Step 4: 创建 7 个占位面板**
+- [x] **Step 4: 创建 7 个占位面板**
 
 `src/components/tools/VatPanel.vue`：
 
@@ -2097,7 +2129,7 @@ function openAbout() {
 </template>
 ```
 
-- [ ] **Step 5: 待办占位页**
+- [x] **Step 5: 待办占位页**
 
 `src/pages/todo/index.vue`：
 
@@ -2110,7 +2142,7 @@ function openAbout() {
 </template>
 ```
 
-- [ ] **Step 6: 构建验证**
+- [x] **Step 6: 构建验证**
 
 ```bash
 yarn build:mp-weixin
@@ -2118,7 +2150,7 @@ yarn build:mp-weixin
 
 Expected: `DONE Build complete.`，且 `dist/build/mp-weixin/pages/tools/index.js` 存在。
 
-- [ ] **Step 7: 提交**
+- [x] **Step 7: 提交**
 
 ```bash
 git add src/App.vue src/pages.json src/pages/tools/index.vue src/pages/todo/index.vue src/components/tools
