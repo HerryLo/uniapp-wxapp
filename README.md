@@ -13,16 +13,18 @@
   - `manifest.json`中的appid修改为自己的；
 
 ## 项目运行
-```
-// 注意：
-// 如果全局安装过vue，如果版本不同可能需要移除下，再全局安装
-npm install -g @vue/cli@4
-
+```bash
 yarn install
 
-// 运行
-npm run dev:mp-weixin
+# 微信小程序开发
+yarn dev:mp-weixin
+
+# H5 开发（仅本地调试）
+yarn dev:h5
 ```
+
+> 微信小程序使用微信开发者工具导入 `dist/dev/mp-weixin`。
+> H5 开发环境通过 Vite 代理访问语雀 API；H5 生产构建仍受语雀 API 的 CORS 限制。
 
 ## 小程序二维码
 
