@@ -2,7 +2,7 @@
   <view class="about">
     <view class="hero">
       <image class="logo" src="../../static/logo.png" mode="aspectFit" />
-      <view class="app-name">宝宝记录与工具箱</view>
+      <view class="app-name">垣计算</view>
       <view class="version">v1.1.0</view>
     </view>
 
