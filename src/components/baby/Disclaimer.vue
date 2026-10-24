@@ -2,6 +2,9 @@
   <view class="disclaimer-box">
     <text class="disclaimer-title">温馨提示</text>
     <text class="disclaimer-text">{{ text }}</text>
+    <text class="disclaimer-privacy">
+      涉及个人隐私，所有数据仅存储在本地，不上传、不登录。删除小程序或卸载微信后，本地数据将全部消失，请定期在「数据与设置」中导出备份。
+    </text>
   </view>
 </template>
 
@@ -31,6 +34,13 @@ defineProps({
 }
 .disclaimer-text {
   display: block;
+  font-size: 24rpx;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+.disclaimer-privacy {
+  display: block;
+  margin-top: 12rpx;
   font-size: 24rpx;
   line-height: 1.7;
   color: var(--text-secondary);
