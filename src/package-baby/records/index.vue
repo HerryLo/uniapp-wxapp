@@ -27,7 +27,10 @@
 
     <view class="card list-card">
       <view class="list-head">
-        <text class="list-title">今天 · {{ currentLabel }}</text>
+        <view class="list-heading">
+          <text class="list-title">今天 · {{ currentLabel }}</text>
+          <text v-if="todayMilkText" class="list-summary">{{ todayMilkText }}</text>
+        </view>
         <view class="add-btn" @click="openForm">+ 添加</view>
       </view>
 
@@ -56,6 +59,23 @@
       </view>
     </view>
 
+    <view v-if="kind === 'milk'" class="card trend-card">
+      <text class="list-title">最近 7 天奶量</text>
+      <view class="trend-list">
+        <view v-for="item in recentMilkList" :key="item.date" class="trend-row">
+          <text class="trend-date">{{ item.date === today ? '今天' : item.date.slice(5) }}</text>
+          <text class="trend-amount" :class="{ empty: !item.hasMilkAmount }">
+            {{ item.hasMilkAmount ? `${item.milkAmount} ml` : '未记录' }}
+          </text>
+          <text class="trend-count">{{ item.milkCount }} 次</text>
+        </view>
+      </view>
+      <view v-if="showMilkChart" class="trend-chart">
+        <text class="trend-chart-title">近 7 天奶量趋势</text>
+        <LineChart :points="milkChart" unit="ml" :height="320" />
+      </view>
+    </view>
+
     <Disclaimer text="记录仅用于家庭照顾参考，不构成医疗建议。如宝宝出现异常症状，请及时就医。" />
     <AdBanner />
 
@@ -76,9 +96,12 @@ import { onLoad, onShow } from '@dcloudio/uni-app'
 import AdBanner from '../../components/AdBanner.vue'
 import Disclaimer from '../../components/baby/Disclaimer.vue'
 import RecordForm from '../../components/baby/RecordForm.vue'
+import LineChart from '../../components/baby/LineChart.vue'
 import {
   addRecord,
   loadDay,
+  loadRecentMilkSummary,
+  milkChartPoints,
   removeRecord,
   summarizeDay,
   sortRecords,
@@ -102,10 +125,27 @@ const list = computed(() => sortRecords(day.value[kind.value] || [], kind.value)
 const currentLabel = computed(
   () => kinds.find((item) => item.key === kind.value)?.label || ''
 )
+const recentMilk = ref(loadRecentMilkSummary(7))
+
+const recentMilkList = computed(() => [...recentMilk.value].reverse())
+const milkChart = computed(() => milkChartPoints(recentMilk.value))
+const showMilkChart = computed(
+  () => recentMilk.value.filter((item) => item.hasMilkAmount).length > 3
+)
+const todayMilkText = computed(() => {
+  if (kind.value !== 'milk' || !summary.value.milkCount) return ''
+  const hasAmount = day.value.milk.some(
+    (item) => typeof item.amount === 'number' && Number.isFinite(item.amount)
+  )
+  return hasAmount
+    ? `共 ${summary.value.milkAmount} ml · ${summary.value.milkCount} 次`
+    : `奶量未记录 · ${summary.value.milkCount} 次`
+})
 
 function refresh() {
   today.value = todayKey()
   day.value = loadDay(today.value)
+  recentMilk.value = loadRecentMilkSummary(7)
 }
 
 function openForm() {
@@ -208,6 +248,17 @@ onShow(refresh)
 .list-card {
   margin-top: 24rpx;
 }
+.list-heading {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  flex: 1;
+}
+.list-summary {
+  margin-left: 16rpx;
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
 .list-head {
   display: flex;
   align-items: center;
@@ -248,6 +299,56 @@ onShow(refresh)
   padding-left: 24rpx;
   font-size: 24rpx;
   color: var(--danger);
+}
+.trend-card {
+  margin-top: 24rpx;
+}
+.trend-list {
+  margin-top: 8rpx;
+}
+.trend-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid var(--border);
+}
+.trend-row:last-child {
+  border-bottom: none;
+}
+.trend-date {
+  flex: 1;
+  font-size: 26rpx;
+  color: var(--text);
+}
+.trend-amount {
+  width: 180rpx;
+  text-align: right;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: var(--primary-strong);
+}
+.trend-amount.empty {
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+.trend-count {
+  width: 100rpx;
+  text-align: right;
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+.trend-chart {
+  margin-top: 24rpx;
+  padding-top: 24rpx;
+  border-top: 1rpx solid var(--border);
+}
+.trend-chart-title {
+  display: block;
+  margin-bottom: 8rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: var(--text);
 }
 .empty-tip {
   margin-top: 48rpx;
