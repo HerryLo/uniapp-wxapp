@@ -14,45 +14,64 @@
       <view class="add-custom" @click="openCustom">+ 自定义疫苗</view>
     </view>
 
-    <view v-for="group in groups" :key="group.type" class="card">
-      <view class="group-head">
-        <text class="group-title">{{ group.type }}疫苗</text>
-        <text v-if="group.type === '二类'" class="self-paid-tag">自费自愿</text>
-      </view>
-      <view v-if="group.type === '二类'" class="group-note">
-        二类疫苗为自费自愿接种，请咨询接种门诊。
-      </view>
+    <view class="table-tip">左右滑动查看完整表格</view>
 
-      <view v-for="item in group.items" :key="item.id" class="vaccine-item">
-        <view class="vaccine-row" @click="toggle(item)">
-          <view class="check" :class="{ checked: item.done }">{{ item.done ? '✓' : '' }}</view>
-          <view class="vaccine-info">
-            <view class="vaccine-name">
-              {{ item.name }}
-              <text v-if="item.type === '二类'" class="mini-tag">自费自愿</text>
+    <scroll-view scroll-x class="table-scroll">
+      <view class="vaccine-table">
+        <view v-for="group in groups" :key="group.type" class="group-block">
+          <view class="group-head">
+            <text class="group-title">{{ group.type }}疫苗</text>
+            <text v-if="group.type === '二类'" class="self-paid-tag">自费自愿</text>
+          </view>
+          <view v-if="group.type === '二类'" class="group-note">
+            二类疫苗为自费自愿接种，请咨询接种门诊。
+          </view>
+
+          <view class="table-row table-header">
+            <view class="cell col-check">接种</view>
+            <view class="cell col-name">疫苗名称</view>
+            <view class="cell col-month">参考月龄</view>
+            <view class="cell col-status">状态</view>
+            <view class="cell col-date">接种日期</view>
+            <view class="cell col-action">操作</view>
+          </view>
+
+          <view v-for="item in group.items" :key="item.id" class="table-row">
+            <view class="cell col-check" @click="toggle(item)">
+              <view class="check" :class="{ checked: item.done }">{{ item.done ? '✓' : '' }}</view>
             </view>
-            <view class="vaccine-meta">参考月龄：{{ formatMonthAge(item.month) }}</view>
-            <view v-if="statusOf(item).key === 'overdue'" class="overdue-note">
-              请咨询接种门诊
+            <view class="cell col-name">
+              <view class="vaccine-name">
+                {{ item.name }}
+                <text v-if="item.type === '二类'" class="mini-tag">自费自愿</text>
+              </view>
+              <view v-if="statusOf(item).key === 'overdue'" class="overdue-note">
+                请咨询接种门诊
+              </view>
+            </view>
+            <view class="cell col-month">{{ formatMonthAge(item.month) }}</view>
+            <view class="cell col-status">
+              <text class="status" :class="statusOf(item).key">{{ statusOf(item).label }}</text>
+            </view>
+            <view class="cell col-date">
+              <picker
+                v-if="item.done"
+                mode="date"
+                :value="item.date || today"
+                @change="changeDate(item, $event.detail.value)"
+              >
+                <view class="date-field">{{ item.date || '选择日期' }} ›</view>
+              </picker>
+              <text v-else class="date-empty">—</text>
+            </view>
+            <view class="cell col-action">
+              <text v-if="!item.builtin" class="custom-delete" @click.stop="removeCustom(item)">删除</text>
+              <text v-else class="action-none">—</text>
             </view>
           </view>
-          <text class="status" :class="statusOf(item).key">{{ statusOf(item).label }}</text>
-        </view>
-        <view v-if="item.done" class="date-row">
-          <text class="date-label">接种日期</text>
-          <picker
-            mode="date"
-            :value="item.date || today"
-            @change="changeDate(item, $event.detail.value)"
-          >
-            <view class="date-field">{{ item.date || '选择日期' }} ›</view>
-          </picker>
-        </view>
-        <view v-if="!item.builtin" class="custom-delete" @click="removeCustom(item)">
-          删除自定义项
         </view>
       </view>
-    </view>
+    </scroll-view>
 
     <view class="source-card">
       <view class="source-title">参考来源</view>
@@ -259,21 +278,87 @@ onShow(refresh)
   line-height: 1.6;
   color: var(--text-secondary);
 }
-.vaccine-item {
-  padding: 24rpx 0;
+.table-tip {
+  margin-top: 24rpx;
+  font-size: 22rpx;
+  color: var(--text-secondary);
+}
+.table-scroll {
+  width: 100%;
+  margin-top: 12rpx;
+  white-space: nowrap;
+}
+.vaccine-table {
+  display: flex;
+  flex-direction: column;
+}
+.group-block {
+  width: 1020rpx;
+  box-sizing: border-box;
+  padding: 24rpx;
+  background: var(--surface);
+  border-radius: 40rpx;
+  box-shadow: 0 8rpx 24rpx rgba(255, 143, 163, 0.12);
+}
+.group-block + .group-block {
+  margin-top: 24rpx;
+}
+.table-row {
+  display: flex;
+  align-items: stretch;
   border-bottom: 1rpx solid var(--border);
 }
-.vaccine-item:last-child {
+.group-block .table-row:last-child {
   border-bottom: none;
 }
-.vaccine-row {
+.cell {
   display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 20rpx 12rpx;
+  font-size: 24rpx;
+  color: var(--text);
+  white-space: normal;
+  word-break: break-all;
+}
+.table-header .cell {
+  padding: 16rpx 12rpx;
+  background: #FFF1F3;
+  font-size: 22rpx;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.table-header .col-check {
+  border-radius: 16rpx 0 0 16rpx;
+}
+.table-header .col-action {
+  border-radius: 0 16rpx 16rpx 0;
+}
+.col-check {
+  width: 72rpx;
+  justify-content: center;
+}
+.col-name {
+  width: 300rpx;
+  flex-direction: column;
   align-items: flex-start;
+}
+.col-month {
+  width: 140rpx;
+}
+.col-status {
+  width: 160rpx;
+}
+.col-date {
+  width: 200rpx;
+}
+.col-action {
+  width: 100rpx;
+  justify-content: center;
 }
 .check {
   width: 40rpx;
   height: 40rpx;
-  margin-top: 4rpx;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -286,29 +371,23 @@ onShow(refresh)
   background: var(--primary-strong);
   border-color: var(--primary-strong);
 }
-.vaccine-info {
-  flex: 1;
-  margin-left: 16rpx;
-}
 .vaccine-name {
-  font-size: 28rpx;
-  line-height: 1.5;
+  font-size: 26rpx;
+  line-height: 1.4;
   color: var(--text);
 }
-.vaccine-meta {
-  margin-top: 6rpx;
-  font-size: 24rpx;
-  color: var(--text-secondary);
+.vaccine-name .mini-tag {
+  display: inline-block;
+  margin-left: 6rpx;
+  vertical-align: middle;
 }
 .overdue-note {
   margin-top: 6rpx;
-  font-size: 22rpx;
+  font-size: 20rpx;
   color: var(--danger);
 }
 .status {
-  margin-left: 12rpx;
   font-size: 22rpx;
-  white-space: nowrap;
 }
 .status.done {
   color: var(--success);
@@ -322,27 +401,20 @@ onShow(refresh)
 .status.pending {
   color: var(--text-secondary);
 }
-.date-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 16rpx;
-  padding-left: 56rpx;
-}
-.date-label {
-  font-size: 24rpx;
-  color: var(--text-secondary);
-}
 .date-field {
-  padding: 8rpx 16rpx;
+  padding: 8rpx 12rpx;
   border: 1rpx solid var(--border);
   border-radius: 12rpx;
-  font-size: 24rpx;
+  font-size: 22rpx;
   color: var(--text);
+  white-space: nowrap;
+}
+.date-empty,
+.action-none {
+  font-size: 22rpx;
+  color: var(--text-secondary);
 }
 .custom-delete {
-  margin-top: 12rpx;
-  padding-left: 56rpx;
   font-size: 22rpx;
   color: var(--danger);
 }
