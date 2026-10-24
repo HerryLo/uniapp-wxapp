@@ -15,11 +15,11 @@
 
       <view class="switch-row">
         <text class="switch-label">去重时忽略大小写</text>
-        <switch :checked="ignoreCase" color="#4361EE" @change="ignoreCase = $event.detail.value" />
+        <switch :checked="ignoreCase" color="#E86F87" @change="ignoreCase = $event.detail.value" />
       </view>
       <view class="switch-row">
         <text class="switch-label">去重时忽略首尾空白</text>
-        <switch :checked="trimLines" color="#4361EE" @change="trimLines = $event.detail.value" />
+        <switch :checked="trimLines" color="#E86F87" @change="trimLines = $event.detail.value" />
       </view>
 
       <view class="chip-row">

@@ -1,15 +1,22 @@
 <template>
   <view class="tools-page">
-    <NavBar title="工具箱" show-tool-menu @open-tools="toolsOpen = true" />
-
     <view class="tools-body">
       <VatPanel v-show="active === 'vat'" />
       <UnitPanel v-show="active === 'unit'" />
       <TextPanel v-show="active === 'text'" />
       <RadixPanel v-show="active === 'radix'" />
 
-      <view class="about-link" @click="openAbout">关于与免责声明</view>
       <AdBanner />
+      <view class="about-link" @click="openAbout">关于与免责声明</view>
+    </view>
+
+    <view class="tools-fab" @click="toolsOpen = true">
+      <view class="grid-icon">
+        <view class="grid-cell"></view>
+        <view class="grid-cell"></view>
+        <view class="grid-cell"></view>
+        <view class="grid-cell"></view>
+      </view>
     </view>
 
     <view v-if="toolsOpen" class="sheet-mask" @click="toolsOpen = false">
@@ -37,14 +44,12 @@
 
 <script setup>
 import { ref } from 'vue'
-import { onLoad, onShow, onShareAppMessage } from '@dcloudio/uni-app'
-import NavBar from '../../components/NavBar.vue'
+import { onLoad, onShareAppMessage } from '@dcloudio/uni-app'
 import AdBanner from '../../components/AdBanner.vue'
 import VatPanel from '../../components/tools/VatPanel.vue'
 import UnitPanel from '../../components/tools/UnitPanel.vue'
 import TextPanel from '../../components/tools/TextPanel.vue'
 import RadixPanel from '../../components/tools/RadixPanel.vue'
-import { loadTodos, activeCount, updateTabBadge } from '../../utils/todo.js'
 
 const tools = [
   { key: 'vat', name: '增值税', desc: '含税 / 不含税' },
@@ -62,12 +67,8 @@ onLoad((options) => {
   }
 })
 
-onShow(() => {
-  updateTabBadge(activeCount(loadTodos()))
-})
-
 onShareAppMessage(() => ({
-  title: '计算工具箱',
+  title: '宝宝记录与工具箱',
   path: `/pages/tools/index?tool=${active.value}`,
 }))
 
@@ -83,7 +84,38 @@ function openAbout() {
 
 <style>
 .tools-page {
-  padding-bottom: 48rpx;
+  padding: 24rpx 0 48rpx;
+}
+
+.tools-fab {
+  position: fixed;
+  right: 32rpx;
+  bottom: calc(32rpx + env(safe-area-inset-bottom));
+  z-index: 150;
+  width: 96rpx;
+  height: 96rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--primary-strong);
+  box-shadow: 0 8rpx 24rpx rgba(232, 111, 135, 0.35);
+}
+
+.tools-fab .grid-icon {
+  width: 36rpx;
+  height: 36rpx;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: space-between;
+}
+
+.tools-fab .grid-cell {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 3rpx;
+  background: #FFFFFF;
 }
 
 .about-link {
@@ -154,7 +186,7 @@ function openAbout() {
   margin-bottom: 20rpx;
   padding: 24rpx;
   box-sizing: border-box;
-  background: #F9FAFB;
+  background: #FFF9F5;
   border: 2rpx solid transparent;
   border-radius: 24rpx;
 }

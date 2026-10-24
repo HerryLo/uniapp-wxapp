@@ -6,15 +6,18 @@ export default {
 
 <style>
 page {
-  --bg: #F7F8FA;
+  --bg: #FFF9F5;
   --surface: #FFFFFF;
-  --primary: #4361EE;
-  --primary-soft: #EEF2FF;
-  --text: #1F2937;
-  --text-secondary: #6B7280;
-  --border: #E5E7EB;
-  --danger: #EF4444;
-  --success: #10B981;
+  --primary: #FF8FA3;
+  --primary-strong: #E86F87;
+  --primary-soft: #FFE4E1;
+  --text: #4A4A4A;
+  --text-secondary: #888888;
+  --border: #FFE4E1;
+  --danger: #D9485F;
+  --success: #3E9B6B;
+  --accent: #B5E4CA;
+  --accent-warm: #FFD93D;
   background-color: var(--bg);
   color: var(--text);
   font-size: 28rpx;
@@ -49,9 +52,15 @@ picker {
 .card {
   margin-top: 24rpx;
   background: var(--surface);
-  border-radius: 24rpx;
+  border-radius: 40rpx;
   padding: 32rpx;
-  box-shadow: 0 8rpx 24rpx rgba(31, 41, 55, 0.06);
+  box-shadow: 0 8rpx 24rpx rgba(255, 143, 163, 0.12);
+}
+
+.card-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text);
 }
 
 .label {
@@ -67,7 +76,7 @@ picker {
   padding: 0 20rpx;
   background: #FFFFFF;
   border: 1rpx solid var(--border);
-  border-radius: 16rpx;
+  border-radius: 24rpx;
   font-size: 30rpx;
   color: var(--text);
 }
@@ -78,7 +87,7 @@ picker {
   padding: 20rpx;
   background: #FFFFFF;
   border: 1rpx solid var(--border);
-  border-radius: 16rpx;
+  border-radius: 24rpx;
   font-size: 30rpx;
   line-height: 1.6;
   color: var(--text);
@@ -92,7 +101,7 @@ picker {
   padding: 0 20rpx;
   background: #FFFFFF;
   border: 1rpx solid var(--border);
-  border-radius: 16rpx;
+  border-radius: 24rpx;
   font-size: 30rpx;
 }
 
@@ -113,14 +122,14 @@ picker {
   margin-bottom: 16rpx;
   padding: 10rpx 24rpx;
   border-radius: 999rpx;
-  background: #F3F4F6;
+  background: #FFF1F3;
   color: var(--text-secondary);
   font-size: 28rpx;
 }
 
 .chip.active {
   background: var(--primary-soft);
-  color: var(--primary);
+  color: var(--primary-strong);
   font-weight: 600;
 }
 
@@ -136,19 +145,19 @@ picker {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 16rpx;
+  border-radius: 24rpx;
   font-size: 30rpx;
 }
 
 .btn-primary {
-  background: var(--primary);
+  background: var(--primary-strong);
   color: #FFFFFF;
 }
 
 .btn-ghost {
   background: #FFFFFF;
-  border: 1rpx solid var(--primary);
-  color: var(--primary);
+  border: 1rpx solid var(--primary-strong);
+  color: var(--primary-strong);
 }
 
 .btn:active {
@@ -158,7 +167,7 @@ picker {
 .result-box {
   margin-top: 24rpx;
   padding: 24rpx;
-  background: #F9FAFB;
+  background: #FFF9F5;
   border-radius: 16rpx;
 }
 
@@ -232,6 +241,6 @@ picker {
 .copy-link {
   margin-left: 16rpx;
   font-size: 24rpx;
-  color: var(--primary);
+  color: var(--primary-strong);
 }
 </style>

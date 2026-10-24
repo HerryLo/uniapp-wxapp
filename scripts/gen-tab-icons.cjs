@@ -4,8 +4,8 @@ const zlib = require('zlib')
 
 const SIZE = 81
 const STROKE = 5
-const NORMAL = [107, 114, 128]
-const ACTIVE = [67, 97, 238]
+const NORMAL = [136, 136, 136]
+const ACTIVE = [255, 143, 163]
 
 const CRC_TABLE = (() => {
   const table = []
@@ -63,18 +63,6 @@ function roundedRectDistance(px, py, cx, cy, size, radius) {
   return Math.hypot(Math.max(qx, 0), Math.max(qy, 0)) + Math.min(Math.max(qx, qy), 0) - radius
 }
 
-function circleDistance(px, py, cx, cy, radius) {
-  return Math.hypot(px - cx, py - cy) - radius
-}
-
-function segmentDistance(px, py, x1, y1, x2, y2) {
-  const dx = x2 - x1
-  const dy = y2 - y1
-  const lengthSq = dx * dx + dy * dy
-  const t = lengthSq === 0 ? 0 : Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / lengthSq))
-  return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy))
-}
-
 function strokeCoverage(distance) {
   return Math.max(0, Math.min(1, 0.5 + (STROKE / 2 - distance)))
 }
@@ -88,13 +76,20 @@ function toolsCoverage(x, y) {
   return best
 }
 
-function todoCoverage(x, y) {
-  const ring = strokeCoverage(Math.abs(circleDistance(x, y, 40.5, 40.5, 25)))
-  const check = Math.max(
-    strokeCoverage(segmentDistance(x, y, 28, 42, 37, 51)),
-    strokeCoverage(segmentDistance(x, y, 37, 51, 55, 32)),
-  )
-  return Math.max(ring, check)
+function heartCoverage(x, y) {
+  const samples = 4
+  let hit = 0
+  for (let sy = 0; sy < samples; sy++) {
+    for (let sx = 0; sx < samples; sx++) {
+      const px = x - 0.5 + (sx + 0.5) / samples
+      const py = y - 0.5 + (sy + 0.5) / samples
+      const nx = (px / SIZE) * 2.4 - 1.2
+      const ny = 1.2 - (py / SIZE) * 2.4
+      const t = nx * nx + ny * ny - 1
+      if (t * t * t - nx * nx * ny * ny * ny <= 0) hit += 1
+    }
+  }
+  return hit / (samples * samples)
 }
 
 function paint(coverageFn, color) {
@@ -117,8 +112,8 @@ const outDir = path.join(__dirname, '..', 'src', 'static')
 const outputs = [
   ['tab-tools.png', paint(toolsCoverage, NORMAL)],
   ['tab-tools-active.png', paint(toolsCoverage, ACTIVE)],
-  ['tab-todo.png', paint(todoCoverage, NORMAL)],
-  ['tab-todo-active.png', paint(todoCoverage, ACTIVE)],
+  ['tab-baby.png', paint(heartCoverage, NORMAL)],
+  ['tab-baby-active.png', paint(heartCoverage, ACTIVE)],
 ]
 
 for (const [name, rgba] of outputs) {

@@ -3,15 +3,13 @@
     {
       "path": "pages/tools/index",
       "style": {
-        "navigationBarTitleText": "工具箱",
-        "navigationStyle": "custom"
+        "navigationBarTitleText": "工具箱"
       }
     },
     {
-      "path": "pages/todo/index",
+      "path": "pages/baby/index",
       "style": {
-        "navigationBarTitleText": "待办",
-        "navigationStyle": "custom"
+        "navigationBarTitleText": "宝宝记录"
       }
     },
     {
@@ -21,15 +19,52 @@
       }
     }
   ],
+  "subPackages": [
+    {
+      "root": "package-baby",
+      "pages": [
+        {
+          "path": "records/index",
+          "style": {
+            "navigationBarTitleText": "日常记录"
+          }
+        },
+        {
+          "path": "growth/index",
+          "style": {
+            "navigationBarTitleText": "生长曲线"
+          }
+        },
+        {
+          "path": "health/index",
+          "style": {
+            "navigationBarTitleText": "疫苗参考"
+          }
+        },
+        {
+          "path": "journal/index",
+          "style": {
+            "navigationBarTitleText": "成长手记"
+          }
+        },
+        {
+          "path": "settings/index",
+          "style": {
+            "navigationBarTitleText": "数据与设置"
+          }
+        }
+      ]
+    }
+  ],
   "globalStyle": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "工具箱",
-    "navigationBarBackgroundColor": "#F7F8FA",
-    "backgroundColor": "#F7F8FA"
+    "navigationBarTitleText": "宝宝记录与工具箱",
+    "navigationBarBackgroundColor": "#FFF9F5",
+    "backgroundColor": "#FFF9F5"
   },
   "tabBar": {
-    "color": "#6B7280",
-    "selectedColor": "#4361EE",
+    "color": "#888888",
+    "selectedColor": "#FF8FA3",
     "borderStyle": "white",
     "backgroundColor": "#FFFFFF",
     "list": [
@@ -40,10 +75,10 @@
         "text": "工具"
       },
       {
-        "pagePath": "pages/todo/index",
-        "iconPath": "static/tab-todo.png",
-        "selectedIconPath": "static/tab-todo-active.png",
-        "text": "待办"
+        "pagePath": "pages/baby/index",
+        "iconPath": "static/tab-baby.png",
+        "selectedIconPath": "static/tab-baby-active.png",
+        "text": "宝宝"
       }
     ]
   }
