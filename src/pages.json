@@ -10,7 +10,8 @@
     {
       "path": "pages/todo/index",
       "style": {
-        "navigationBarTitleText": "待办"
+        "navigationBarTitleText": "待办",
+        "navigationStyle": "custom"
       }
     },
     {

@@ -7,11 +7,10 @@
 - 增值税计算：含税/不含税双向换算，支持常用税率与自定义税率
 - 单位换算：长度、重量、温度、存储、面积
 - 文本处理：按行去重、大小写转换
-- 编码工具：Base64、URL 编解码
 - 进制转换：2–36 进制，支持负数与超大整数
-- 时间戳转换：时间戳与日期时间双向转换
-- JSON 格式化：格式化、压缩、校验
 - 待办清单：本地存储、筛选排序、tab 徽标、系统日历提醒（仅微信小程序）
+
+工具页使用自定义导航栏，右上角入口打开「全部工具」抽屉，默认展示增值税。
 
 ## 运行
 
@@ -39,8 +38,10 @@ yarn build:h5
 
 ## 目录结构
 
-- `src/pages/tools/index.vue`：工具页与标签切换
+- `src/pages/tools/index.vue`：工具页与「全部工具」抽屉
 - `src/pages/todo/index.vue`：待办清单
+- `src/components/NavBar.vue`：工具页/待办页共用的自定义导航栏
+- `src/components/AdBanner.vue`：微信小程序广告位
 - `src/components/tools/*Panel.vue`：各工具面板
 - `src/utils/*.js`：纯函数计算逻辑与本地存储
 - `tests/*.test.js`：Vitest 单元测试

@@ -34,14 +34,14 @@ picker {
 }
 
 .panel-title {
-  font-size: 30rpx;
+  font-size: 34rpx;
   font-weight: 600;
   color: var(--text);
 }
 
 .panel-desc {
   margin-top: 8rpx;
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: var(--text-secondary);
   line-height: 1.6;
 }
@@ -57,7 +57,7 @@ picker {
 .label {
   margin-top: 24rpx;
   margin-bottom: 12rpx;
-  font-size: 26rpx;
+  font-size: 28rpx;
   color: var(--text-secondary);
 }
 
@@ -68,7 +68,7 @@ picker {
   background: #FFFFFF;
   border: 1rpx solid var(--border);
   border-radius: 16rpx;
-  font-size: 28rpx;
+  font-size: 30rpx;
   color: var(--text);
 }
 
@@ -79,7 +79,7 @@ picker {
   background: #FFFFFF;
   border: 1rpx solid var(--border);
   border-radius: 16rpx;
-  font-size: 28rpx;
+  font-size: 30rpx;
   line-height: 1.6;
   color: var(--text);
 }
@@ -93,12 +93,12 @@ picker {
   background: #FFFFFF;
   border: 1rpx solid var(--border);
   border-radius: 16rpx;
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 
 .picker-arrow {
   color: var(--text-secondary);
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 
 .chip-row {
@@ -115,7 +115,7 @@ picker {
   border-radius: 999rpx;
   background: #F3F4F6;
   color: var(--text-secondary);
-  font-size: 26rpx;
+  font-size: 28rpx;
 }
 
 .chip.active {
@@ -137,7 +137,7 @@ picker {
   align-items: center;
   justify-content: center;
   border-radius: 16rpx;
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 
 .btn-primary {
@@ -170,13 +170,13 @@ picker {
 }
 
 .result-label {
-  font-size: 26rpx;
+  font-size: 28rpx;
   color: var(--text-secondary);
 }
 
 .result-value {
   font-family: "SF Mono", Menlo, Consolas, monospace;
-  font-size: 30rpx;
+  font-size: 32rpx;
   font-weight: 600;
   color: var(--text);
   word-break: break-all;
@@ -184,19 +184,19 @@ picker {
 
 .error {
   margin-top: 20rpx;
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: var(--danger);
 }
 
 .empty-tip {
   margin-top: 24rpx;
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: var(--text-secondary);
 }
 
 .disclaimer {
   margin-top: 24rpx;
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.6;
   color: var(--text-secondary);
 }
@@ -204,7 +204,7 @@ picker {
 .stats {
   display: flex;
   margin-top: 16rpx;
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: var(--text-secondary);
 }
 
@@ -220,7 +220,7 @@ picker {
 }
 
 .switch-label {
-  font-size: 26rpx;
+  font-size: 28rpx;
   color: var(--text);
 }
 
@@ -231,7 +231,7 @@ picker {
 
 .copy-link {
   margin-left: 16rpx;
-  font-size: 22rpx;
+  font-size: 24rpx;
   color: var(--primary);
 }
 </style>

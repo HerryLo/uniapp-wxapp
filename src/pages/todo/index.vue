@@ -1,49 +1,55 @@
 <template>
   <view class="todo-page">
-    <view class="card add-card">
-      <view class="add-row">
-        <input
-          class="input"
-          v-model="newTitle"
-          maxlength="60"
-          confirm-type="done"
-          placeholder="添加待办..."
-          @confirm="add"
-        />
-        <view class="add-btn" @click="add">添加</view>
+    <NavBar title="待办" />
+
+    <view class="todo-body">
+      <view class="card add-card">
+        <view class="add-row">
+          <input
+            class="input"
+            v-model="newTitle"
+            maxlength="60"
+            confirm-type="done"
+            placeholder="添加待办..."
+            @confirm="add"
+          />
+          <view class="add-btn" @click="add">添加</view>
+        </view>
       </view>
-    </view>
 
-    <view class="chip-row filters">
-      <view
-        v-for="item in filters"
-        :key="item.key"
-        class="chip"
-        :class="{ active: filter === item.key }"
-        @click="filter = item.key"
-      >{{ item.label }}（{{ counts[item.key] }}）</view>
-    </view>
+      <view class="chip-row filters">
+        <view
+          v-for="item in filters"
+          :key="item.key"
+          class="chip"
+          :class="{ active: filter === item.key }"
+          @click="filter = item.key"
+        >{{ item.label }}（{{ counts[item.key] }}）</view>
+      </view>
 
-    <view v-if="!visibleTodos.length" class="empty-state">暂无待办</view>
+      <view v-if="!visibleTodos.length" class="empty-state">暂无待办</view>
 
-    <TodoItem
-      v-for="item in visibleTodos"
-      :key="item.id"
-      :todo="item"
-      :editing="editingId === item.id"
-      :now="now"
-      @toggle="toggle"
-      @edit="startEdit"
-      @save="saveEdit"
-      @cancel="editingId = ''"
-      @more="showMore"
-    />
+      <TodoItem
+        v-for="item in visibleTodos"
+        :key="item.id"
+        :todo="item"
+        :editing="editingId === item.id"
+        :now="now"
+        @toggle="toggle"
+        @edit="startEdit"
+        @save="saveEdit"
+        @cancel="editingId = ''"
+        @more="showMore"
+      />
 
-    <view class="note">
-      <view>日历事件写入后无法由小程序删除或更新，修改或删除待办不会同步系统日历，旧事件需手动删除。</view>
-      <view>提醒依赖用户授权系统日历，请到系统设置中开启日历权限。</view>
-      <view>H5 端不支持日历提醒。</view>
-      <view>数据仅保存在本机，清理小程序缓存或卸载后会丢失。</view>
+      <view class="note">
+        <view>日历事件写入后无法由小程序删除或更新，修改或删除待办不会同步系统日历，旧事件需手动删除。</view>
+        <view>提醒依赖用户授权系统日历，请到系统设置中开启日历权限。</view>
+        <view>H5 端不支持日历提醒。</view>
+        <view>数据仅保存在本机，清理小程序缓存或卸载后会丢失。</view>
+      </view>
+
+      <AdBanner />
     </view>
   </view>
 </template>
@@ -51,6 +57,8 @@
 <script setup>
 import { ref, computed, onUnmounted } from 'vue'
 import { onHide, onShow } from '@dcloudio/uni-app'
+import NavBar from '../../components/NavBar.vue'
+import AdBanner from '../../components/AdBanner.vue'
 import TodoItem from '../../components/tools/TodoItem.vue'
 import {
   createTodo,
@@ -182,7 +190,7 @@ onUnmounted(stopClock)
 </script>
 
 <style scoped>
-.todo-page {
+.todo-body {
   padding: 32rpx 32rpx 64rpx;
 }
 
@@ -209,7 +217,7 @@ onUnmounted(stopClock)
   border-radius: 16rpx;
   background: var(--primary);
   color: #FFFFFF;
-  font-size: 28rpx;
+  font-size: 30rpx;
 }
 
 .filters {
@@ -219,13 +227,13 @@ onUnmounted(stopClock)
 .empty-state {
   margin-top: 96rpx;
   text-align: center;
-  font-size: 26rpx;
+  font-size: 28rpx;
   color: var(--text-secondary);
 }
 
 .note {
   margin-top: 48rpx;
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 1.8;
   color: var(--text-secondary);
 }

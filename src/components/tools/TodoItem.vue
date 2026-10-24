@@ -149,7 +149,7 @@ function save() {
 
 .check-mark {
   color: #FFFFFF;
-  font-size: 24rpx;
+  font-size: 26rpx;
   line-height: 1;
 }
 
@@ -159,7 +159,7 @@ function save() {
 }
 
 .todo-title {
-  font-size: 28rpx;
+  font-size: 30rpx;
   color: var(--text);
   word-break: break-all;
 }
@@ -171,7 +171,7 @@ function save() {
 
 .todo-due {
   margin-top: 8rpx;
-  font-size: 22rpx;
+  font-size: 24rpx;
   color: var(--text-secondary);
 }
 
@@ -197,7 +197,7 @@ function save() {
 
 .clear-due {
   margin-top: 12rpx;
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: var(--primary);
 }
 </style>

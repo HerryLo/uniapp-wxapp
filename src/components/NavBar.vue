@@ -38,8 +38,10 @@ const metrics = (() => {
   statusBarHeight = info.statusBarHeight || 0
   try {
     const menu = wx.getMenuButtonBoundingClientRect()
-    navBarHeight = (menu.top - statusBarHeight) * 2 + menu.height
-    rightOffset = info.windowWidth - menu.left + 8
+    if (menu && menu.height > 0 && menu.top >= statusBarHeight) {
+      navBarHeight = (menu.top - statusBarHeight) * 2 + menu.height
+      rightOffset = info.windowWidth - menu.left + 8
+    }
   } catch (e) {
     navBarHeight = 44
     rightOffset = 16

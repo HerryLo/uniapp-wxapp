@@ -8,9 +8,8 @@
 
     <view class="card">
       <view class="section-title">功能</view>
-      <view class="text">增值税计算 · 单位换算 · 文本处理</view>
-      <view class="text">编码工具 · 进制转换 · 时间戳转换</view>
-      <view class="text">JSON 格式化 · 待办清单</view>
+      <view class="text">增值税计算 · 单位换算 · 文本处理 · 进制转换</view>
+      <view class="text">待办清单</view>
     </view>
 
     <view class="card">
@@ -62,19 +61,19 @@ function copyRepo() {
 
 .version {
   margin-top: 8rpx;
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: var(--text-secondary);
 }
 
 .section-title {
   margin-bottom: 12rpx;
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
   color: var(--text);
 }
 
 .text {
-  font-size: 26rpx;
+  font-size: 28rpx;
   line-height: 1.8;
   color: var(--text-secondary);
 }
