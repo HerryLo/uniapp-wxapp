@@ -2,6 +2,8 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import {
   addRecord,
   loadDay,
+  loadRecentMilkSummary,
+  milkChartPoints,
   removeRecord,
   summarizeDay,
   sortRecords,
@@ -75,5 +77,60 @@ describe('baby records', () => {
     expect(
       addRecord('milk', { time: '2026-10-24 08:00', type: '母乳', amount: '' })
     ).toEqual({ ok: false, error: '保存失败' })
+  })
+
+  it('summarizes the recent seven days across month boundaries', () => {
+    addRecord('milk', { time: '2026-09-28 08:00', type: '配方奶', amount: '100' }, 1)
+    addRecord('milk', { time: '2026-09-28 12:00', type: '母乳', amount: '' }, 2)
+    addRecord('milk', { time: '2026-10-01 09:00', type: '配方奶', amount: '120' }, 3)
+
+    const summary = loadRecentMilkSummary(7, new Date(2026, 9, 1))
+    expect(summary).toHaveLength(7)
+    expect(summary.map((item) => item.date)).toEqual([
+      '2026-09-25',
+      '2026-09-26',
+      '2026-09-27',
+      '2026-09-28',
+      '2026-09-29',
+      '2026-09-30',
+      '2026-10-01',
+    ])
+    expect(summary.find((item) => item.date === '2026-09-28')).toMatchObject({
+      milkCount: 2,
+      milkAmount: 100,
+      hasMilkAmount: true,
+    })
+    expect(summary.find((item) => item.date === '2026-10-01')).toMatchObject({
+      milkCount: 1,
+      milkAmount: 120,
+      hasMilkAmount: true,
+    })
+    expect(milkChartPoints(summary)).toEqual([
+      { date: '2026-09-28', value: 100 },
+      { date: '2026-10-01', value: 120 },
+    ])
+  })
+
+  it('marks days without recorded amounts and filters chart points', () => {
+    addRecord('milk', { time: '2026-10-01 08:00', type: '母乳', amount: '' }, 1)
+
+    const summary = loadRecentMilkSummary(7, new Date(2026, 9, 1))
+    expect(summary.find((item) => item.date === '2026-10-01')).toMatchObject({
+      milkCount: 1,
+      milkAmount: 0,
+      hasMilkAmount: false,
+    })
+    expect(milkChartPoints(summary)).toEqual([])
+  })
+
+  it('returns an empty seven-day window when there is no data', () => {
+    const summary = loadRecentMilkSummary(7, new Date(2026, 9, 1))
+    expect(summary).toHaveLength(7)
+    expect(
+      summary.every(
+        (item) => item.milkCount === 0 && item.milkAmount === 0 && !item.hasMilkAmount
+      )
+    ).toBe(true)
+    expect(milkChartPoints(summary)).toEqual([])
   })
 })

@@ -1,6 +1,6 @@
 import { readStorage, writeStorage } from '../storage.js'
 import { recordsKey } from './keys.js'
-import { durationMinutes, monthKey, parseLocalDateTime } from './date.js'
+import { durationMinutes, formatDate, monthKey, parseLocalDateTime } from './date.js'
 
 const KINDS = ['milk', 'sleep', 'diaper']
 const MILK_TYPES = ['母乳', '配方奶', '混合']
@@ -167,4 +167,31 @@ export function sortRecords(list, kind) {
   return [...list].sort((a, b) =>
     String(b[field] || '').localeCompare(String(a[field] || ''))
   )
+}
+
+export function loadRecentMilkSummary(days = 7, now = new Date()) {
+  const count = Math.max(1, Math.floor(Number(days) || 0))
+  const result = []
+  for (let offset = count - 1; offset >= 0; offset -= 1) {
+    const date = new Date(now.getFullYear(), now.getMonth(), now.getDate() - offset)
+    const dateStr = formatDate(date)
+    const day = loadDay(dateStr)
+    const summary = summarizeDay(day)
+    result.push({
+      date: dateStr,
+      milkCount: summary.milkCount,
+      milkAmount: summary.milkAmount,
+      hasMilkAmount: day.milk.some(
+        (item) => typeof item.amount === 'number' && Number.isFinite(item.amount)
+      ),
+    })
+  }
+  return result
+}
+
+export function milkChartPoints(summary) {
+  if (!Array.isArray(summary)) return []
+  return summary
+    .filter((item) => item && item.hasMilkAmount)
+    .map((item) => ({ date: item.date, value: item.milkAmount }))
 }
