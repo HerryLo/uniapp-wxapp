@@ -1,0 +1,327 @@
+<template>
+  <view class="baby-page">
+    <view class="profile-card">
+      <view class="avatar">👶</view>
+      <view class="profile-info">
+        <view class="profile-name">{{ profile.name }}</view>
+        <view v-if="age" class="profile-age">
+          {{ age.text }} · {{ profile.gender === 'girl' ? '女宝' : '男宝' }}
+        </view>
+        <view v-else class="profile-age">还没有填写出生日期</view>
+      </view>
+      <view class="profile-edit" @click="goSettings">{{ age ? '编辑' : '去设置' }}</view>
+    </view>
+
+    <view class="quick-grid">
+      <view
+        v-for="item in quickActions"
+        :key="item.kind"
+        class="quick-item"
+        @click="goRecords(item.kind)"
+      >
+        <text class="quick-icon">{{ item.icon }}</text>
+        <text class="quick-label">{{ item.label }}</text>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">今日记录</view>
+      <view class="today-grid">
+        <view class="today-cell">
+          <text class="today-value">{{ summary.milkCount }}</text>
+          <text class="today-label">喝奶次数</text>
+        </view>
+        <view class="today-cell">
+          <text class="today-value">{{ (summary.sleepMinutes / 60).toFixed(1) }}</text>
+          <text class="today-label">睡眠小时</text>
+        </view>
+        <view class="today-cell">
+          <text class="today-value">{{ summary.diaperCount }}</text>
+          <text class="today-label">排便次数</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">下一条疫苗参考</view>
+      <view v-if="nextVaccineItem" class="vaccine-preview">
+        <view>
+          <view class="preview-name">{{ nextVaccineItem.name }}</view>
+          <view class="preview-meta">
+            参考月龄：{{ formatMonthAge(nextVaccineItem.month) }}
+          </view>
+        </view>
+        <text class="status" :class="nextStatus.key">{{ nextStatus.label }}</text>
+      </view>
+      <view v-else-if="!age" class="empty-tip">完善出生日期后显示参考疫苗</view>
+      <view v-else class="empty-tip">暂无待接种参考</view>
+      <view class="card-link" @click="goPage('/package-baby/health/index')">
+        查看疫苗参考 ›
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">最近生长</view>
+      <view v-if="latest" class="growth-preview">
+        <view>
+          <view class="preview-name">{{ latest.date }}</view>
+          <view class="preview-meta">{{ latest.height }} cm · {{ latest.weight }} kg</view>
+        </view>
+        <text class="card-link inline" @click="goPage('/package-baby/growth/index')">
+          查看曲线 ›
+        </text>
+      </view>
+      <view v-else class="empty-tip">还没有身高体重记录</view>
+    </view>
+
+    <view class="feature-list">
+      <view
+        v-for="item in features"
+        :key="item.url"
+        class="feature-item"
+        @click="goPage(item.url)"
+      >
+        <view class="feature-body">
+          <view class="feature-title">{{ item.title }}</view>
+          <view class="feature-desc">{{ item.desc }}</view>
+        </view>
+        <text class="feature-arrow">›</text>
+      </view>
+    </view>
+
+    <Disclaimer />
+    <AdBanner />
+  </view>
+</template>
+
+<script setup>
+import { computed, ref } from 'vue'
+import { onShareAppMessage, onShow } from '@dcloudio/uni-app'
+import AdBanner from '../../components/AdBanner.vue'
+import Disclaimer from '../../components/baby/Disclaimer.vue'
+import { ageInfo, formatMonthAge, todayKey } from '../../utils/baby/date.js'
+import { latestGrowth, loadGrowth } from '../../utils/baby/growth.js'
+import { loadProfile } from '../../utils/baby/profile.js'
+import { loadDay, summarizeDay } from '../../utils/baby/records.js'
+import { loadVaccines, nextVaccine, vaccineStatus } from '../../utils/baby/vaccines.js'
+
+const quickActions = [
+  { kind: 'milk', icon: '🍼', label: '喝奶' },
+  { kind: 'sleep', icon: '😴', label: '睡眠' },
+  { kind: 'diaper', icon: '💧', label: '排便' },
+]
+
+const features = [
+  { title: '生长曲线', desc: '记录身高体重', url: '/package-baby/growth/index' },
+  { title: '疫苗参考', desc: '一类 / 二类参考清单', url: '/package-baby/health/index' },
+  { title: '成长手记', desc: '里程碑、心情与心得', url: '/package-baby/journal/index' },
+  { title: '数据与设置', desc: '资料、导出与恢复', url: '/package-baby/settings/index' },
+]
+
+const profile = ref(loadProfile())
+const today = ref(todayKey())
+const summary = ref(summarizeDay(loadDay(today.value)))
+const latest = ref(null)
+const nextVaccineItem = ref(null)
+
+const age = computed(() => ageInfo(profile.value.birthDate))
+const nextStatus = computed(() =>
+  nextVaccineItem.value
+    ? vaccineStatus(nextVaccineItem.value, age.value ? age.value.totalMonths : null)
+    : { key: 'pending', label: '' }
+)
+
+function refresh() {
+  profile.value = loadProfile()
+  today.value = todayKey()
+  summary.value = summarizeDay(loadDay(today.value))
+  latest.value = latestGrowth(loadGrowth())
+  nextVaccineItem.value = nextVaccine(
+    loadVaccines(),
+    age.value ? age.value.totalMonths : null
+  )
+}
+
+function goRecords(kind) {
+  uni.navigateTo({ url: `/package-baby/records/index?type=${kind}` })
+}
+
+function goPage(url) {
+  uni.navigateTo({ url })
+}
+
+function goSettings() {
+  uni.navigateTo({ url: '/package-baby/settings/index' })
+}
+
+onShow(refresh)
+
+onShareAppMessage(() => ({
+  title: '宝宝记录 · 本地优先',
+  path: '/pages/baby/index',
+}))
+</script>
+
+<style scoped>
+.baby-page {
+  padding: 24rpx 32rpx 64rpx;
+}
+.profile-card {
+  display: flex;
+  align-items: center;
+  padding: 32rpx;
+  background: linear-gradient(135deg, #FFE4E1, #FFB6C1);
+  border-radius: 40rpx;
+}
+.avatar {
+  width: 96rpx;
+  height: 96rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #FFFFFF;
+  font-size: 52rpx;
+}
+.profile-info {
+  flex: 1;
+  margin-left: 24rpx;
+}
+.profile-name {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: var(--text);
+}
+.profile-age {
+  margin-top: 8rpx;
+  font-size: 26rpx;
+  color: #7A5B60;
+}
+.profile-edit {
+  padding: 12rpx 24rpx;
+  border-radius: 999rpx;
+  background: #FFFFFF;
+  color: var(--primary-strong);
+  font-size: 24rpx;
+  white-space: nowrap;
+}
+.quick-grid {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24rpx;
+}
+.quick-item {
+  width: calc(33.33% - 12rpx);
+  padding: 28rpx 0;
+  background: var(--surface);
+  border-radius: 28rpx;
+  text-align: center;
+  box-shadow: 0 8rpx 24rpx rgba(255, 143, 163, 0.1);
+}
+.quick-icon {
+  display: block;
+  font-size: 44rpx;
+}
+.quick-label {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 26rpx;
+  color: var(--text);
+}
+.today-grid {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20rpx;
+}
+.today-cell {
+  width: 33%;
+  text-align: center;
+}
+.today-value {
+  display: block;
+  font-size: 40rpx;
+  font-weight: 700;
+  color: var(--primary-strong);
+}
+.today-label {
+  display: block;
+  margin-top: 6rpx;
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+.vaccine-preview,
+.growth-preview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20rpx;
+}
+.preview-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text);
+}
+.preview-meta {
+  margin-top: 6rpx;
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+.status {
+  margin-left: 16rpx;
+  font-size: 22rpx;
+  white-space: nowrap;
+}
+.status.done {
+  color: var(--success);
+}
+.status.due {
+  color: var(--primary-strong);
+}
+.status.overdue {
+  color: var(--danger);
+}
+.status.pending {
+  color: var(--text-secondary);
+}
+.card-link {
+  margin-top: 20rpx;
+  text-align: right;
+  font-size: 24rpx;
+  color: var(--primary-strong);
+}
+.card-link.inline {
+  margin-top: 0;
+  white-space: nowrap;
+}
+.feature-list {
+  margin-top: 24rpx;
+  background: var(--surface);
+  border-radius: 40rpx;
+  padding: 0 32rpx;
+  box-shadow: 0 8rpx 24rpx rgba(255, 143, 163, 0.12);
+}
+.feature-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28rpx 0;
+  border-bottom: 1rpx solid var(--border);
+}
+.feature-item:last-child {
+  border-bottom: none;
+}
+.feature-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text);
+}
+.feature-desc {
+  margin-top: 6rpx;
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+.feature-arrow {
+  font-size: 32rpx;
+  color: var(--text-secondary);
+}
+</style>
