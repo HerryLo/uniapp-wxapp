@@ -32,6 +32,7 @@
 <script setup>
 import { ref } from 'vue'
 import { formatJson, minifyJson, validateJson } from '../../utils/json.js'
+import { copyText } from '../../utils/clipboard.js'
 
 const LIMIT = 100000
 const input = ref('')
@@ -48,6 +49,7 @@ function run(action) {
     return
   }
   if (action === 'validate') {
+    result.value = ''
     const checked = validateJson(input.value)
     if (checked.error) error.value = checked.error
     else message.value = 'JSON 格式正确'
@@ -67,10 +69,7 @@ function copyResult() {
     uni.showToast({ title: '暂无可复制结果', icon: 'none' })
     return
   }
-  uni.setClipboardData({
-    data: result.value,
-    success: () => uni.showToast({ title: '已复制', icon: 'none' }),
-  })
+  copyText(result.value)
 }
 
 function clearAll() {

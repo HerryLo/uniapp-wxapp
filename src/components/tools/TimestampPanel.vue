@@ -95,6 +95,7 @@ import {
   formatDateValue,
   formatTimeValue,
 } from '../../utils/timestamp.js'
+import { copyText } from '../../utils/clipboard.js'
 
 const mode = ref('toDate')
 const unit = ref('s')
@@ -121,25 +122,11 @@ function fillNow() {
 }
 
 function copyValue(value) {
-  uni.setClipboardData({
-    data: String(value),
-    success: () => uni.showToast({ title: '已复制', icon: 'none' }),
-  })
+  copyText(value)
 }
 </script>
 
 <style scoped>
-.value-copy {
-  display: flex;
-  align-items: center;
-}
-
-.copy-link {
-  margin-left: 16rpx;
-  font-size: 22rpx;
-  color: var(--primary);
-}
-
 .result-row {
   align-items: flex-start;
 }

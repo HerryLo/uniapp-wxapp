@@ -11,6 +11,8 @@ import {
   updateTabBadge,
   formatDueLabel,
   isOverdue,
+  needsCalendarSync,
+  markCalendarSynced,
 } from '../src/utils/todo.js'
 
 const makeList = () => [
@@ -93,6 +95,7 @@ describe('todo storage and badge', () => {
         done: false,
         dueAt: null,
         remind: false,
+        calendarSyncedAt: null,
         createdAt: expect.any(Number),
         completedAt: null,
       },
@@ -117,6 +120,22 @@ describe('todo storage and badge', () => {
     expect(first[0].completedAt).toBe(null)
     expect(second[0].dueAt).toBe(null)
     expect(second[0].completedAt).toBe(null)
+  })
+
+  it('tracks calendar sync state to avoid duplicates', () => {
+    expect(needsCalendarSync(null, { remind: true, dueAt: 1000 })).toBe(true)
+    expect(needsCalendarSync({ calendarSyncedAt: null }, { remind: true, dueAt: 1000 })).toBe(true)
+    expect(needsCalendarSync({ calendarSyncedAt: 900 }, { remind: true, dueAt: 1000 })).toBe(false)
+    expect(needsCalendarSync(null, { remind: false, dueAt: 1000 })).toBe(false)
+    expect(needsCalendarSync(null, { remind: true, dueAt: null })).toBe(false)
+
+    store[TODOS_KEY] = JSON.stringify([{ id: 'a', title: 'a', calendarSyncedAt: 900 }])
+    expect(loadTodos()[0].calendarSyncedAt).toBe(900)
+
+    const marked = markCalendarSynced([createTodo('a', 1000, 1)], 'missing', 5000)
+    expect(marked[0].calendarSyncedAt).toBe(null)
+    const id = marked[0].id
+    expect(markCalendarSynced(marked, id, 5000)[0].calendarSyncedAt).toBe(5000)
   })
 
   it('updates the tab badge', () => {

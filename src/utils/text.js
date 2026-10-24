@@ -31,8 +31,12 @@ export function toTitleCaseText(text) {
 export function countText(text) {
   const s = String(text)
   if (!s) return { lines: 0, chars: 0 }
-  return {
-    lines: s.split(/\r?\n/).length,
-    chars: s.replace(/\r?\n/g, '').length,
+  let lines = 1
+  let chars = 0
+  for (let i = 0; i < s.length; i++) {
+    const code = s.charCodeAt(i)
+    if (code === 10) lines += 1
+    else if (code !== 13) chars += 1
   }
+  return { lines, chars }
 }

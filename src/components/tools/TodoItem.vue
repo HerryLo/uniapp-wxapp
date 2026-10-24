@@ -28,6 +28,7 @@
           </view>
         </picker>
       </view>
+      <view v-if="draftDate || draftTime" class="clear-due" @click="clearDue">清除截止时间</view>
       <view v-if="showRemind" class="switch-row">
         <text class="switch-label">日历提醒</text>
         <switch :checked="draftRemind" color="#4361EE" @change="draftRemind = $event.detail.value" />
@@ -50,6 +51,7 @@ import { canAddCalendar } from '../../utils/calendar.js'
 const props = defineProps({
   todo: { type: Object, required: true },
   editing: { type: Boolean, default: false },
+  now: { type: Number, default: () => Date.now() },
 })
 
 const emit = defineEmits(['toggle', 'edit', 'save', 'cancel', 'more'])
@@ -60,8 +62,8 @@ const draftDate = ref('')
 const draftTime = ref('')
 const draftRemind = ref(false)
 
-const dueLabel = computed(() => formatDueLabel(props.todo.dueAt))
-const overdue = computed(() => isOverdue(props.todo))
+const dueLabel = computed(() => formatDueLabel(props.todo.dueAt, props.now))
+const overdue = computed(() => isOverdue(props.todo, props.now))
 
 watch(
   () => props.editing,
@@ -80,6 +82,12 @@ watch(
   },
   { immediate: true },
 )
+
+function clearDue() {
+  draftDate.value = ''
+  draftTime.value = ''
+  draftRemind.value = false
+}
 
 function save() {
   const title = draftTitle.value.trim()
@@ -185,5 +193,11 @@ function save() {
 
 .edit-row picker {
   width: 48%;
+}
+
+.clear-due {
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: var(--primary);
 }
 </style>

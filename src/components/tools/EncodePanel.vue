@@ -33,6 +33,7 @@
 <script setup>
 import { ref } from 'vue'
 import { base64Encode, base64Decode, urlEncode, urlDecode } from '../../utils/encode.js'
+import { copyText } from '../../utils/clipboard.js'
 
 const mode = ref('base64')
 const input = ref('')
@@ -70,10 +71,7 @@ function copyResult() {
     uni.showToast({ title: '暂无可复制结果', icon: 'none' })
     return
   }
-  uni.setClipboardData({
-    data: result.value,
-    success: () => uni.showToast({ title: '已复制', icon: 'none' }),
-  })
+  copyText(result.value)
 }
 
 function clearAll() {

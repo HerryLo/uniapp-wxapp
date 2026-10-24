@@ -33,6 +33,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { convertRadix } from '../../utils/radix.js'
+import { copyText } from '../../utils/clipboard.js'
 
 const baseOptions = Array.from({ length: 35 }, (_, index) => String(index + 2))
 const input = ref('')
@@ -54,22 +55,6 @@ const rows = computed(() => {
 })
 
 function copyValue(value) {
-  uni.setClipboardData({
-    data: value,
-    success: () => uni.showToast({ title: '已复制', icon: 'none' }),
-  })
+  copyText(value)
 }
 </script>
-
-<style scoped>
-.value-copy {
-  display: flex;
-  align-items: center;
-}
-
-.copy-link {
-  margin-left: 16rpx;
-  font-size: 22rpx;
-  color: var(--primary);
-}
-</style>

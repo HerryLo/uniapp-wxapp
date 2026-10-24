@@ -26,13 +26,12 @@
 </template>
 
 <script setup>
+import { copyText } from '../../utils/clipboard.js'
+
 const repo = 'https://github.com/HerryLo/uniapp-wxapp'
 
 function copyRepo() {
-  uni.setClipboardData({
-    data: repo,
-    success: () => uni.showToast({ title: '已复制', icon: 'none' }),
-  })
+  copyText(repo)
 }
 </script>
 

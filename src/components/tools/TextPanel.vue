@@ -52,6 +52,7 @@ import {
   toTitleCaseText,
   countText,
 } from '../../utils/text.js'
+import { copyText } from '../../utils/clipboard.js'
 
 const LIMIT = 100000
 const input = ref('')
@@ -83,14 +84,23 @@ function copyResult() {
     uni.showToast({ title: '暂无可复制结果', icon: 'none' })
     return
   }
-  uni.setClipboardData({
-    data: result.value,
-    success: () => uni.showToast({ title: '已复制', icon: 'none' }),
-  })
+  copyText(result.value)
 }
 
 function useResult() {
   if (!result.value) return
+  if (truncated.value) {
+    uni.showModal({
+      title: '替换原文',
+      content: '原文超过 100,000 字符，替换将丢失超出部分，是否继续？',
+      success: (res) => {
+        if (!res.confirm) return
+        input.value = result.value
+        result.value = ''
+      },
+    })
+    return
+  }
   input.value = result.value
   result.value = ''
 }

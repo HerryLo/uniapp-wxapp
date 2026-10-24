@@ -28,7 +28,7 @@ yarn dev:h5
 yarn test
 ```
 
-微信小程序：使用微信开发者工具导入 `dist/dev/mp-weixin`。
+微信小程序：使用微信开发者工具导入 `dist/dev/mp-weixin`。发布前请先将 `src/manifest.json` 中的 appid 改为自己的小程序 appid。
 
 ## 构建
 

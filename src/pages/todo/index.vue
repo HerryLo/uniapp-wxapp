@@ -31,6 +31,7 @@
       :key="item.id"
       :todo="item"
       :editing="editingId === item.id"
+      :now="now"
       @toggle="toggle"
       @edit="startEdit"
       @save="saveEdit"
@@ -48,8 +49,8 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { onShow } from '@dcloudio/uni-app'
+import { ref, computed, onUnmounted } from 'vue'
+import { onHide, onShow } from '@dcloudio/uni-app'
 import TodoItem from '../../components/tools/TodoItem.vue'
 import {
   createTodo,
@@ -60,6 +61,8 @@ import {
   loadTodos,
   saveTodos,
   updateTabBadge,
+  needsCalendarSync,
+  markCalendarSynced,
 } from '../../utils/todo.js'
 import { addTodoToCalendar } from '../../utils/calendar.js'
 
@@ -73,6 +76,22 @@ const todos = ref(loadTodos())
 const newTitle = ref('')
 const filter = ref('all')
 const editingId = ref('')
+const now = ref(Date.now())
+let clockTimer = null
+
+function startClock() {
+  stopClock()
+  clockTimer = setInterval(() => {
+    now.value = Date.now()
+  }, 60000)
+}
+
+function stopClock() {
+  if (clockTimer) {
+    clearInterval(clockTimer)
+    clockTimer = null
+  }
+}
 
 const counts = computed(() => {
   const active = activeCount(todos.value)
@@ -108,20 +127,27 @@ function startEdit(id) {
 }
 
 function saveEdit(payload) {
+  const previous = todos.value.find((item) => item.id === payload.id)
+  const remind = payload.dueAt ? payload.remind : false
   todos.value = todos.value.map((item) => {
     if (item.id !== payload.id) return item
     return {
       ...item,
       title: payload.title,
       dueAt: payload.dueAt,
-      remind: payload.dueAt ? payload.remind : false,
+      remind,
+      calendarSyncedAt: remind ? item.calendarSyncedAt : null,
     }
   })
   editingId.value = ''
   persist()
-  if (payload.remind && payload.dueAt) {
+  if (needsCalendarSync(previous, { remind, dueAt: payload.dueAt })) {
     addTodoToCalendar({ title: payload.title, dueAt: payload.dueAt })
-      .then(() => uni.showToast({ title: '已添加到手机日历', icon: 'none' }))
+      .then(() => {
+        todos.value = markCalendarSynced(todos.value, payload.id)
+        persist()
+        uni.showToast({ title: '已添加到手机日历', icon: 'none' })
+      })
       .catch(() => uni.showToast({ title: '添加日历失败，请检查日历权限', icon: 'none' }))
   }
 }
@@ -146,8 +172,13 @@ function showMore(id) {
 }
 
 onShow(() => {
+  now.value = Date.now()
   updateTabBadge(activeCount(todos.value))
+  startClock()
 })
+
+onHide(stopClock)
+onUnmounted(stopClock)
 </script>
 
 <style scoped>

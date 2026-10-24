@@ -15,7 +15,12 @@
       </view>
 
       <view class="label">数值</view>
-      <input class="input" type="digit" v-model="value" placeholder="请输入数值" />
+      <input
+        class="input"
+        :type="groupKey === 'temperature' ? 'text' : 'digit'"
+        v-model="value"
+        placeholder="请输入数值"
+      />
 
       <view class="label">从</view>
       <picker mode="selector" :range="unitLabels" :value="fromIndex" @change="fromIndex = Number($event.detail.value)">

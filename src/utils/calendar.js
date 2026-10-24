@@ -1,6 +1,6 @@
 export function canAddCalendar() {
   // #ifdef MP-WEIXIN
-  return true
+  return typeof wx !== 'undefined' && typeof wx.addPhoneCalendar === 'function'
   // #endif
   // #ifndef MP-WEIXIN
   return false

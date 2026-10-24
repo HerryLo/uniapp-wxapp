@@ -204,6 +204,7 @@
   done: Boolean,
   dueAt: Number|null,  // 毫秒时间戳
   remind: Boolean,     // 仅微信小程序且 dueAt 非空时生效
+  calendarSyncedAt: Number|null, // 成功写入系统日历的时间，用于避免重复添加
   createdAt: Number,
   completedAt: Number|null
 }

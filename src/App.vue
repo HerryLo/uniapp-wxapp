@@ -223,4 +223,15 @@ picker {
   font-size: 26rpx;
   color: var(--text);
 }
+
+.value-copy {
+  display: flex;
+  align-items: center;
+}
+
+.copy-link {
+  margin-left: 16rpx;
+  font-size: 22rpx;
+  color: var(--primary);
+}
 </style>

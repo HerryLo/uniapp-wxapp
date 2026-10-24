@@ -59,7 +59,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import {
   RATE_PRESETS,
   validateAmount,
@@ -69,6 +69,7 @@ import {
   formatVatText,
 } from '../../utils/vat.js'
 import { readStorage, writeStorage } from '../../utils/storage.js'
+import { copyText } from '../../utils/clipboard.js'
 
 const PREFS_KEY = 'tools.vat.prefs'
 const amount = ref('')
@@ -108,14 +109,11 @@ function copyResult() {
     uni.showToast({ title: '暂无可复制结果', icon: 'none' })
     return
   }
-  uni.setClipboardData({
-    data: formatVatText({
-      net: state.value.net,
-      tax: state.value.tax,
-      gross: state.value.gross,
-    }),
-    success: () => uni.showToast({ title: '已复制', icon: 'none' }),
-  })
+  copyText(formatVatText({
+    net: state.value.net,
+    tax: state.value.tax,
+    gross: state.value.gross,
+  }))
 }
 
 function reset() {
@@ -131,12 +129,28 @@ onMounted(() => {
   if (typeof prefs.customRate === 'string') customRate.value = prefs.customRate
 })
 
-watch([mode, rate, rateMode, customRate], () => {
+let prefsTimer = null
+
+function persistPrefs() {
   writeStorage(PREFS_KEY, {
     mode: mode.value,
     rate: rate.value,
     rateMode: rateMode.value,
     customRate: customRate.value,
   })
+}
+
+watch([mode, rate, rateMode], persistPrefs)
+
+watch(customRate, () => {
+  if (prefsTimer) clearTimeout(prefsTimer)
+  prefsTimer = setTimeout(persistPrefs, 300)
+})
+
+onUnmounted(() => {
+  if (prefsTimer) {
+    clearTimeout(prefsTimer)
+    persistPrefs()
+  }
 })
 </script>

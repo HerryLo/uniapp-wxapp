@@ -9,6 +9,7 @@ export function createTodo(title, dueAt = null, now = Date.now()) {
     done: false,
     dueAt,
     remind: false,
+    calendarSyncedAt: null,
     createdAt: now,
     completedAt: null,
   }
@@ -56,9 +57,19 @@ export function loadTodos() {
       done: !!item.done,
       dueAt: Number.isFinite(item.dueAt) ? item.dueAt : null,
       remind: !!item.remind,
+      calendarSyncedAt: Number.isFinite(item.calendarSyncedAt) ? item.calendarSyncedAt : null,
       createdAt: Number.isFinite(item.createdAt) ? item.createdAt : 0,
       completedAt: Number.isFinite(item.completedAt) ? item.completedAt : null,
     }))
+}
+
+export function needsCalendarSync(previous, next) {
+  if (!next || !next.remind || next.dueAt == null) return false
+  return !(previous && previous.calendarSyncedAt)
+}
+
+export function markCalendarSynced(list, id, now = Date.now()) {
+  return list.map((todo) => (todo.id === id ? { ...todo, calendarSyncedAt: now } : todo))
 }
 
 export function saveTodos(list) {
