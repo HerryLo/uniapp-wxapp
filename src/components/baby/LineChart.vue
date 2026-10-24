@@ -13,6 +13,7 @@ const props = defineProps({
   unit: { type: String, default: '' },
   color: { type: String, default: '#E86F87' },
   height: { type: Number, default: 360 },
+  maxXLabels: { type: Number, default: 4 },
 })
 
 const instance = getCurrentInstance()
@@ -99,8 +100,9 @@ function draw() {
   ctx.font = '10px sans-serif'
   ctx.textAlign = 'right'
   ctx.textBaseline = 'middle'
-  for (let i = 0; i <= 3; i += 1) {
-    const value = min + ((max - min) * i) / 3
+  const yTickCount = Math.max(2, Math.min(4, Math.floor(innerH / 28)))
+  for (let i = 0; i < yTickCount; i += 1) {
+    const value = min + ((max - min) * i) / (yTickCount - 1)
     const y = yOf(value)
     ctx.beginPath()
     ctx.moveTo(pad.left, y)
@@ -132,16 +134,27 @@ function draw() {
   ctx.fillStyle = '#888888'
   ctx.font = '10px sans-serif'
   ctx.textBaseline = 'top'
-  ctx.textAlign = 'left'
-  ctx.fillText(points[0].date.slice(5), pad.left, height - pad.bottom + 8)
-  if (points.length > 1) {
-    ctx.textAlign = 'right'
-    ctx.fillText(
-      points[points.length - 1].date.slice(5),
-      width - pad.right,
-      height - pad.bottom + 8
-    )
+
+  const maxLabels = Math.max(1, Math.floor(Number(props.maxXLabels) || 4))
+  const fitByWidth = Math.max(1, Math.floor(innerW / 48))
+  const labelCount = Math.min(maxLabels, fitByWidth, points.length)
+  const labelIndices = []
+  if (labelCount === 1) {
+    labelIndices.push(points.length - 1)
+  } else {
+    for (let i = 0; i < labelCount; i += 1) {
+      labelIndices.push(Math.round((i * (points.length - 1)) / (labelCount - 1)))
+    }
   }
+  const uniqueIndices = [...new Set(labelIndices)]
+  uniqueIndices.forEach((index) => {
+    const x = xOf(times[index])
+    if (uniqueIndices.length === 1) ctx.textAlign = 'center'
+    else if (index === 0) ctx.textAlign = 'left'
+    else if (index === points.length - 1) ctx.textAlign = 'right'
+    else ctx.textAlign = 'center'
+    ctx.fillText(points[index].date.slice(5), x, height - pad.bottom + 8)
+  })
 }
 
 function initMpWeixin() {
