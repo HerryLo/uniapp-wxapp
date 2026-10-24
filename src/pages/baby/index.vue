@@ -89,6 +89,8 @@
       </view>
     </view>
 
+    <ShareButton class="share-entry" />
+
     <Disclaimer />
     <AdBanner />
   </view>
@@ -96,8 +98,14 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import { onShareAppMessage, onShow } from '@dcloudio/uni-app'
+import {
+  onLoad,
+  onShareAppMessage,
+  onShareTimeline,
+  onShow,
+} from '@dcloudio/uni-app'
 import AdBanner from '../../components/AdBanner.vue'
+import ShareButton from '../../components/ShareButton.vue'
 import Disclaimer from '../../components/baby/Disclaimer.vue'
 import { ageInfo, formatMonthAge, todayKey } from '../../utils/baby/date.js'
 import { latestGrowth, loadGrowth } from '../../utils/baby/growth.js'
@@ -154,17 +162,34 @@ function goSettings() {
   uni.navigateTo({ url: '/package-baby/settings/index' })
 }
 
+onLoad(() => {
+  // #ifdef MP-WEIXIN
+  uni.showShareMenu({ menus: ['shareAppMessage', 'shareTimeline'] })
+  // #endif
+})
+
 onShow(refresh)
 
 onShareAppMessage(() => ({
-  title: '宝宝记录 · 本地优先',
+  title: '垣计算 · 记录宝宝成长',
   path: '/pages/baby/index',
+  imageUrl: '/static/logo.png',
+}))
+
+onShareTimeline(() => ({
+  title: '垣计算 · 记录宝宝成长',
+  imageUrl: '/static/logo.png',
 }))
 </script>
 
 <style scoped>
 .baby-page {
   padding: 24rpx 32rpx 64rpx;
+}
+.share-entry {
+  display: flex;
+  width: 100%;
+  margin-top: 24rpx;
 }
 .profile-card {
   display: flex;
