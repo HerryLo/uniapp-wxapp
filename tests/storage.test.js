@@ -57,4 +57,15 @@ describe('storage', () => {
     expect(writeStorage('k', 1)).toBe(true)
     expect(removeStorage('k')).toBe(true)
   })
+
+  it('shows one warning when stored JSON is corrupt', async () => {
+    vi.resetModules()
+    const { readStorage: freshRead } = await import('../src/utils/storage.js')
+    const showToast = vi.fn()
+    uni.showToast = showToast
+    store.bad = '{oops'
+    expect(freshRead('bad', [])).toEqual([])
+    expect(freshRead('bad', [])).toEqual([])
+    expect(showToast).toHaveBeenCalledTimes(1)
+  })
 })
