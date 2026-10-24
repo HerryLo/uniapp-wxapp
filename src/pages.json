@@ -1,15 +1,15 @@
 {
   "pages": [
     {
-      "path": "pages/tools/index",
-      "style": {
-        "navigationBarTitleText": "工具箱"
-      }
-    },
-    {
       "path": "pages/baby/index",
       "style": {
         "navigationBarTitleText": "宝宝记录"
+      }
+    },
+    {
+      "path": "pages/tools/index",
+      "style": {
+        "navigationBarTitleText": "工具箱"
       }
     },
     {
@@ -69,16 +69,16 @@
     "backgroundColor": "#FFFFFF",
     "list": [
       {
-        "pagePath": "pages/tools/index",
-        "iconPath": "static/tab-tools.png",
-        "selectedIconPath": "static/tab-tools-active.png",
-        "text": "工具"
-      },
-      {
         "pagePath": "pages/baby/index",
         "iconPath": "static/tab-baby.png",
         "selectedIconPath": "static/tab-baby-active.png",
         "text": "宝宝"
+      },
+      {
+        "pagePath": "pages/tools/index",
+        "iconPath": "static/tab-tools.png",
+        "selectedIconPath": "static/tab-tools-active.png",
+        "text": "工具"
       }
     ]
   }
