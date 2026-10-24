@@ -7,7 +7,10 @@
       <RadixPanel v-show="active === 'radix'" />
 
       <AdBanner />
-      <view class="about-link" @click="openAbout">关于与免责声明</view>
+      <view class="footer-links">
+        <view class="about-link" @click="openAbout">关于与免责声明</view>
+        <ShareButton class="share-entry" />
+      </view>
     </view>
 
     <view class="tools-fab" @click="toolsOpen = true">
@@ -44,8 +47,9 @@
 
 <script setup>
 import { ref } from 'vue'
-import { onLoad, onShareAppMessage } from '@dcloudio/uni-app'
+import { onLoad, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
 import AdBanner from '../../components/AdBanner.vue'
+import ShareButton from '../../components/ShareButton.vue'
 import VatPanel from '../../components/tools/VatPanel.vue'
 import UnitPanel from '../../components/tools/UnitPanel.vue'
 import TextPanel from '../../components/tools/TextPanel.vue'
@@ -65,11 +69,21 @@ onLoad((options) => {
   if (options && tools.some((tool) => tool.key === options.tool)) {
     active.value = options.tool
   }
+  // #ifdef MP-WEIXIN
+  uni.showShareMenu({ menus: ['shareAppMessage', 'shareTimeline'] })
+  // #endif
 })
 
 onShareAppMessage(() => ({
-  title: '宝宝记录与工具箱',
+  title: '垣计算 · 日常计算工具箱',
   path: `/pages/tools/index?tool=${active.value}`,
+  imageUrl: '/static/logo.png',
+}))
+
+onShareTimeline(() => ({
+  title: '垣计算 · 日常计算工具箱',
+  query: `tool=${active.value}`,
+  imageUrl: '/static/logo.png',
 }))
 
 function pickTool(key) {
@@ -118,12 +132,19 @@ function openAbout() {
   background: #FFFFFF;
 }
 
-.about-link {
+.footer-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 48rpx 32rpx 0;
-  padding: 24rpx 0;
-  text-align: center;
+}
+.about-link {
+  padding: 12rpx 0;
   font-size: 26rpx;
   color: var(--text-secondary);
+}
+.share-entry {
+  margin-left: 24rpx;
 }
 
 .sheet-mask {
