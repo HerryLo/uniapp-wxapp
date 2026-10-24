@@ -12,7 +12,7 @@
 
 ## 执行进度（更新于 2026-10-23）
 
-**分支：** `feat/tool-miniapp`（已推送到 `origin`）
+**分支：** `feat/tool-miniapp`
 
 | 任务 | 状态 | 提交 |
 |---|---|---|
@@ -27,18 +27,29 @@
 | Task 8 编码工具逻辑 | ✅ 完成 | `721803b`、`21967e9` |
 | Task 9 待办数据逻辑 | ✅ 完成 | `c6aecfb`、`768baff` |
 | Task 10 生成 tab 图标 | ✅ 完成 | `54876ce` |
-| Task 11 应用外壳 | ✅ 完成（spec 评审通过；代码质量评审被打断，恢复后可补做） | `3a73cf5` |
-| Task 12–22 | ⬜ 未开始 | — |
-| 最终整体代码评审 | ⬜ 未开始 | — |
+| Task 11 应用外壳 | ✅ 完成 | `3a73cf5` |
+| Task 12 增值税面板 | ✅ 完成 | `6fcdc60` |
+| Task 13 单位换算面板 | ✅ 完成 | `cb9b65e` |
+| Task 14 文本处理面板 | ✅ 完成 | `70ff234` |
+| Task 15 编码面板 | ✅ 完成 | `c9e9d0c` |
+| Task 16 进制面板 | ✅ 完成 | `cf6e917` |
+| Task 17 时间戳面板 | ✅ 完成 | `92ee50f` |
+| Task 18 JSON 面板 | ✅ 完成 | `34c585a` |
+| Task 19 待办清单与日历提醒 | ✅ 完成 | `bbd543e` |
+| Task 20 关于页与博客遗留清理 | ✅ 完成 | `a652933` |
+| Task 21 README 与项目元信息 | ✅ 完成 | `b140e62` |
+| Task 22 全量验证 | 🔶 自动化验证通过；微信开发者工具/真机验收未执行 | — |
+| 最终整体代码评审 | ⬜ 待执行 | — |
 
-**当前测试基线：** 9 个测试文件 / 49 个用例全部通过（`yarn test`）。`yarn build:mp-weixin` 在 Task 11 提交后构建成功。
+**当前测试基线：** 9 个测试文件 / 49 个用例全部通过（`yarn test`）；`yarn build:mp-weixin`、`yarn build:h5` 均成功，产物中无 `yuque` / `uni-stat`。
 
-**下一步：** 从 Task 12（增值税面板）继续。每完成一个任务：实现 → 构建验证 → 提交 → spec 评审 → 代码质量评审 → 勾选本计划对应步骤。
+**H5 自动化验收（2026-10-23）：** 7 个工具深链、增值税计算、单位换算、Base64 编码、JSON 格式化、进制转换、时间戳、文本去重、待办新增/持久化/完成切换共 11 项全部通过。
+
+**尚未验证：** 微信开发者工具中的小程序界面、`wx.addPhoneCalendar` 真机授权与日历写入（本机未安装微信开发者工具）。
 
 **注意：**
-- 工作区有一个未提交的 `.gitignore` 改动（新增 `.claude/`），与计划无关，请勿提交。
 - 依赖安装需使用 `--registry https://registry.yarnpkg.com`（本机 `~/.npmrc` 私服返回 401）。
-- 微信开发者工具需真机验证日历提醒（Task 19 / 22）。
+- 本机无全局 yarn，可用 `npx yarn@1.22.22 <script>` 执行。
 
 ---
 
@@ -2164,7 +2175,7 @@ git commit -m "feat 新增工具页外壳与主题样式"
 **Files:**
 - Modify: `src/components/tools/VatPanel.vue`
 
-- [ ] **Step 1: 实现面板**
+- [x] **Step 1: 实现面板**
 
 `src/components/tools/VatPanel.vue`：
 
@@ -2313,7 +2324,7 @@ watch([mode, rate, rateMode, customRate], () => {
 </script>
 ```
 
-- [ ] **Step 2: 构建验证**
+- [x] **Step 2: 构建验证**
 
 ```bash
 yarn build:mp-weixin
@@ -2321,7 +2332,7 @@ yarn build:mp-weixin
 
 Expected: `DONE Build complete.`。
 
-- [ ] **Step 3: 提交**
+- [x] **Step 3: 提交**
 
 ```bash
 git add src/components/tools/VatPanel.vue
@@ -2335,7 +2346,7 @@ git commit -m "feat 完成增值税计算面板"
 **Files:**
 - Modify: `src/components/tools/UnitPanel.vue`
 
-- [ ] **Step 1: 实现面板**
+- [x] **Step 1: 实现面板**
 
 `src/components/tools/UnitPanel.vue`：
 
@@ -2428,7 +2439,7 @@ function swap() {
 </script>
 ```
 
-- [ ] **Step 2: 构建验证**
+- [x] **Step 2: 构建验证**
 
 ```bash
 yarn build:mp-weixin
@@ -2436,7 +2447,7 @@ yarn build:mp-weixin
 
 Expected: `DONE Build complete.`。
 
-- [ ] **Step 3: 提交**
+- [x] **Step 3: 提交**
 
 ```bash
 git add src/components/tools/UnitPanel.vue
@@ -2450,7 +2461,7 @@ git commit -m "feat 完成单位换算面板"
 **Files:**
 - Modify: `src/components/tools/TextPanel.vue`
 
-- [ ] **Step 1: 实现面板**
+- [x] **Step 1: 实现面板**
 
 `src/components/tools/TextPanel.vue`：
 
@@ -2559,7 +2570,7 @@ function clearAll() {
 </script>
 ```
 
-- [ ] **Step 2: 构建验证**
+- [x] **Step 2: 构建验证**
 
 ```bash
 yarn build:mp-weixin
@@ -2567,7 +2578,7 @@ yarn build:mp-weixin
 
 Expected: `DONE Build complete.`。
 
-- [ ] **Step 3: 提交**
+- [x] **Step 3: 提交**
 
 ```bash
 git add src/components/tools/TextPanel.vue
@@ -2581,7 +2592,7 @@ git commit -m "feat 完成文本处理面板"
 **Files:**
 - Modify: `src/components/tools/EncodePanel.vue`
 
-- [ ] **Step 1: 实现面板**
+- [x] **Step 1: 实现面板**
 
 `src/components/tools/EncodePanel.vue`：
 
@@ -2672,7 +2683,7 @@ function clearAll() {
 </script>
 ```
 
-- [ ] **Step 2: 构建验证**
+- [x] **Step 2: 构建验证**
 
 ```bash
 yarn build:mp-weixin
@@ -2680,7 +2691,7 @@ yarn build:mp-weixin
 
 Expected: `DONE Build complete.`。
 
-- [ ] **Step 3: 提交**
+- [x] **Step 3: 提交**
 
 ```bash
 git add src/components/tools/EncodePanel.vue
@@ -2694,7 +2705,7 @@ git commit -m "feat 完成编码工具面板"
 **Files:**
 - Modify: `src/components/tools/RadixPanel.vue`
 
-- [ ] **Step 1: 实现面板**
+- [x] **Step 1: 实现面板**
 
 `src/components/tools/RadixPanel.vue`：
 
@@ -2776,7 +2787,7 @@ function copyValue(value) {
 </style>
 ```
 
-- [ ] **Step 2: 构建验证**
+- [x] **Step 2: 构建验证**
 
 ```bash
 yarn build:mp-weixin
@@ -2784,7 +2795,7 @@ yarn build:mp-weixin
 
 Expected: `DONE Build complete.`。
 
-- [ ] **Step 3: 提交**
+- [x] **Step 3: 提交**
 
 ```bash
 git add src/components/tools/RadixPanel.vue
@@ -2798,7 +2809,7 @@ git commit -m "feat 完成进制转换面板"
 **Files:**
 - Modify: `src/components/tools/TimestampPanel.vue`
 
-- [ ] **Step 1: 实现面板**
+- [x] **Step 1: 实现面板**
 
 `src/components/tools/TimestampPanel.vue`：
 
@@ -2951,7 +2962,7 @@ function copyValue(value) {
 </style>
 ```
 
-- [ ] **Step 2: 构建验证**
+- [x] **Step 2: 构建验证**
 
 ```bash
 yarn build:mp-weixin
@@ -2959,7 +2970,7 @@ yarn build:mp-weixin
 
 Expected: `DONE Build complete.`。
 
-- [ ] **Step 3: 提交**
+- [x] **Step 3: 提交**
 
 ```bash
 git add src/components/tools/TimestampPanel.vue
@@ -2973,7 +2984,7 @@ git commit -m "feat 完成时间戳转换面板"
 **Files:**
 - Modify: `src/components/tools/JsonPanel.vue`
 
-- [ ] **Step 1: 实现面板**
+- [x] **Step 1: 实现面板**
 
 `src/components/tools/JsonPanel.vue`：
 
@@ -3062,7 +3073,7 @@ function clearAll() {
 </script>
 ```
 
-- [ ] **Step 2: 构建验证**
+- [x] **Step 2: 构建验证**
 
 ```bash
 yarn build:mp-weixin
@@ -3070,7 +3081,7 @@ yarn build:mp-weixin
 
 Expected: `DONE Build complete.`。
 
-- [ ] **Step 3: 提交**
+- [x] **Step 3: 提交**
 
 ```bash
 git add src/components/tools/JsonPanel.vue
@@ -3087,7 +3098,7 @@ git commit -m "feat 完成 JSON 格式化面板"
 - Modify: `src/pages/todo/index.vue`
 - Modify: `src/pages/tools/index.vue`
 
-- [ ] **Step 1: 日历封装**
+- [x] **Step 1: 日历封装**
 
 `src/utils/calendar.js`：
 
@@ -3122,7 +3133,7 @@ export function addTodoToCalendar({ title, dueAt, description = '来自工具箱
 }
 ```
 
-- [ ] **Step 2: 待办条目组件**
+- [x] **Step 2: 待办条目组件**
 
 `src/components/tools/TodoItem.vue`：
 
@@ -3318,7 +3329,7 @@ function save() {
 </style>
 ```
 
-- [ ] **Step 3: 待办页面**
+- [x] **Step 3: 待办页面**
 
 `src/pages/todo/index.vue`：
 
@@ -3526,7 +3537,7 @@ onShow(() => {
 </style>
 ```
 
-- [ ] **Step 4: 工具页同步 tab 徽标**
+- [x] **Step 4: 工具页同步 tab 徽标**
 
 修改 `src/pages/tools/index.vue` 的 `<script setup>`：
 
@@ -3551,7 +3562,7 @@ onShow(() => {
 })
 ```
 
-- [ ] **Step 5: 构建验证**
+- [x] **Step 5: 构建验证**
 
 ```bash
 yarn build:mp-weixin
@@ -3559,7 +3570,7 @@ yarn build:mp-weixin
 
 Expected: `DONE Build complete.`，`dist/build/mp-weixin/pages/todo/index.js` 存在。
 
-- [ ] **Step 6: 提交**
+- [x] **Step 6: 提交**
 
 ```bash
 git add src/utils/calendar.js src/components/tools/TodoItem.vue src/pages/todo/index.vue src/pages/tools/index.vue
@@ -3575,7 +3586,7 @@ git commit -m "feat 完成待办清单与日历提醒"
 - Modify: `src/manifest.json`
 - Delete: 博客页面、组件、服务、配置、旧静态资源、`public/` 遗留
 
-- [ ] **Step 1: 重写关于页**
+- [x] **Step 1: 重写关于页**
 
 `src/pages/about/about.vue`：
 
@@ -3668,7 +3679,7 @@ function copyRepo() {
 </style>
 ```
 
-- [ ] **Step 2: 更新 manifest**
+- [x] **Step 2: 更新 manifest**
 
 修改 `src/manifest.json` 顶部：
 
@@ -3678,7 +3689,7 @@ function copyRepo() {
   "description": "计算工具与待办清单小程序",
 ```
 
-- [ ] **Step 3: 删除博客遗留文件**
+- [x] **Step 3: 删除博客遗留文件**
 
 ```bash
 git rm -r src/pages/index src/pages/article src/pages/detail
@@ -3692,7 +3703,7 @@ git rm public/index.html public/static/gh_4766a66c7f8e_258\ \(2\).jpg
 
 Expected: 每个文件显示 `rm '...'`，无报错。
 
-- [ ] **Step 4: 构建验证**
+- [x] **Step 4: 构建验证**
 
 ```bash
 yarn build:mp-weixin && yarn build:h5
@@ -3700,7 +3711,7 @@ yarn build:mp-weixin && yarn build:h5
 
 Expected: 两次均 `DONE Build complete.`，无 `Cannot find module` 或缺失页面错误。
 
-- [ ] **Step 5: 提交**
+- [x] **Step 5: 提交**
 
 ```bash
 git add -A src public
@@ -3715,11 +3726,11 @@ git commit -m "refactor 移除博客功能并重写关于页"
 - Modify: `README.md`（整体替换）
 - Modify: `package.json`（`name`）
 
-- [ ] **Step 1: 更新 package.json 名称**
+- [x] **Step 1: 更新 package.json 名称**
 
 将 `"name": "uniapp-blog1"` 改为 `"name": "toolbox-miniapp"`。
 
-- [ ] **Step 2: 重写 README**
+- [x] **Step 2: 重写 README**
 
 `README.md`：
 
@@ -3782,7 +3793,7 @@ yarn build:h5
 [MIT](./LICENSE)
 ```
 
-- [ ] **Step 3: 提交**
+- [x] **Step 3: 提交**
 
 ```bash
 git add README.md package.json
@@ -3795,7 +3806,7 @@ git commit -m "docs 更新项目说明与元信息"
 
 **Files:** 无新增
 
-- [ ] **Step 1: 运行全部单元测试**
+- [x] **Step 1: 运行全部单元测试**
 
 ```bash
 yarn test
@@ -3803,7 +3814,7 @@ yarn test
 
 Expected: `Test Files  9 passed (9)`，`Tests  42 passed (42)`。
 
-- [ ] **Step 2: 构建两个平台**
+- [x] **Step 2: 构建两个平台**
 
 ```bash
 yarn build:mp-weixin && yarn build:h5
@@ -3811,7 +3822,7 @@ yarn build:mp-weixin && yarn build:h5
 
 Expected: 两次均 `DONE Build complete.`。
 
-- [ ] **Step 3: 检查构建产物已清理**
+- [x] **Step 3: 检查构建产物已清理**
 
 ```bash
 grep -r "yuque" dist/build/mp-weixin || echo "no yuque"
