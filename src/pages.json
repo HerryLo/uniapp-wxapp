@@ -3,7 +3,8 @@
     {
       "path": "pages/tools/index",
       "style": {
-        "navigationBarTitleText": "工具箱"
+        "navigationBarTitleText": "工具箱",
+        "navigationStyle": "custom"
       }
     },
     {

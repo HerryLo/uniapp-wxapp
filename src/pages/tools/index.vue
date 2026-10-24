@@ -1,56 +1,63 @@
 <template>
   <view class="tools-page">
-    <view class="tabs">
-      <view
-        v-for="tab in tabs"
-        :key="tab.key"
-        class="tab"
-        :class="{ active: active === tab.key }"
-        @click="active = tab.key"
-      >
-        <text class="tab-text">{{ tab.label }}</text>
-        <view class="tab-line"></view>
-      </view>
+    <NavBar title="工具箱" show-tool-menu @open-tools="toolsOpen = true" />
+
+    <view class="tools-body">
+      <VatPanel v-show="active === 'vat'" />
+      <UnitPanel v-show="active === 'unit'" />
+      <TextPanel v-show="active === 'text'" />
+      <RadixPanel v-show="active === 'radix'" />
+
+      <view class="about-link" @click="openAbout">关于与免责声明</view>
+      <AdBanner />
     </view>
 
-    <VatPanel v-show="active === 'vat'" />
-    <UnitPanel v-show="active === 'unit'" />
-    <TextPanel v-show="active === 'text'" />
-    <EncodePanel v-show="active === 'encode'" />
-    <RadixPanel v-show="active === 'radix'" />
-    <TimestampPanel v-show="active === 'timestamp'" />
-    <JsonPanel v-show="active === 'json'" />
-
-    <view class="about-link" @click="openAbout">关于与免责声明</view>
+    <view v-if="toolsOpen" class="sheet-mask" @click="toolsOpen = false">
+      <view class="sheet" @click.stop>
+        <view class="sheet-head">
+          <text class="sheet-title">全部工具</text>
+          <text class="sheet-close" @click="toolsOpen = false">✕</text>
+        </view>
+        <view class="tool-grid">
+          <view
+            v-for="tool in tools"
+            :key="tool.key"
+            class="tool-cell"
+            :class="{ active: active === tool.key }"
+            @click="pickTool(tool.key)"
+          >
+            <text class="tool-name">{{ tool.name }}</text>
+            <text class="tool-desc">{{ tool.desc }}</text>
+          </view>
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { onLoad, onShow, onShareAppMessage } from '@dcloudio/uni-app'
-import { loadTodos, activeCount, updateTabBadge } from '../../utils/todo.js'
+import NavBar from '../../components/NavBar.vue'
+import AdBanner from '../../components/AdBanner.vue'
 import VatPanel from '../../components/tools/VatPanel.vue'
 import UnitPanel from '../../components/tools/UnitPanel.vue'
 import TextPanel from '../../components/tools/TextPanel.vue'
-import EncodePanel from '../../components/tools/EncodePanel.vue'
 import RadixPanel from '../../components/tools/RadixPanel.vue'
-import TimestampPanel from '../../components/tools/TimestampPanel.vue'
-import JsonPanel from '../../components/tools/JsonPanel.vue'
+import { loadTodos, activeCount, updateTabBadge } from '../../utils/todo.js'
 
-const tabs = [
-  { key: 'vat', label: '增值税' },
-  { key: 'unit', label: '单位换算' },
-  { key: 'text', label: '文本处理' },
-  { key: 'encode', label: '编码' },
-  { key: 'radix', label: '进制' },
-  { key: 'timestamp', label: '时间戳' },
-  { key: 'json', label: 'JSON' },
+const tools = [
+  { key: 'vat', name: '增值税', desc: '含税 / 不含税' },
+  { key: 'unit', name: '单位换算', desc: '长度 / 重量 / 温度' },
+  { key: 'text', name: '文本处理', desc: '去重 / 大小写' },
+  { key: 'radix', name: '进制转换', desc: '2–36 进制' },
 ]
 
 const active = ref('vat')
+const toolsOpen = ref(false)
 
 onLoad((options) => {
-  if (options && tabs.some((tab) => tab.key === options.tool)) {
+  if (options && tools.some((tool) => tool.key === options.tool)) {
     active.value = options.tool
   }
 })
@@ -64,6 +71,11 @@ onShareAppMessage(() => ({
   path: `/pages/tools/index?tool=${active.value}`,
 }))
 
+function pickTool(key) {
+  active.value = key
+  toolsOpen.value = false
+}
+
 function openAbout() {
   uni.navigateTo({ url: '/pages/about/about' })
 }
@@ -74,51 +86,94 @@ function openAbout() {
   padding-bottom: 48rpx;
 }
 
-.tabs {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  display: flex;
-  background: var(--surface);
-  border-bottom: 1rpx solid var(--border);
-}
-
-.tab {
-  flex: 1;
-  height: 88rpx;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.tab-text {
-  font-size: 24rpx;
-  color: var(--text-secondary);
-  white-space: nowrap;
-}
-
-.tab-line {
-  width: 32rpx;
-  height: 4rpx;
-  margin-top: 8rpx;
-  border-radius: 2rpx;
-  background: transparent;
-}
-
-.tab.active .tab-text {
-  color: var(--primary);
-  font-weight: 600;
-}
-
-.tab.active .tab-line {
-  background: var(--primary);
-}
-
 .about-link {
   margin: 48rpx 32rpx 0;
   padding: 24rpx 0;
   text-align: center;
+  font-size: 26rpx;
+  color: var(--text-secondary);
+}
+
+.sheet-mask {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  background: rgba(17, 24, 39, 0.45);
+}
+
+.sheet {
+  width: 100%;
+  padding: 32rpx 32rpx calc(32rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+  background: var(--surface);
+  border-radius: 32rpx 32rpx 0 0;
+  animation: sheet-up 0.2s ease-out;
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+
+.sheet-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.sheet-close {
+  padding: 8rpx 16rpx;
+  font-size: 32rpx;
+  color: var(--text-secondary);
+}
+
+.tool-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.tool-cell {
+  width: calc(50% - 10rpx);
+  margin-bottom: 20rpx;
+  padding: 24rpx;
+  box-sizing: border-box;
+  background: #F9FAFB;
+  border: 2rpx solid transparent;
+  border-radius: 24rpx;
+}
+
+.tool-cell.active {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+}
+
+.tool-name {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.tool-desc {
+  display: block;
+  margin-top: 8rpx;
   font-size: 24rpx;
   color: var(--text-secondary);
 }
