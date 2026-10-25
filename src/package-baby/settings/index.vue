@@ -2,7 +2,7 @@
   <BabyPage active="settings">
     <view class="settings-page">
       <view class="card form-card">
-      <view class="card-title">宝宝资料</view>
+      <view class="card-title">👶 宝宝资料</view>
       <view class="label">昵称</view>
       <input class="input" v-model="form.name" maxlength="20" placeholder="宝宝昵称" />
       <view class="label">出生日期</view>
@@ -32,24 +32,24 @@
     </view>
 
     <view class="card">
-      <view class="card-title">数据管理</view>
+      <view class="card-title">📦 数据管理</view>
       <view class="row" @click="exportData">
         <view class="row-body">
-          <view class="row-title">导出数据</view>
+          <view class="row-title">📤 导出数据</view>
           <view class="row-desc">生成 JSON 备份，可保存到聊天或复制到剪贴板</view>
         </view>
         <text class="row-arrow">›</text>
       </view>
       <view class="row" @click="restore">
         <view class="row-body">
-          <view class="row-title">恢复数据</view>
+          <view class="row-title">📥 恢复数据</view>
           <view class="row-desc">从备份文件恢复，恢复前会自动备份当前数据</view>
         </view>
         <text class="row-arrow">›</text>
       </view>
       <view class="row danger" @click="clearData">
         <view class="row-body">
-          <view class="row-title">清空宝宝数据</view>
+          <view class="row-title">🧹 清空宝宝数据</view>
           <view class="row-desc">删除资料、记录和备份，不可恢复</view>
         </view>
         <text class="row-arrow">›</text>

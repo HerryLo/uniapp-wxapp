@@ -17,7 +17,7 @@
       <view class="vaccine-table">
         <view v-for="group in groups" :key="group.type" class="group-block">
           <view class="group-head">
-            <text class="group-title">{{ group.type }}疫苗</text>
+            <text class="group-title">{{ group.type === '一类' ? '🛡' : '💉' }} {{ group.type }}疫苗</text>
             <text v-if="group.type === '二类'" class="self-paid-tag">自费自愿</text>
           </view>
           <view v-if="group.type === '二类'" class="group-note">
@@ -420,7 +420,7 @@ onShow(refresh)
   margin-top: 32rpx;
   padding: 24rpx;
   background: #FFF1F3;
-  border-radius: 24rpx;
+  border-radius: 32rpx;
 }
 .source-title {
   margin-bottom: 8rpx;

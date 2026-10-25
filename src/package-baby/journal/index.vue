@@ -2,7 +2,7 @@
   <BabyPage active="journal">
     <view class="journal-page">
       <view class="card form-card">
-      <view class="card-title">成长里程碑</view>
+      <view class="card-title">🌟 成长里程碑</view>
       <view class="label">日期</view>
       <picker
         mode="date"
@@ -35,8 +35,8 @@
     </view>
 
     <view class="card">
-      <view class="card-title">里程碑时间线</view>
-      <view v-if="!milestones.length" class="empty-tip">还没有里程碑记录</view>
+      <view class="card-title">📖 里程碑时间线</view>
+      <view v-if="!milestones.length" class="empty-tip">还没有里程碑记录 🌱</view>
       <view v-for="item in milestones" :key="item.id" class="timeline-item">
         <view class="timeline-date">{{ item.date }}</view>
         <view class="timeline-title">{{ item.title }}</view>
@@ -64,7 +64,7 @@
     </view>
 
     <view class="card">
-      <view class="card-title">今天的心情</view>
+      <view class="card-title">💭 今天的心情</view>
       <view class="mood-row">
         <view
           v-for="mood in MOODS"
@@ -80,7 +80,7 @@
     </view>
 
     <view class="card">
-      <view class="card-title">育儿心得</view>
+      <view class="card-title">✏️ 育儿心得</view>
       <view class="label">日期</view>
       <picker mode="date" :value="noteForm.date" @change="noteForm.date = $event.detail.value">
         <view class="picker-field">
@@ -99,7 +99,7 @@
       <view class="btn-row">
         <view class="btn btn-primary" @click="saveNote">添加心得</view>
       </view>
-      <view v-if="!notes.length" class="empty-tip">还没有心得记录</view>
+      <view v-if="!notes.length" class="empty-tip">还没有心得记录 🌱</view>
       <view v-for="item in notes" :key="item.id" class="note-item">
         <view class="note-head">
           <text class="note-date">{{ item.date }}</text>
@@ -302,6 +302,7 @@ onShow(refresh)
   align-items: center;
   border: 2rpx solid transparent;
   border-radius: 20rpx;
+  background: var(--cream);
 }
 .mood-item.active {
   background: var(--primary-soft);

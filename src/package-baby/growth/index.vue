@@ -2,7 +2,7 @@
   <BabyPage active="growth">
     <view class="growth-page">
       <view class="card form-card">
-      <view class="card-title">记录身高体重</view>
+      <view class="card-title">📏 记录身高体重</view>
       <view class="label">测量日期</view>
       <picker mode="date" :value="form.date" @change="form.date = $event.detail.value">
         <view class="picker-field">
@@ -29,20 +29,20 @@
     </view>
 
     <view class="card">
-      <view class="card-title">身高曲线（cm）</view>
+      <view class="card-title">📈 身高曲线（cm）</view>
       <LineChart v-if="heightPoints.length" :points="heightPoints" unit="cm" />
-      <view v-else class="empty-tip">暂无数据</view>
+      <view v-else class="empty-tip">暂无数据 🌱</view>
     </view>
 
     <view class="card">
-      <view class="card-title">体重曲线（kg）</view>
+      <view class="card-title">⚖️ 体重曲线（kg）</view>
       <LineChart v-if="weightPoints.length" :points="weightPoints" unit="kg" />
-      <view v-else class="empty-tip">暂无数据</view>
+      <view v-else class="empty-tip">暂无数据 🌱</view>
     </view>
 
     <view class="card">
-      <view class="card-title">历史记录</view>
-      <view v-if="!history.length" class="empty-tip">还没有生长记录</view>
+      <view class="card-title">🗂 历史记录</view>
+      <view v-if="!history.length" class="empty-tip">还没有生长记录 🌱</view>
       <view v-for="item in history" :key="item.id" class="history-item">
         <view>
           <view class="history-date">{{ item.date }}</view>
@@ -135,8 +135,10 @@ onShow(refresh)
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 24rpx 0;
-  border-bottom: 1rpx solid var(--border);
+  margin-top: 12rpx;
+  padding: 20rpx;
+  background: var(--cream);
+  border-radius: 24rpx;
 }
 .history-item:last-child {
   border-bottom: none;
