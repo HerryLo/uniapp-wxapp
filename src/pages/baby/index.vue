@@ -32,7 +32,7 @@
     </view>
 
     <view class="card">
-      <view class="card-title">💉 下一条疫苗参考</view>
+      <view class="card-title">💉 下一条一类疫苗参考</view>
       <view v-if="nextVaccineItem" class="vaccine-preview">
         <view>
           <view class="preview-name">{{ nextVaccineItem.name }}</view>
@@ -43,7 +43,7 @@
         <text class="status" :class="nextStatus.key">{{ nextStatus.label }}</text>
       </view>
       <view v-else-if="!age" class="empty-tip">完善出生日期后显示参考疫苗</view>
-      <view v-else class="empty-tip">暂无待接种参考</view>
+      <view v-else class="empty-tip">一类疫苗已按参考程序完成</view>
       <view class="card-link" @click="goPage('/package-baby/health/index')">
         查看疫苗参考 ›
       </view>
@@ -109,7 +109,8 @@ function refresh() {
   latest.value = latestGrowth(loadGrowth())
   nextVaccineItem.value = nextVaccine(
     loadVaccines(),
-    age.value ? age.value.totalMonths : null
+    age.value ? age.value.totalMonths : null,
+    { type: '一类' }
   )
 }
 
