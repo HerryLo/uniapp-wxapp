@@ -28,9 +28,33 @@
       "root": "package-baby",
       "pages": [
         {
-          "path": "records/index",
+          "path": "records/milk",
           "style": {
-            "navigationBarTitleText": "日常记录"
+            "navigationBarTitleText": "喝奶记录"
+          }
+        },
+        {
+          "path": "records/sleep",
+          "style": {
+            "navigationBarTitleText": "睡眠记录"
+          }
+        },
+        {
+          "path": "records/diaper",
+          "style": {
+            "navigationBarTitleText": "排便记录"
+          }
+        },
+        {
+          "path": "records/food",
+          "style": {
+            "navigationBarTitleText": "辅食记录"
+          }
+        },
+        {
+          "path": "records/medicine",
+          "style": {
+            "navigationBarTitleText": "用药记录"
           }
         },
         {

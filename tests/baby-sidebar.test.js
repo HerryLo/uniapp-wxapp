@@ -43,9 +43,9 @@ describe('baby sidebar', () => {
       '设置',
     ])
     expect(SIDEBAR_ITEMS[0].url).toBe('/pages/baby/index')
-    expect(SIDEBAR_ITEMS[1].url).toBe('/package-baby/records/index?type=milk')
-    expect(SIDEBAR_ITEMS[4].url).toBe('/package-baby/records/index?type=food')
-    expect(SIDEBAR_ITEMS[5].url).toBe('/package-baby/records/index?type=medicine')
+    expect(SIDEBAR_ITEMS[1].url).toBe('/package-baby/records/milk')
+    expect(SIDEBAR_ITEMS[4].url).toBe('/package-baby/records/food')
+    expect(SIDEBAR_ITEMS[5].url).toBe('/package-baby/records/medicine')
     expect(SIDEBAR_ITEMS[6].url).toBe('/package-baby/health/index')
     expect(SIDEBAR_ITEMS[9].url).toBe('/package-baby/mom/index')
     expect(SIDEBAR_ITEMS[10].url).toBe('/package-baby/travel/index')
