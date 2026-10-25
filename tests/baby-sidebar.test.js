@@ -36,7 +36,7 @@ describe('baby sidebar', () => {
       'settings',
     ])
     expect(SIDEBAR_ITEMS.map((item) => item.label)).toEqual([
-      '宝宝首页',
+      '首页',
       '喝奶',
       '睡眠',
       '排便',
@@ -48,6 +48,11 @@ describe('baby sidebar', () => {
     expect(SIDEBAR_ITEMS[0].url).toBe('/pages/baby/index')
     expect(SIDEBAR_ITEMS[1].url).toBe('/package-baby/records/index?type=milk')
     expect(SIDEBAR_ITEMS[4].url).toBe('/package-baby/health/index')
+  })
+
+  it('uses unique sidebar labels', () => {
+    const labels = SIDEBAR_ITEMS.map((item) => item.label)
+    expect(new Set(labels).size).toBe(labels.length)
   })
 
   it('uses a UI key outside the baby data prefix', () => {

@@ -5,7 +5,7 @@ export const SIDEBAR_STATE_KEY = 'ui.baby-sidebar.v1'
 export const SIDEBAR_ITEMS = [
   {
     key: 'home',
-    label: '宝宝首页',
+    label: '首页',
     emoji: '🏠',
     url: '/pages/baby/index',
   },

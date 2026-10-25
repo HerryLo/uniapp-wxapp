@@ -24,7 +24,7 @@
 
 | key | 文案 | emoji | 目标 |
 |---|---|---|---|
-| home | 宝宝首页 | 🏠 | `/pages/baby/index` |
+| home | 首页 | 🏠 | `/pages/baby/index` |
 | milk | 喝奶 | 🍼 | `/package-baby/records/index?type=milk` |
 | sleep | 睡眠 | 😴 | `/package-baby/records/index?type=sleep` |
 | diaper | 排便 | 💧 | `/package-baby/records/index?type=diaper` |
@@ -44,7 +44,7 @@
 - 当前页面入口高亮：
   - 日常记录按当前 Tab 高亮喝奶/睡眠/排便
   - 生长、疫苗、成长、设置页高亮对应入口
-  - 宝宝首页高亮「宝宝首页」
+  - 宝宝首页高亮「首页」
 - 选中效果：浅粉背景、主题色文字、加粗，并在左侧显示主题色内阴影条。
 - 点击当前已激活项不重复导航。
 - 从宝宝首页进入分包页使用 `uni.navigateTo`；分包页之间切换使用 `uni.redirectTo`，避免页面栈持续增长。
