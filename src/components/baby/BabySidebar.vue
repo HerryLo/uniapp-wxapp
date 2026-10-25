@@ -158,6 +158,13 @@ function onClick() {
   min-height: 0;
   overflow-y: auto;
   margin-bottom: 8rpx;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.sidebar-list::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 .sidebar-item {
   display: flex;
