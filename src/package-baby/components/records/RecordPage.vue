@@ -1,7 +1,7 @@
 <template>
   <BabyPage :active="kind">
     <view class="record-page">
-      <view class="record-switch">
+      <view v-if="showSwitch" class="record-switch">
         <view
           v-for="item in RECORD_SWITCH_ITEMS"
           :key="item.key"
@@ -51,6 +51,7 @@ const props = defineProps({
   emoji: { type: String, default: '' },
   title: { type: String, required: true },
   emptyText: { type: String, default: '今天还没有记录' },
+  showSwitch: { type: Boolean, default: true },
 })
 
 const emit = defineEmits(['change'])

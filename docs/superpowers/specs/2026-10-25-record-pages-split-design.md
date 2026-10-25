@@ -128,7 +128,7 @@ medicine → /package-baby/records/medicine
 
 - key 不变，侧栏高亮继续使用 `milk/sleep/diaper/food/medicine`
 - 5 个记录页顶部统一提供 4 项快捷切换：🍼 喝奶 / 😴 睡眠 / 💧 排便 / 🍚 辅食
-- 用药页不在这排快捷切换中，仍从侧栏进入
+- 用药页不展示这排快捷切换，仍从侧栏进入
 - 分包页之间继续用 `redirectTo`
 - 旧 `/package-baby/records/index?type=` 没有其他引用，直接移除
 

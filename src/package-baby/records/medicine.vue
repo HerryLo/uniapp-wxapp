@@ -4,6 +4,7 @@
     emoji="💊"
     title="用药"
     empty-text="今天还没有用药记录，点“添加”记一笔吧 🐣"
+    :show-switch="false"
   >
     <template #stats="{ list }">
       <view class="record-stats">
