@@ -219,6 +219,34 @@ picker {
   color: var(--text-secondary);
 }
 
+.record-stats {
+  display: flex;
+  margin-top: 20rpx;
+}
+.record-stat {
+  flex: 1;
+  padding: 20rpx 8rpx;
+  border-radius: 28rpx;
+  text-align: center;
+  background: #FFF1F3;
+}
+.record-stat + .record-stat {
+  margin-left: 12rpx;
+  background: #F0FAF4;
+}
+.record-stat-value {
+  display: block;
+  font-size: 36rpx;
+  font-weight: 700;
+  color: var(--primary-strong);
+}
+.record-stat-label {
+  display: block;
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  color: var(--text-secondary);
+}
+
 .disclaimer {
   margin-top: 24rpx;
   font-size: 24rpx;
