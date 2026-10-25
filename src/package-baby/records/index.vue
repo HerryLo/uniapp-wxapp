@@ -190,7 +190,6 @@ function remove(id) {
 onLoad((options) => {
   if (options && kinds.some((item) => item.key === options.type)) {
     kind.value = options.type
-    openForm()
   }
 })
 
