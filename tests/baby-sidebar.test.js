@@ -1,26 +1,12 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import {
   SIDEBAR_ITEMS,
-  SIDEBAR_STATE_KEY,
   loadSidebarCollapsed,
   saveSidebarCollapsed,
 } from '../src/utils/baby/sidebar.js'
-import { isBabyKey } from '../src/utils/baby/keys.js'
-
-let store
 
 beforeEach(() => {
-  store = {}
-  vi.stubGlobal('uni', {
-    getStorageSync: (key) => (key in store ? store[key] : ''),
-    setStorageSync: (key, value) => { store[key] = value },
-    removeStorageSync: (key) => { delete store[key] },
-    showToast: vi.fn(),
-  })
-})
-
-afterEach(() => {
-  vi.unstubAllGlobals()
+  saveSidebarCollapsed(false)
 })
 
 describe('baby sidebar', () => {
@@ -42,7 +28,7 @@ describe('baby sidebar', () => {
       '排便',
       '疫苗',
       '生长',
-      '成长',
+      '手记',
       '设置',
     ])
     expect(SIDEBAR_ITEMS[0].url).toBe('/pages/baby/index')
@@ -55,23 +41,11 @@ describe('baby sidebar', () => {
     expect(new Set(labels).size).toBe(labels.length)
   })
 
-  it('uses a UI key outside the baby data prefix', () => {
-    expect(SIDEBAR_STATE_KEY).toBe('ui.baby-sidebar.v1')
-    expect(isBabyKey(SIDEBAR_STATE_KEY)).toBe(false)
-  })
-
-  it('defaults to expanded and persists the collapsed state', () => {
+  it('defaults to expanded and toggles in memory', () => {
     expect(loadSidebarCollapsed()).toBe(false)
     expect(saveSidebarCollapsed(true)).toBe(true)
     expect(loadSidebarCollapsed()).toBe(true)
     expect(saveSidebarCollapsed(false)).toBe(true)
-    expect(loadSidebarCollapsed()).toBe(false)
-  })
-
-  it('falls back to expanded when stored state is corrupt', () => {
-    store[SIDEBAR_STATE_KEY] = '{oops'
-    expect(loadSidebarCollapsed()).toBe(false)
-    store[SIDEBAR_STATE_KEY] = 'true'
     expect(loadSidebarCollapsed()).toBe(false)
   })
 })

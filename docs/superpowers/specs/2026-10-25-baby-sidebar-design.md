@@ -30,7 +30,7 @@
 | diaper | 排便 | 💧 | `/package-baby/records/index?type=diaper` |
 | health | 疫苗 | 💉 | `/package-baby/health/index` |
 | growth | 生长 | 📈 | `/package-baby/growth/index` |
-| journal | 成长 | 📖 | `/package-baby/journal/index` |
+| journal | 手记 | 📖 | `/package-baby/journal/index` |
 | settings | 设置 | ⚙️ | `/package-baby/settings/index` |
 
 喝奶/睡眠/排便进入日常记录后会自动打开对应记录表单（复用现有 `onLoad` 的 `type` 参数逻辑）。
@@ -50,17 +50,16 @@
 - 从宝宝首页进入分包页使用 `uni.navigateTo`；分包页之间切换使用 `uni.redirectTo`，避免页面栈持续增长。
 - 返回宝宝首页使用 `uni.switchTab`。
 - H5 环境对 `getCurrentPages` 做存在性判断，缺失时回退 `navigateTo`。
-- 收起状态保存在 UI key `ui.baby-sidebar.v1`，不进入宝宝数据导出，也不会被「清空宝宝数据」删除。
+- 收起状态保存在内存中：本次使用期间跨页面保持一致，重新打开小程序后恢复为默认展开。
 - 侧栏底部预留 `env(safe-area-inset-bottom)` 间距。
 
 ## 组件设计
 
 ### `src/utils/baby/sidebar.js`
 
-- `SIDEBAR_ITEMS`：上表 7 项数组。
-- `SIDEBAR_STATE_KEY = 'ui.baby-sidebar.v1'`
-- `loadSidebarCollapsed(): boolean`：读取失败或数据损坏时返回 `false`（默认展开）。
-- `saveSidebarCollapsed(collapsed: boolean): boolean`：写入 UI 状态。
+- `SIDEBAR_ITEMS`：上表 8 项数组。
+- `loadSidebarCollapsed(): boolean`：读取当前会话的收起状态，默认 `false`（展开）。
+- `saveSidebarCollapsed(collapsed: boolean): boolean`：更新当前会话的收起状态。
 
 ### `src/components/baby/BabySidebar.vue`
 
@@ -109,7 +108,7 @@
 
 ## 边界与错误处理
 
-- 侧栏状态读取失败时默认展开，不影响页面使用。
+- 每次启动默认展开，收起状态只在本次使用期间跨页面保持。
 - 当前已激活入口不导航。
 - 侧栏与内容区不重叠；收起/展开时过渡平滑。
 - 侧栏不改变现有数据读写、备份和清空逻辑。
@@ -120,8 +119,7 @@
 - `tests/baby-sidebar.test.js`：
   - 8 个入口的顺序、文案与 URL 正确。
   - 默认展开。
-  - 收起状态可保存并重新读取。
-  - 存储损坏时回退为展开。
+  - 收起状态在当前会话内可保存并重新读取。
 - 现有 125 个测试保持通过。
 - `npm run build:mp-weixin`、`npm run build:h5` 成功。
 - 人工检查 6 个页面的侧栏展开/收起、高亮、跳转、表单自动打开和内容不被遮挡。

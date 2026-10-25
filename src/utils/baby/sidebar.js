@@ -1,7 +1,3 @@
-import { readStorage, writeStorage } from '../storage.js'
-
-export const SIDEBAR_STATE_KEY = 'ui.baby-sidebar.v1'
-
 export const SIDEBAR_ITEMS = [
   {
     key: 'home',
@@ -41,7 +37,7 @@ export const SIDEBAR_ITEMS = [
   },
   {
     key: 'journal',
-    label: '成长',
+    label: '手记',
     emoji: '📖',
     url: '/package-baby/journal/index',
   },
@@ -53,11 +49,13 @@ export const SIDEBAR_ITEMS = [
   },
 ]
 
+let sidebarCollapsed = false
+
 export function loadSidebarCollapsed() {
-  const raw = readStorage(SIDEBAR_STATE_KEY, null)
-  return !!(raw && typeof raw === 'object' && raw.collapsed === true)
+  return sidebarCollapsed
 }
 
 export function saveSidebarCollapsed(collapsed) {
-  return writeStorage(SIDEBAR_STATE_KEY, { collapsed: !!collapsed })
+  sidebarCollapsed = !!collapsed
+  return true
 }
