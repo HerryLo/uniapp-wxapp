@@ -21,7 +21,17 @@
             <text v-if="group.type === '二类'" class="self-paid-tag">自费自愿</text>
           </view>
           <view v-if="group.type === '二类'" class="group-note">
-            二类疫苗为自费自愿接种，请咨询接种门诊。如不计划接种，可标记为暂不接种。
+            二类疫苗为自费自愿接种，请咨询接种门诊。如不计划接种，可单项或批量标记为暂不接种。
+          </view>
+          <view
+            v-if="group.type === '二类' && pendingOptional(group).length"
+            class="batch-row"
+          >
+            <view
+              class="batch-btn"
+              :class="{ restore: allOptionalSkipped(group) }"
+              @click="toggleAllOptional(group)"
+            >{{ allOptionalSkipped(group) ? '↺ 全部恢复参考' : '全部暂不接种' }}</view>
           </view>
 
           <view class="table-row table-header">
@@ -131,6 +141,7 @@ import {
   loadVaccines,
   removeCustomVaccine,
   saveVaccines,
+  setOptionalVaccinesSkipped,
   setVaccineDone,
   setVaccineSkipped,
   vaccineStatus,
@@ -171,6 +182,36 @@ function toggle(item) {
 
 function changeDate(item, date) {
   persist(setVaccineDone(list.value, item.id, true, date))
+}
+
+function pendingOptional(group) {
+  return group.items.filter((item) => item.type === '二类' && !item.done)
+}
+
+function allOptionalSkipped(group) {
+  const pending = pendingOptional(group)
+  return pending.length > 0 && pending.every((item) => item.skipped)
+}
+
+function toggleAllOptional(group) {
+  const pending = pendingOptional(group)
+  if (!pending.length) return
+  if (allOptionalSkipped(group)) {
+    if (persist(setOptionalVaccinesSkipped(list.value, false))) {
+      uni.showToast({ title: '已恢复', icon: 'none' })
+    }
+    return
+  }
+  uni.showModal({
+    title: '全部暂不接种',
+    content: `确定将 ${pending.length} 项未接种的二类疫苗全部标记为暂不接种吗？之后可恢复。`,
+    success: (res) => {
+      if (!res.confirm) return
+      if (persist(setOptionalVaccinesSkipped(list.value, true))) {
+        uni.showToast({ title: '已更新', icon: 'none' })
+      }
+    },
+  })
 }
 
 function toggleSkip(item) {
@@ -441,6 +482,27 @@ onShow(refresh)
   color: var(--text-secondary);
 }
 .skip-btn:active {
+  opacity: 0.75;
+}
+.batch-row {
+  display: flex;
+  margin-top: 12rpx;
+}
+.batch-btn {
+  padding: 8rpx 20rpx;
+  border: 1rpx solid var(--primary-strong);
+  border-radius: 999rpx;
+  background: #FFF1F3;
+  color: var(--primary-strong);
+  font-size: 22rpx;
+  line-height: 1.4;
+}
+.batch-btn.restore {
+  border-color: var(--border);
+  background: #FFFFFF;
+  color: var(--text-secondary);
+}
+.batch-btn:active {
   opacity: 0.75;
 }
 .date-field {

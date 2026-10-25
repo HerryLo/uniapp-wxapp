@@ -74,6 +74,14 @@ export function setVaccineSkipped(list, id, skipped) {
   })
 }
 
+export function setOptionalVaccinesSkipped(list, skipped) {
+  return list.map((item) => {
+    if (item.type !== '二类' || item.done) return item
+    if (!skipped) return { ...item, skipped: false }
+    return { ...item, done: false, date: '', skipped: true }
+  })
+}
+
 export function addCustomVaccine(list, input, now = Date.now()) {
   const name = String(input.name || '').trim()
   if (!name) return { ok: false, error: '请输入疫苗名称' }

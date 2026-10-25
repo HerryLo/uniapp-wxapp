@@ -5,6 +5,7 @@ import {
   loadVaccines,
   setVaccineDone,
   setVaccineSkipped,
+  setOptionalVaccinesSkipped,
   addCustomVaccine,
   removeCustomVaccine,
   vaccineStatus,
@@ -165,6 +166,28 @@ describe('baby vaccines', () => {
       skipped: false,
       date: '2026-10-24',
     })
+  })
+
+  it('batch skips and restores pending optional vaccines', () => {
+    const list = [
+      { id: 'a', name: 'A', month: 2, type: '二类', done: false, skipped: false, date: '' },
+      { id: 'b', name: 'B', month: 3, type: '二类', done: true, skipped: false, date: '2026-01-01' },
+      { id: 'c', name: 'C', month: 4, type: '一类', done: false, skipped: false, date: '' },
+    ]
+    const skipped = setOptionalVaccinesSkipped(list, true)
+    expect(skipped.find((item) => item.id === 'a')).toMatchObject({
+      skipped: true,
+      done: false,
+    })
+    expect(skipped.find((item) => item.id === 'b')).toMatchObject({
+      skipped: false,
+      done: true,
+      date: '2026-01-01',
+    })
+    expect(skipped.find((item) => item.id === 'c').skipped).toBe(false)
+
+    const restored = setOptionalVaccinesSkipped(skipped, false)
+    expect(restored.find((item) => item.id === 'a').skipped).toBe(false)
   })
 
   it('keeps skipped state from stored data and defaults it for old data', () => {
