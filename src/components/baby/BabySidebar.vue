@@ -143,7 +143,7 @@ function onClick() {
   bottom: var(--window-bottom, 0);
   left: 0;
   z-index: 220;
-  width: 160rpx;
+  width: 120rpx;
   display: flex;
   flex-direction: column;
   padding: 16rpx 12rpx calc(16rpx + env(safe-area-inset-bottom));
@@ -156,11 +156,13 @@ function onClick() {
 .sidebar-item {
   display: flex;
   align-items: center;
+  justify-content: center;
   height: 80rpx;
   margin-bottom: 8rpx;
-  padding: 0 16rpx;
+  padding: 0 8rpx;
   border-radius: 20rpx;
   color: var(--text-secondary);
+  text-align: center;
 }
 .sidebar-item.active {
   background: var(--primary-soft);
@@ -169,7 +171,9 @@ function onClick() {
   box-shadow: inset 6rpx 0 0 var(--primary-strong);
 }
 .sidebar-label {
+  width: 100%;
   font-size: 24rpx;
+  text-align: center;
 }
 .sidebar-toggle {
   display: flex;

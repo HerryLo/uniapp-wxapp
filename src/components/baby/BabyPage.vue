@@ -32,7 +32,7 @@ function toggle() {
   min-height: 100vh;
 }
 .baby-content {
-  margin-left: 160rpx;
+  margin-left: 120rpx;
   transition: margin-left 0.2s ease;
 }
 .baby-content.collapsed {
