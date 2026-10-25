@@ -20,10 +20,11 @@
 
 ## 侧栏内容
 
-按以下顺序展示 7 个入口：
+按以下顺序展示 8 个入口：
 
 | key | 文案 | emoji | 目标 |
 |---|---|---|---|
+| home | 宝宝首页 | 🏠 | `/pages/baby/index` |
 | milk | 喝奶 | 🍼 | `/package-baby/records/index?type=milk` |
 | sleep | 睡眠 | 😴 | `/package-baby/records/index?type=sleep` |
 | diaper | 排便 | 💧 | `/package-baby/records/index?type=diaper` |
@@ -37,15 +38,17 @@
 ## 布局与交互
 
 - 侧栏固定在页面左侧，`position: fixed`，白色背景，右边框使用 `var(--border)`。
-- 默认展开：宽度 200rpx，显示 emoji + 文案。
-- 收起：宽度 76rpx，只显示 emoji；点击底部「收起 / 展开」切换。
+- 默认展开：宽度 160rpx，只显示文案，不显示 emoji。
+- 收起：宽度 64rpx，只显示 emoji；点击底部「收起 / 展开」切换。
 - 内容区通过 `margin-left` 跟随侧栏宽度变化，带 0.2s 过渡，避免遮挡内容。
 - 当前页面入口高亮：
   - 日常记录按当前 Tab 高亮喝奶/睡眠/排便
   - 生长、疫苗、成长、设置页高亮对应入口
-  - 宝宝首页无高亮项
+  - 宝宝首页高亮「宝宝首页」
+- 选中效果：浅粉背景、主题色文字、加粗，并在左侧显示主题色内阴影条。
 - 点击当前已激活项不重复导航。
 - 从宝宝首页进入分包页使用 `uni.navigateTo`；分包页之间切换使用 `uni.redirectTo`，避免页面栈持续增长。
+- 返回宝宝首页使用 `uni.switchTab`。
 - H5 环境对 `getCurrentPages` 做存在性判断，缺失时回退 `navigateTo`。
 - 收起状态保存在 UI key `ui.baby-sidebar.v1`，不进入宝宝数据导出，也不会被「清空宝宝数据」删除。
 - 侧栏底部预留 `env(safe-area-inset-bottom)` 间距。
@@ -65,8 +68,8 @@
   - `active: string`，默认空字符串
   - `collapsed: boolean`，默认 `false`
 - Emits：`toggle`
-- 渲染 7 个入口和底部的展开/收起按钮。
-- 点击入口时按当前页面判断 `navigateTo` 或 `redirectTo`。
+- 渲染 8 个入口和底部的展开/收起按钮。
+- 点击入口时按当前页面判断 `navigateTo`、`redirectTo` 或返回首页的 `switchTab`。
 
 ### `src/components/baby/BabyPage.vue`
 
@@ -115,7 +118,7 @@
 ## 测试
 
 - `tests/baby-sidebar.test.js`：
-  - 7 个入口的顺序、文案与 URL 正确。
+  - 8 个入口的顺序、文案与 URL 正确。
   - 默认展开。
   - 收起状态可保存并重新读取。
   - 存储损坏时回退为展开。
@@ -126,6 +129,5 @@
 ## 不在范围
 
 - 不改侧栏为抽屉或手势操作。
-- 不增加「宝宝首页」入口（使用系统返回）。
 - 不改工具页、关于页。
 - 不调整现有业务数据和备份结构。
