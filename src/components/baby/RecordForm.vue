@@ -69,6 +69,66 @@
         </view>
       </template>
 
+      <template v-else-if="kind === 'food'">
+        <view class="form-label">时间</view>
+        <view class="form-row">
+          <picker mode="date" :value="date" @change="date = $event.detail.value">
+            <view class="form-picker">{{ date }}</view>
+          </picker>
+          <picker mode="time" :value="time" @change="time = $event.detail.value">
+            <view class="form-picker">{{ time }}</view>
+          </picker>
+        </view>
+        <view class="form-label">食物名称</view>
+        <input class="input" v-model="foodName" maxlength="30" placeholder="例如 米糊" />
+        <view class="form-label">份量（可选）</view>
+        <input class="input" v-model="foodAmount" maxlength="20" placeholder="例如 半碗" />
+        <view class="form-label">进食反应</view>
+        <view class="chip-row">
+          <view
+            v-for="item in FOOD_REACTIONS"
+            :key="item"
+            class="chip"
+            :class="{ active: foodReaction === item }"
+            @click="foodReaction = item"
+          >{{ item }}</view>
+        </view>
+        <view v-if="foodReaction === '异常'" class="form-tip">
+          如出现持续异常反应，请咨询儿科医生。
+        </view>
+        <view class="form-label">备注（可选）</view>
+        <textarea
+          class="textarea"
+          v-model="foodNote"
+          maxlength="200"
+          placeholder="记录进食情况"
+        />
+      </template>
+
+      <template v-else-if="kind === 'medicine'">
+        <view class="form-label">时间</view>
+        <view class="form-row">
+          <picker mode="date" :value="date" @change="date = $event.detail.value">
+            <view class="form-picker">{{ date }}</view>
+          </picker>
+          <picker mode="time" :value="time" @change="time = $event.detail.value">
+            <view class="form-picker">{{ time }}</view>
+          </picker>
+        </view>
+        <view class="form-label">药品名称（自定义）</view>
+        <input class="input" v-model="medicineName" maxlength="30" placeholder="输入药品名称" />
+        <view class="form-label">用量（可选，自行填写）</view>
+        <input class="input" v-model="medicineAmount" maxlength="20" placeholder="例如 5 ml" />
+        <view class="form-label">备注（可选）</view>
+        <textarea
+          class="textarea"
+          v-model="medicineNote"
+          maxlength="200"
+          placeholder="记录用药情况"
+        />
+        <view class="form-tip">仅记录用户输入，不提供用药建议，请遵医嘱。</view>
+      </template>
+
       <template v-else>
         <view class="form-label">时间</view>
         <view class="form-row">
@@ -112,6 +172,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { formatDateTime, todayKey } from '../../utils/baby/date.js'
+import { FOOD_REACTIONS } from '../../utils/baby/records.js'
 
 const props = defineProps({
   visible: { type: Boolean, default: false },
@@ -136,10 +197,19 @@ const sleepEndDate = ref('')
 const sleepEndTime = ref('')
 const diaperType = ref('小便')
 const diaperColor = ref('正常')
+const foodName = ref('')
+const foodAmount = ref('')
+const foodReaction = ref('一般')
+const foodNote = ref('')
+const medicineName = ref('')
+const medicineAmount = ref('')
+const medicineNote = ref('')
 
 const title = computed(() => {
   if (props.kind === 'sleep') return '😴 记录睡眠'
   if (props.kind === 'diaper') return '💧 记录排便'
+  if (props.kind === 'food') return '🍚 记录辅食'
+  if (props.kind === 'medicine') return '💊 记录用药'
   return '🍼 记录喝奶'
 })
 
@@ -157,6 +227,13 @@ function reset() {
   sleepEndTime.value = end.slice(11, 16)
   diaperType.value = '小便'
   diaperColor.value = '正常'
+  foodName.value = ''
+  foodAmount.value = ''
+  foodReaction.value = '一般'
+  foodNote.value = ''
+  medicineName.value = ''
+  medicineAmount.value = ''
+  medicineNote.value = ''
 }
 
 watch(
@@ -195,6 +272,25 @@ function submit() {
     emit('submit', {
       start: `${sleepStartDate.value} ${sleepStartTime.value}`,
       end: `${sleepEndDate.value} ${sleepEndTime.value}`,
+    })
+    return
+  }
+  if (props.kind === 'food') {
+    emit('submit', {
+      time: `${date.value} ${time.value}`,
+      name: foodName.value,
+      amount: foodAmount.value,
+      reaction: foodReaction.value,
+      note: foodNote.value,
+    })
+    return
+  }
+  if (props.kind === 'medicine') {
+    emit('submit', {
+      time: `${date.value} ${time.value}`,
+      name: medicineName.value,
+      amount: medicineAmount.value,
+      note: medicineNote.value,
     })
     return
   }
@@ -270,5 +366,11 @@ function submit() {
   margin-top: 8rpx;
   font-size: 26rpx;
   color: var(--danger);
+}
+.form-tip {
+  margin-top: 12rpx;
+  font-size: 22rpx;
+  line-height: 1.6;
+  color: var(--primary-strong);
 }
 </style>

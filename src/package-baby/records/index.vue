@@ -31,6 +31,7 @@
         <view class="list-heading">
           <text class="list-title">今天 · {{ currentLabel }}</text>
           <text v-if="todayMilkText" class="list-summary">{{ todayMilkText }}</text>
+          <text v-if="todayCountText" class="list-summary">{{ todayCountText }}</text>
         </view>
         <view class="add-btn" @click="openForm">+ 添加</view>
       </view>
@@ -49,6 +50,16 @@
             <view class="record-main">😴 {{ item.start.slice(11) }} – {{ item.end.slice(11) }}</view>
             <view class="record-sub">
               {{ formatDuration(durationMinutes(item.start, item.end)) }}
+            </view>
+          </template>
+          <template v-else-if="kind === 'food'">
+            <view class="record-main">🍚 {{ item.time.slice(11) }} · {{ item.name }}</view>
+            <view class="record-sub">{{ foodDetail(item) }}</view>
+          </template>
+          <template v-else-if="kind === 'medicine'">
+            <view class="record-main">💊 {{ item.time.slice(11) }} · {{ item.name }}</view>
+            <view class="record-sub">
+              {{ [item.amount, item.note].filter(Boolean).join(' · ') || '用量未记录' }}
             </view>
           </template>
           <template v-else>
@@ -113,6 +124,8 @@ const kinds = [
   { key: 'milk', label: '🍼 喝奶' },
   { key: 'sleep', label: '😴 睡眠' },
   { key: 'diaper', label: '💧 排便' },
+  { key: 'food', label: '🍚 辅食' },
+  { key: 'medicine', label: '💊 用药' },
 ]
 
 const today = ref(todayKey())
@@ -142,6 +155,20 @@ const todayMilkText = computed(() => {
     ? `共 ${summary.value.milkAmount} ml · ${summary.value.milkCount} 次`
     : `奶量未记录 · ${summary.value.milkCount} 次`
 })
+
+const todayCountText = computed(() => {
+  if (kind.value !== 'food' && kind.value !== 'medicine') return ''
+  const count = day.value[kind.value].length
+  return count ? `今日 ${count} 次` : ''
+})
+
+function foodDetail(item) {
+  const parts = []
+  if (item.amount) parts.push(item.amount)
+  parts.push(`反应：${item.reaction || '未记录'}`)
+  if (item.note) parts.push(item.note)
+  return parts.join(' · ')
+}
 
 function refresh() {
   today.value = todayKey()
@@ -211,7 +238,7 @@ onShow(refresh)
   padding: 16rpx 0;
   text-align: center;
   border-radius: 18rpx;
-  font-size: 28rpx;
+  font-size: 24rpx;
   color: var(--text-secondary);
 }
 .kind-tab.active {
