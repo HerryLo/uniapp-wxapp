@@ -1,6 +1,7 @@
 <template>
-  <view class="baby-page">
-    <view class="profile-card">
+  <BabyPage>
+    <view class="baby-page">
+      <view class="profile-card">
       <view class="avatar">👶</view>
       <view class="profile-info">
         <view class="profile-name">{{ profile.name }}</view>
@@ -10,18 +11,6 @@
         <view v-else class="profile-age">还没有填写出生日期</view>
       </view>
       <view class="profile-edit" @click="goSettings">{{ age ? '编辑' : '去设置' }}</view>
-    </view>
-
-    <view class="quick-grid">
-      <view
-        v-for="item in quickActions"
-        :key="item.kind"
-        class="quick-item"
-        @click="goRecords(item.kind)"
-      >
-        <text class="quick-icon">{{ item.icon }}</text>
-        <text class="quick-label">{{ item.label }}</text>
-      </view>
     </view>
 
     <view class="card">
@@ -74,26 +63,12 @@
       <view v-else class="empty-tip">还没有身高体重记录</view>
     </view>
 
-    <view class="feature-list">
-      <view
-        v-for="item in features"
-        :key="item.url"
-        class="feature-item"
-        @click="goPage(item.url)"
-      >
-        <view class="feature-body">
-          <view class="feature-title">{{ item.title }}</view>
-          <view class="feature-desc">{{ item.desc }}</view>
-        </view>
-        <text class="feature-arrow">›</text>
-      </view>
+      <ShareButton class="share-entry" />
+
+      <Disclaimer />
+      <AdBanner />
     </view>
-
-    <ShareButton class="share-entry" />
-
-    <Disclaimer />
-    <AdBanner />
-  </view>
+  </BabyPage>
 </template>
 
 <script setup>
@@ -106,25 +81,13 @@ import {
 } from '@dcloudio/uni-app'
 import AdBanner from '../../components/AdBanner.vue'
 import ShareButton from '../../components/ShareButton.vue'
+import BabyPage from '../../components/baby/BabyPage.vue'
 import Disclaimer from '../../components/baby/Disclaimer.vue'
 import { ageInfo, formatMonthAge, todayKey } from '../../utils/baby/date.js'
 import { latestGrowth, loadGrowth } from '../../utils/baby/growth.js'
 import { loadProfile } from '../../utils/baby/profile.js'
 import { loadDay, summarizeDay } from '../../utils/baby/records.js'
 import { loadVaccines, nextVaccine, vaccineStatus } from '../../utils/baby/vaccines.js'
-
-const quickActions = [
-  { kind: 'milk', icon: '🍼', label: '喝奶' },
-  { kind: 'sleep', icon: '😴', label: '睡眠' },
-  { kind: 'diaper', icon: '💧', label: '排便' },
-]
-
-const features = [
-  { title: '生长曲线', desc: '记录身高体重', url: '/package-baby/growth/index' },
-  { title: '疫苗参考', desc: '一类 / 二类参考清单', url: '/package-baby/health/index' },
-  { title: '成长手记', desc: '里程碑、心情与心得', url: '/package-baby/journal/index' },
-  { title: '数据与设置', desc: '资料、导出与恢复', url: '/package-baby/settings/index' },
-]
 
 const profile = ref(loadProfile())
 const today = ref(todayKey())
@@ -148,10 +111,6 @@ function refresh() {
     loadVaccines(),
     age.value ? age.value.totalMonths : null
   )
-}
-
-function goRecords(kind) {
-  uni.navigateTo({ url: `/package-baby/records/index?type=${kind}` })
 }
 
 function goPage(url) {
@@ -230,29 +189,6 @@ onShareTimeline(() => ({
   font-size: 24rpx;
   white-space: nowrap;
 }
-.quick-grid {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 24rpx;
-}
-.quick-item {
-  width: calc(33.33% - 12rpx);
-  padding: 28rpx 0;
-  background: var(--surface);
-  border-radius: 28rpx;
-  text-align: center;
-  box-shadow: 0 8rpx 24rpx rgba(255, 143, 163, 0.1);
-}
-.quick-icon {
-  display: block;
-  font-size: 44rpx;
-}
-.quick-label {
-  display: block;
-  margin-top: 8rpx;
-  font-size: 26rpx;
-  color: var(--text);
-}
 .today-grid {
   display: flex;
   justify-content: space-between;
@@ -317,36 +253,5 @@ onShareTimeline(() => ({
 .card-link.inline {
   margin-top: 0;
   white-space: nowrap;
-}
-.feature-list {
-  margin-top: 24rpx;
-  background: var(--surface);
-  border-radius: 40rpx;
-  padding: 0 32rpx;
-  box-shadow: 0 8rpx 24rpx rgba(255, 143, 163, 0.12);
-}
-.feature-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 28rpx 0;
-  border-bottom: 1rpx solid var(--border);
-}
-.feature-item:last-child {
-  border-bottom: none;
-}
-.feature-title {
-  font-size: 30rpx;
-  font-weight: 600;
-  color: var(--text);
-}
-.feature-desc {
-  margin-top: 6rpx;
-  font-size: 24rpx;
-  color: var(--text-secondary);
-}
-.feature-arrow {
-  font-size: 32rpx;
-  color: var(--text-secondary);
 }
 </style>
