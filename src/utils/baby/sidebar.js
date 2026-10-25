@@ -3,6 +3,8 @@ export const SIDEBAR_ITEMS = [
   { key: 'milk', label: '喝奶', url: '/package-baby/records/index?type=milk' },
   { key: 'sleep', label: '睡眠', url: '/package-baby/records/index?type=sleep' },
   { key: 'diaper', label: '排便', url: '/package-baby/records/index?type=diaper' },
+  { key: 'food', label: '辅食', url: '/package-baby/records/index?type=food' },
+  { key: 'medicine', label: '用药', url: '/package-baby/records/index?type=medicine' },
   { key: 'health', label: '疫苗', url: '/package-baby/health/index' },
   { key: 'growth', label: '生长', url: '/package-baby/growth/index' },
   { key: 'journal', label: '手记', url: '/package-baby/journal/index' },
