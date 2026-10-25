@@ -147,9 +147,9 @@ function onClick() {
   display: flex;
   flex-direction: column;
   padding: 16rpx 12rpx calc(16rpx + env(safe-area-inset-bottom));
-  background: linear-gradient(180deg, #FFF6F7 0%, var(--cream) 100%);
-  border-right: 1rpx solid var(--border);
-  box-shadow: 6rpx 0 24rpx rgba(255, 143, 163, 0.06);
+  background: linear-gradient(180deg, #FFE4E1 0%, #FFF3F5 60%, #FFF9F5 100%);
+  border-right: 2rpx solid #FFD6DE;
+  box-shadow: 8rpx 0 28rpx rgba(255, 143, 163, 0.12);
 }
 .sidebar-list {
   margin-bottom: 8rpx;
@@ -166,7 +166,7 @@ function onClick() {
   text-align: center;
 }
 .sidebar-item.active {
-  background: var(--primary-soft);
+  background: #FFFFFF;
   color: var(--primary-strong);
   font-weight: 600;
   box-shadow: inset 6rpx 0 0 var(--primary-strong);
