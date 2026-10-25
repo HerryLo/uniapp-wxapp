@@ -13,7 +13,7 @@ beforeEach(() => {
 })
 
 describe('baby sidebar', () => {
-  it('ships the eight entries in order', () => {
+  it('ships the ten entries in order', () => {
     expect(SIDEBAR_ITEMS.map((item) => item.key)).toEqual([
       'home',
       'milk',
@@ -22,6 +22,8 @@ describe('baby sidebar', () => {
       'health',
       'growth',
       'journal',
+      'mom',
+      'travel',
       'settings',
     ])
     expect(SIDEBAR_ITEMS.map((item) => item.label)).toEqual([
@@ -32,11 +34,15 @@ describe('baby sidebar', () => {
       '疫苗',
       '生长',
       '手记',
+      '妈妈',
+      '旅行',
       '设置',
     ])
     expect(SIDEBAR_ITEMS[0].url).toBe('/pages/baby/index')
     expect(SIDEBAR_ITEMS[1].url).toBe('/package-baby/records/index?type=milk')
     expect(SIDEBAR_ITEMS[4].url).toBe('/package-baby/health/index')
+    expect(SIDEBAR_ITEMS[7].url).toBe('/package-baby/mom/index')
+    expect(SIDEBAR_ITEMS[8].url).toBe('/package-baby/travel/index')
   })
 
   it('uses unique sidebar labels', () => {

@@ -52,6 +52,12 @@
           }
         },
         {
+          "path": "mom/index",
+          "style": {
+            "navigationBarTitleText": "妈妈记录"
+          }
+        },
+        {
           "path": "settings/index",
           "style": {
             "navigationBarTitleText": "数据与设置"

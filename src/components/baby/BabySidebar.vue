@@ -152,6 +152,9 @@ function onClick() {
   box-shadow: 8rpx 0 28rpx rgba(255, 143, 163, 0.12);
 }
 .sidebar-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   margin-bottom: 8rpx;
 }
 .sidebar-item {

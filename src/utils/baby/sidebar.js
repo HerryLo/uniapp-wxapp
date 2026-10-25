@@ -6,6 +6,8 @@ export const SIDEBAR_ITEMS = [
   { key: 'health', label: '疫苗', url: '/package-baby/health/index' },
   { key: 'growth', label: '生长', url: '/package-baby/growth/index' },
   { key: 'journal', label: '手记', url: '/package-baby/journal/index' },
+  { key: 'mom', label: '妈妈', url: '/package-baby/mom/index' },
+  { key: 'travel', label: '旅行', url: '/package-baby/travel/index' },
   { key: 'settings', label: '设置', url: '/package-baby/settings/index' },
 ]
 
