@@ -147,8 +147,9 @@ function onClick() {
   display: flex;
   flex-direction: column;
   padding: 16rpx 12rpx calc(16rpx + env(safe-area-inset-bottom));
-  background: var(--surface);
+  background: linear-gradient(180deg, #FFF6F7 0%, var(--cream) 100%);
   border-right: 1rpx solid var(--border);
+  box-shadow: 6rpx 0 24rpx rgba(255, 143, 163, 0.06);
 }
 .sidebar-list {
   margin-bottom: 8rpx;
