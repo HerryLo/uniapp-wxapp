@@ -1,6 +1,7 @@
 <template>
-  <view class="records-page">
-    <view class="kind-tabs">
+  <BabyPage :active="kind">
+    <view class="records-page">
+      <view class="kind-tabs">
       <view
         v-for="item in kinds"
         :key="item.key"
@@ -85,9 +86,10 @@
       :date="today"
       :error="formError"
       @close="closeForm"
-      @submit="submitForm"
-    />
-  </view>
+        @submit="submitForm"
+      />
+    </view>
+  </BabyPage>
 </template>
 
 <script setup>
@@ -95,6 +97,7 @@ import { computed, ref } from 'vue'
 import { onLoad, onShow } from '@dcloudio/uni-app'
 import AdBanner from '../../components/AdBanner.vue'
 import Disclaimer from '../../components/baby/Disclaimer.vue'
+import BabyPage from '../../components/baby/BabyPage.vue'
 import RecordForm from '../../components/baby/RecordForm.vue'
 import LineChart from '../../components/baby/LineChart.vue'
 import {
