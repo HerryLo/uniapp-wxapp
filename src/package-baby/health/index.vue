@@ -45,11 +45,12 @@
               <view v-if="statusOf(item).key === 'overdue'" class="overdue-note">
                 请咨询接种门诊
               </view>
-              <text
+              <view
                 v-if="item.type === '二类' && !item.done"
-                class="skip-link"
+                class="skip-btn"
+                :class="{ skipped: item.skipped }"
                 @click.stop="toggleSkip(item)"
-              >{{ item.skipped ? '恢复参考' : '暂不接种' }}</text>
+              >{{ item.skipped ? '↺ 恢复参考' : '暂不接种' }}</view>
             </view>
             <view class="cell col-month">{{ formatMonthAge(item.month) }}</view>
             <view class="cell col-status">
@@ -423,11 +424,24 @@ onShow(refresh)
 .status.skipped {
   color: var(--text-secondary);
 }
-.skip-link {
-  display: inline-block;
-  margin-top: 6rpx;
-  font-size: 22rpx;
+.skip-btn {
+  align-self: flex-start;
+  margin-top: 10rpx;
+  padding: 6rpx 18rpx;
+  border: 1rpx solid var(--primary-strong);
+  border-radius: 999rpx;
+  background: #FFF1F3;
   color: var(--primary-strong);
+  font-size: 22rpx;
+  line-height: 1.4;
+}
+.skip-btn.skipped {
+  border-color: var(--border);
+  background: #FFFFFF;
+  color: var(--text-secondary);
+}
+.skip-btn:active {
+  opacity: 0.75;
 }
 .date-field {
   padding: 8rpx 12rpx;
