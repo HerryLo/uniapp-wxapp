@@ -1,11 +1,7 @@
 <template>
   <BabyPage active="health">
     <view class="health-page">
-      <Disclaimer
-      text="疫苗清单仅作记录参考，不构成医疗建议，也不代表推荐接种。具体程序、费用和禁忌请咨询当地接种门诊。"
-    />
-
-    <view v-if="!age" class="card profile-tip">
+      <view v-if="!age" class="card profile-tip">
       <view class="tip-text">完善宝宝出生日期后，可显示参考月龄和待接种提示。</view>
       <view class="tip-btn" @click="goSettings">去完善资料</view>
     </view>
@@ -119,7 +115,6 @@
 import { computed, ref } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import BabyPage from '../../components/baby/BabyPage.vue'
-import Disclaimer from '../../components/baby/Disclaimer.vue'
 import { VACCINE_SOURCE } from '../../data/vaccinePlan.js'
 import { ageInfo, formatMonthAge, todayKey } from '../../utils/baby/date.js'
 import { loadProfile } from '../../utils/baby/profile.js'

@@ -77,7 +77,6 @@
       </view>
     </view>
 
-    <Disclaimer text="记录仅用于家庭照顾参考，不构成医疗建议。如宝宝出现异常症状，请及时就医。" />
     <AdBanner />
 
     <RecordForm
@@ -96,7 +95,6 @@
 import { computed, ref } from 'vue'
 import { onLoad, onShow } from '@dcloudio/uni-app'
 import AdBanner from '../../components/AdBanner.vue'
-import Disclaimer from '../../components/baby/Disclaimer.vue'
 import BabyPage from '../../components/baby/BabyPage.vue'
 import RecordForm from '../../components/baby/RecordForm.vue'
 import LineChart from '../../components/baby/LineChart.vue'

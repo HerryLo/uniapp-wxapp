@@ -109,9 +109,6 @@
       </view>
     </view>
 
-      <Disclaimer
-        text="参考里程碑仅作了解，个体差异较大，不构成发育评估。如有疑问请咨询儿科医生。"
-      />
     </view>
   </BabyPage>
 </template>
@@ -120,7 +117,6 @@
 import { ref } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import BabyPage from '../../components/baby/BabyPage.vue'
-import Disclaimer from '../../components/baby/Disclaimer.vue'
 import {
   REFERENCE_MILESTONES,
   REFERENCE_MILESTONE_NOTE,
