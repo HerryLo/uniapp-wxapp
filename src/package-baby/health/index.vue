@@ -21,7 +21,7 @@
             <text v-if="group.type === '二类'" class="self-paid-tag">自费自愿</text>
           </view>
           <view v-if="group.type === '二类'" class="group-note">
-            二类疫苗为自费自愿接种，请咨询接种门诊。
+            二类疫苗为自费自愿接种，请咨询接种门诊。如不计划接种，可标记为暂不接种。
           </view>
 
           <view class="table-row table-header">
@@ -45,6 +45,11 @@
               <view v-if="statusOf(item).key === 'overdue'" class="overdue-note">
                 请咨询接种门诊
               </view>
+              <text
+                v-if="item.type === '二类' && !item.done"
+                class="skip-link"
+                @click.stop="toggleSkip(item)"
+              >{{ item.skipped ? '恢复参考' : '暂不接种' }}</text>
             </view>
             <view class="cell col-month">{{ formatMonthAge(item.month) }}</view>
             <view class="cell col-status">
@@ -126,6 +131,7 @@ import {
   removeCustomVaccine,
   saveVaccines,
   setVaccineDone,
+  setVaccineSkipped,
   vaccineStatus,
 } from '../../utils/baby/vaccines.js'
 
@@ -164,6 +170,21 @@ function toggle(item) {
 
 function changeDate(item, date) {
   persist(setVaccineDone(list.value, item.id, true, date))
+}
+
+function toggleSkip(item) {
+  if (item.skipped) {
+    persist(setVaccineSkipped(list.value, item.id, false))
+    return
+  }
+  uni.showModal({
+    title: '暂不接种',
+    content: `确定将「${item.name}」标记为暂不接种吗？之后可恢复参考。`,
+    success: (res) => {
+      if (!res.confirm) return
+      persist(setVaccineSkipped(list.value, item.id, true))
+    },
+  })
 }
 
 function openCustom() {
@@ -398,6 +419,15 @@ onShow(refresh)
 }
 .status.pending {
   color: var(--text-secondary);
+}
+.status.skipped {
+  color: var(--text-secondary);
+}
+.skip-link {
+  display: inline-block;
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  color: var(--primary-strong);
 }
 .date-field {
   padding: 8rpx 12rpx;
