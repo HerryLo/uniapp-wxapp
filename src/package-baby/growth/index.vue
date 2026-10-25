@@ -1,6 +1,7 @@
 <template>
-  <view class="growth-page">
-    <view class="card form-card">
+  <BabyPage active="growth">
+    <view class="growth-page">
+      <view class="card form-card">
       <view class="card-title">记录身高体重</view>
       <view class="label">测量日期</view>
       <picker mode="date" :value="form.date" @change="form.date = $event.detail.value">
@@ -51,13 +52,15 @@
       </view>
     </view>
 
-    <Disclaimer text="生长数据仅记录用户输入，不提供发育评估。如对宝宝生长有疑问，请咨询儿科医生。" />
-  </view>
+      <Disclaimer text="生长数据仅记录用户输入，不提供发育评估。如对宝宝生长有疑问，请咨询儿科医生。" />
+    </view>
+  </BabyPage>
 </template>
 
 <script setup>
 import { computed, ref } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
+import BabyPage from '../../components/baby/BabyPage.vue'
 import Disclaimer from '../../components/baby/Disclaimer.vue'
 import LineChart from '../../components/baby/LineChart.vue'
 import {

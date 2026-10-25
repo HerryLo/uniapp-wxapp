@@ -1,6 +1,7 @@
 <template>
-  <view class="journal-page">
-    <view class="card form-card">
+  <BabyPage active="journal">
+    <view class="journal-page">
+      <view class="card form-card">
       <view class="card-title">成长里程碑</view>
       <view class="label">日期</view>
       <picker
@@ -108,15 +109,17 @@
       </view>
     </view>
 
-    <Disclaimer
-      text="参考里程碑仅作了解，个体差异较大，不构成发育评估。如有疑问请咨询儿科医生。"
-    />
-  </view>
+      <Disclaimer
+        text="参考里程碑仅作了解，个体差异较大，不构成发育评估。如有疑问请咨询儿科医生。"
+      />
+    </view>
+  </BabyPage>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
+import BabyPage from '../../components/baby/BabyPage.vue'
 import Disclaimer from '../../components/baby/Disclaimer.vue'
 import {
   REFERENCE_MILESTONES,

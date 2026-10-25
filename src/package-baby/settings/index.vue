@@ -1,6 +1,7 @@
 <template>
-  <view class="settings-page">
-    <view class="card form-card">
+  <BabyPage active="settings">
+    <view class="settings-page">
+      <view class="card form-card">
       <view class="card-title">宝宝资料</view>
       <view class="label">昵称</view>
       <input class="input" v-model="form.name" maxlength="20" placeholder="宝宝昵称" />
@@ -86,13 +87,15 @@
           <view class="btn btn-ghost" @click="pasteOpen = false">取消</view>
         </view>
       </view>
+      </view>
     </view>
-  </view>
+  </BabyPage>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
+import BabyPage from '../../components/baby/BabyPage.vue'
 import { copyText } from '../../utils/clipboard.js'
 import { loadProfile, saveProfile } from '../../utils/baby/profile.js'
 import {
