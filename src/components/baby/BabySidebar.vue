@@ -195,14 +195,16 @@ function onClick() {
   height: 64rpx;
   margin-top: 8rpx;
   border-top: 1rpx solid var(--border);
-  color: var(--text-secondary);
+  color: var(--primary-strong);
 }
 .sidebar-toggle-text {
-  font-size: 30rpx;
+  font-size: 32rpx;
+  font-weight: 600;
 }
 .sidebar-toggle-label {
   margin-left: 8rpx;
-  font-size: 22rpx;
+  font-size: 26rpx;
+  font-weight: 600;
 }
 .sidebar-float {
   position: fixed;
