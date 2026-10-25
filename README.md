@@ -7,11 +7,15 @@
 ### 宝宝（Tab）
 
 - 宝宝资料：昵称、出生日期、性别与月龄
-- 日常记录：喝奶、睡眠、排便，今日统计
+- 侧边栏导航：首页、喝奶、睡眠、排便、辅食、用药、疫苗、生长、手记、妈妈、旅行、设置；可收起为悬浮按钮，拖动调整位置
+- 日常记录：喝奶、睡眠、排便、辅食、用药，首页汇总今日喝奶次数、睡眠时长与排便次数
+- 奶量趋势：最近 7 天奶量列表，有奶量记录超过 3 天时显示折线图
 - 生长曲线：身高体重记录与 canvas 折线图
-- 疫苗参考：一类 / 二类参考清单、已接种标记、自定义疫苗
+- 疫苗参考：一类 / 二类参考清单、已接种标记与接种日期、自定义疫苗；二类疫苗可单项或批量标记「暂不接种」
 - 成长手记：里程碑、每日心情、育儿心得
-- 数据管理：JSON 导出 / 恢复 / 清空
+- 妈妈记录：每日心情、睡眠时长、身体状态与备注
+- 旅行记录：出行日期、地点与备注
+- 数据管理：JSON 导出 / 恢复 / 清空，恢复前自动备份当前数据
 
 ### 工具（Tab）
 
@@ -25,40 +29,50 @@
 ## 运行
 
 ```bash
-yarn install
+npm install
 
 # 微信小程序开发
-yarn dev:mp-weixin
+npm run dev:mp-weixin
 
 # H5 开发（仅用于本地调试）
-yarn dev:h5
+npm run dev:h5
 
 # 单元测试
-yarn test
+npm test
+
+# 只跑单个测试文件
+npx vitest run tests/baby-records.test.js
 ```
+
+也可以使用 `yarn` 执行同样的脚本。
 
 微信小程序：使用微信开发者工具导入 `dist/dev/mp-weixin`。发布前请先将 `src/manifest.json` 中的 appid 改为自己的小程序 appid。
 
 ## 构建
 
 ```bash
-yarn build:mp-weixin
-yarn build:h5
+npm run build:mp-weixin
+npm run build:h5
 ```
 
 ## 目录结构
 
+- `src/pages/baby/index.vue`：宝宝首页（今日记录、下一条疫苗、最近生长）
 - `src/pages/tools/index.vue`：工具页与「全部工具」抽屉
-- `src/pages/baby/index.vue`：宝宝首页
-- `src/package-baby/records/index.vue`：日常记录
-- `src/package-baby/growth/index.vue`：生长曲线
-- `src/package-baby/health/index.vue`：疫苗参考
-- `src/package-baby/journal/index.vue`：成长手记
-- `src/package-baby/settings/index.vue`：数据与设置
-- `src/components/baby/*`：宝宝模块组件
-- `src/data/*`：疫苗与参考里程碑数据
-- `src/utils/baby/*`：宝宝模块纯逻辑与本地存储
-- `tests/*.test.js`：Vitest 单元测试
+- `src/pages/about/about.vue`：关于、免责声明与隐私说明
+- `src/package-baby/`：宝宝分包页面（日常记录、生长、疫苗、手记、妈妈、旅行、设置）
+  - `records/*.vue`：喝奶 / 睡眠 / 排便 / 辅食 / 用药记录页，复用 `components/records/RecordPage.vue`
+  - `components/`：记录页外壳、记录表单、列表与 canvas 折线图
+  - `composables/useDayRecords.js`：单日记录的状态与增删逻辑
+  - `utils/`：备份恢复、成长手记、妈妈记录、旅行记录与同步快照封装
+- `src/components/baby/*`：宝宝页外壳（含侧边栏）与通用组件
+- `src/components/tools/*`：增值税、单位、文本、进制面板
+- `src/data/*`：疫苗参考清单数据
+- `src/utils/baby/*`：宝宝模块纯逻辑、存储 key 与本地存储封装
+- `src/utils/*`：工具箱计算逻辑与剪贴板等通用工具
+- `tests/*.test.js`：Vitest 单元测试（纯逻辑，stub 全局 `uni`）
+- `docs/superpowers/`：需求设计与实施计划
+- `scripts/gen-tab-icons.cjs`：生成 tabBar 图标脚本
 
 ## 说明
 
