@@ -139,7 +139,7 @@ export function backupCurrent(now = new Date()) {
   return writeStorage(BACKUP_KEY, buildExportPayload(now))
 }
 
-function clearExceptBackup() {
+function clearExceptBackup(recordMonths = []) {
   try {
     const info = uni.getStorageInfoSync()
     const keys = info && Array.isArray(info.keys) ? info.keys : []
@@ -157,6 +157,7 @@ function clearExceptBackup() {
       MOM_KEY,
       TRAVEL_KEY,
       META_KEY,
+      ...recordMonths.map((month) => recordsKey(month)),
     ]) {
       removeStorage(key)
     }
@@ -164,10 +165,11 @@ function clearExceptBackup() {
 }
 
 export function restoreData(data, now = new Date()) {
-  if (!backupCurrent(now)) {
+  const backup = buildExportPayload(now)
+  if (!writeStorage(BACKUP_KEY, backup)) {
     return { ok: false, error: '备份当前数据失败，已取消导入' }
   }
-  clearExceptBackup()
+  clearExceptBackup(Object.keys(backup.data.records || {}))
   const writes = []
   if (data.profile) writes.push(writeStorage(PROFILE_KEY, data.profile))
   if (Array.isArray(data.growth)) writes.push(writeStorage(GROWTH_KEY, data.growth))

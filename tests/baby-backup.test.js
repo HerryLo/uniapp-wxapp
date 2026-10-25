@@ -24,6 +24,7 @@ import {
 import { createBuiltinVaccines } from '../src/utils/baby/vaccines.js'
 import { loadMomEntries } from '../src/package-baby/utils/mom.js'
 import { loadTravels } from '../src/package-baby/utils/travel.js'
+import { loadDay } from '../src/utils/baby/records.js'
 
 let store
 
@@ -54,6 +55,27 @@ function seed() {
       milk: [{ id: 'm1', time: '2026-10-24 08:00', type: '母乳', amount: null, createdAt: 1 }],
       sleep: [],
       diaper: [],
+      food: [
+        {
+          id: 'f1',
+          time: '2026-10-24 10:00',
+          name: '米糊',
+          amount: '半碗',
+          reaction: '喜欢',
+          note: '',
+          createdAt: 1,
+        },
+      ],
+      medicine: [
+        {
+          id: 'med1',
+          time: '2026-10-24 11:00',
+          name: '维生素',
+          amount: '5 滴',
+          note: '',
+          createdAt: 1,
+        },
+      ],
     },
   })
   store[GROWTH_KEY] = JSON.stringify([
@@ -231,6 +253,40 @@ describe('baby backup', () => {
     expect(res.ok).toBe(true)
     expect(loadMomEntries()[0].mood).toBe('happy')
     expect(loadTravels()[0].place).toBe('苏州')
+  })
+
+  it('round-trips food and medicine records', () => {
+    seed()
+    const payload = buildExportPayload(new Date(2026, 9, 24, 10, 5))
+    const day = payload.data.records['2026-10']['2026-10-24']
+    expect(day.food).toHaveLength(1)
+    expect(day.medicine).toHaveLength(1)
+
+    const res = restoreData(payload.data, new Date(2026, 9, 25, 9, 0))
+    expect(res.ok).toBe(true)
+    expect(loadDay('2026-10-24').food).toHaveLength(1)
+    expect(loadDay('2026-10-24').medicine).toHaveLength(1)
+  })
+
+  it('removes record months when storage info fails during cleanup', () => {
+    seed()
+    let calls = 0
+    uni.getStorageInfoSync = () => {
+      calls += 1
+      if (calls > 1) throw new Error('fail')
+      return { keys: Object.keys(store) }
+    }
+    const res = restoreData({
+      profile: null,
+      records: {},
+      growth: [],
+      vaccines: [],
+      milestones: [],
+      moods: {},
+      notes: [],
+    })
+    expect(res.ok).toBe(true)
+    expect(store[recordsKey('2026-10')]).toBeUndefined()
   })
 
   it('accepts old backups without mom and travel fields', () => {
