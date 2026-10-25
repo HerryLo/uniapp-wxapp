@@ -5,9 +5,11 @@ import {
   META_KEY,
   MILESTONES_KEY,
   MOODS_KEY,
+  MOM_KEY,
   NOTES_KEY,
   PROFILE_KEY,
   RECORDS_PREFIX,
+  TRAVEL_KEY,
   VACCINES_KEY,
   isBabyKey,
   recordsKey,
@@ -17,6 +19,8 @@ import { loadProfile } from './profile.js'
 import { loadGrowth } from './growth.js'
 import { loadVaccines } from './vaccines.js'
 import { loadMilestones, loadMoods, loadNotes } from './journal.js'
+import { loadMomEntries } from './mom.js'
+import { loadTravels } from './travel.js'
 
 export const MAX_IMPORT_BYTES = 2 * 1024 * 1024
 
@@ -77,6 +81,8 @@ export function buildExportPayload(now = new Date()) {
       milestones: loadMilestones(),
       moods: loadMoods(),
       notes: loadNotes(),
+      mom: loadMomEntries(),
+      travel: loadTravels(),
     },
   }
 }
@@ -121,6 +127,11 @@ export function validateImportPayload(raw) {
   if (!data.moods || typeof data.moods !== 'object' || Array.isArray(data.moods)) {
     return { ok: false, error: '心情记录格式不正确' }
   }
+  for (const key of ['mom', 'travel']) {
+    if (data[key] != null && !Array.isArray(data[key])) {
+      return { ok: false, error: '备份字段格式不正确' }
+    }
+  }
   return { ok: true, payload }
 }
 
@@ -143,6 +154,8 @@ function clearExceptBackup() {
       MILESTONES_KEY,
       MOODS_KEY,
       NOTES_KEY,
+      MOM_KEY,
+      TRAVEL_KEY,
       META_KEY,
     ]) {
       removeStorage(key)
@@ -163,6 +176,8 @@ export function restoreData(data, now = new Date()) {
     writes.push(writeStorage(MILESTONES_KEY, data.milestones))
   }
   if (Array.isArray(data.notes)) writes.push(writeStorage(NOTES_KEY, data.notes))
+  if (Array.isArray(data.mom)) writes.push(writeStorage(MOM_KEY, data.mom))
+  if (Array.isArray(data.travel)) writes.push(writeStorage(TRAVEL_KEY, data.travel))
   if (data.moods) writes.push(writeStorage(MOODS_KEY, data.moods))
   for (const [month, value] of Object.entries(data.records || {})) {
     if (/^\d{4}-(0[1-9]|1[0-2])$/.test(month)) {

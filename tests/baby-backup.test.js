@@ -14,12 +14,16 @@ import {
   META_KEY,
   MILESTONES_KEY,
   MOODS_KEY,
+  MOM_KEY,
   NOTES_KEY,
   PROFILE_KEY,
+  TRAVEL_KEY,
   VACCINES_KEY,
   recordsKey,
 } from '../src/utils/baby/keys.js'
 import { createBuiltinVaccines } from '../src/utils/baby/vaccines.js'
+import { loadMomEntries } from '../src/utils/baby/mom.js'
+import { loadTravels } from '../src/utils/baby/travel.js'
 
 let store
 
@@ -64,6 +68,27 @@ function seed() {
   store[MOODS_KEY] = JSON.stringify({ '2026-10-24': 'happy' })
   store[NOTES_KEY] = JSON.stringify([
     { id: 'n1', date: '2026-10-24', content: '今天很乖', createdAt: 1 },
+  ])
+  store[MOM_KEY] = JSON.stringify([
+    {
+      date: '2026-10-24',
+      sleepHours: 6.5,
+      mood: 'calm',
+      condition: '腰酸',
+      note: '',
+      createdAt: 1,
+      updatedAt: 1,
+    },
+  ])
+  store[TRAVEL_KEY] = JSON.stringify([
+    {
+      id: 't1',
+      startDate: '2026-05-01',
+      endDate: '2026-05-03',
+      place: '杭州',
+      note: '西湖',
+      createdAt: 1,
+    },
   ])
 }
 
@@ -164,6 +189,66 @@ describe('baby backup', () => {
     const res = restoreData({ profile: null, records: {}, growth: [], vaccines: [], milestones: [], moods: {}, notes: [] })
     expect(res).toEqual({ ok: false, error: '备份当前数据失败，已取消导入' })
     expect(JSON.parse(store[PROFILE_KEY]).name).toBe('小满')
+  })
+
+  it('exports and restores mom and travel data', () => {
+    seed()
+    const payload = buildExportPayload(new Date(2026, 9, 24, 10, 5))
+    expect(payload.data.mom).toHaveLength(1)
+    expect(payload.data.travel).toHaveLength(1)
+
+    const imported = {
+      profile: null,
+      records: {},
+      growth: [],
+      vaccines: [],
+      milestones: [],
+      moods: {},
+      notes: [],
+      mom: [
+        {
+          date: '2026-01-01',
+          sleepHours: 8,
+          mood: 'happy',
+          condition: '',
+          note: '',
+          createdAt: 2,
+          updatedAt: 2,
+        },
+      ],
+      travel: [
+        {
+          id: 't2',
+          startDate: '2026-02-01',
+          endDate: '2026-02-02',
+          place: '苏州',
+          note: '',
+          createdAt: 2,
+        },
+      ],
+    }
+    const res = restoreData(imported, new Date(2026, 9, 25, 9, 0))
+    expect(res.ok).toBe(true)
+    expect(loadMomEntries()[0].mood).toBe('happy')
+    expect(loadTravels()[0].place).toBe('苏州')
+  })
+
+  it('accepts old backups without mom and travel fields', () => {
+    const payload = {
+      app: 'toolbox-baby',
+      schemaVersion: 1,
+      exportedAt: '2026-10-24 10:05',
+      data: {
+        profile: null,
+        records: {},
+        growth: [],
+        vaccines: [],
+        milestones: [],
+        moods: {},
+        notes: [],
+      },
+    }
+    expect(validateImportPayload(payload).ok).toBe(true)
   })
 
   it('clears all baby data and keeps tools data', () => {
