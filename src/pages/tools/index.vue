@@ -36,7 +36,7 @@
             :class="{ active: active === tool.key }"
             @click="pickTool(tool.key)"
           >
-            <text class="tool-name">{{ tool.name }}</text>
+            <text class="tool-name">{{ tool.emoji }} {{ tool.name }}</text>
             <text class="tool-desc">{{ tool.desc }}</text>
           </view>
         </view>
@@ -56,10 +56,10 @@ import TextPanel from '../../components/tools/TextPanel.vue'
 import RadixPanel from '../../components/tools/RadixPanel.vue'
 
 const tools = [
-  { key: 'vat', name: '增值税', desc: '含税 / 不含税' },
-  { key: 'unit', name: '单位换算', desc: '长度 / 重量 / 温度' },
-  { key: 'text', name: '文本处理', desc: '去重 / 大小写' },
-  { key: 'radix', name: '进制转换', desc: '2–36 进制' },
+  { key: 'vat', name: '增值税', emoji: '🧮', desc: '含税 / 不含税' },
+  { key: 'unit', name: '单位换算', emoji: '📐', desc: '长度 / 重量 / 温度' },
+  { key: 'text', name: '文本处理', emoji: '✂️', desc: '去重 / 大小写' },
+  { key: 'radix', name: '进制转换', emoji: '🔢', desc: '2–36 进制' },
 ]
 
 const active = ref('vat')
@@ -112,8 +112,13 @@ function openAbout() {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: var(--primary-strong);
-  box-shadow: 0 8rpx 24rpx rgba(232, 111, 135, 0.35);
+  background: linear-gradient(135deg, #FF9FB1, var(--primary-strong));
+  box-shadow: 0 10rpx 26rpx rgba(232, 111, 135, 0.3);
+  transition: transform 0.12s ease;
+}
+
+.tools-fab:active {
+  transform: scale(0.94);
 }
 
 .tools-fab .grid-icon {
@@ -207,14 +212,19 @@ function openAbout() {
   margin-bottom: 20rpx;
   padding: 24rpx;
   box-sizing: border-box;
-  background: #FFF9F5;
+  background: var(--cream);
   border: 2rpx solid transparent;
-  border-radius: 24rpx;
+  border-radius: 32rpx;
+  transition: transform 0.12s ease, opacity 0.12s ease;
 }
 
 .tool-cell.active {
   background: var(--primary-soft);
   border-color: var(--primary);
+}
+.tool-cell:active {
+  transform: scale(0.98);
+  opacity: 0.9;
 }
 
 .tool-name {
