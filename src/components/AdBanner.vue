@@ -2,7 +2,7 @@
   <!-- #ifdef MP-WEIXIN -->
   <view class="ad-slot">
     <ad-custom
-      unit-id="adunit-a36ca84c0d70179a"
+      :unit-id="unitId"
       @load="adLoad"
       @error="adError"
       @close="adClose"
@@ -12,6 +12,13 @@
 </template>
 
 <script setup>
+defineProps({
+  unitId: {
+    type: String,
+    default: 'adunit-a36ca84c0d70179a',
+  },
+})
+
 function adLoad() {}
 
 function adError(event) {

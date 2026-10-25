@@ -6,7 +6,7 @@
       <TextPanel v-show="active === 'text'" />
       <RadixPanel v-show="active === 'radix'" />
 
-      <AdBanner />
+      <AdBanner unit-id="adunit-74c204c0dcb6cc73" />
       <view class="footer-links">
         <view class="about-link" @click="openAbout">关于与免责声明</view>
         <ShareButton class="share-entry" />
