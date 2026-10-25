@@ -163,7 +163,7 @@ function onClick() {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 96rpx;
+  height: 100rpx;
   margin-bottom: 6rpx;
   padding: 8rpx 4rpx;
   border-radius: 20rpx;
@@ -177,7 +177,7 @@ function onClick() {
   box-shadow: inset 6rpx 0 0 var(--primary-strong);
 }
 .sidebar-icon {
-  font-size: 32rpx;
+  font-size: 40rpx;
   line-height: 1;
 }
 .sidebar-label {
