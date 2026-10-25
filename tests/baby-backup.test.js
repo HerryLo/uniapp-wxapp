@@ -19,6 +19,7 @@ import {
   VACCINES_KEY,
   recordsKey,
 } from '../src/utils/baby/keys.js'
+import { createBuiltinVaccines } from '../src/utils/baby/vaccines.js'
 
 let store
 
@@ -54,17 +55,9 @@ function seed() {
   store[GROWTH_KEY] = JSON.stringify([
     { id: 'g1', date: '2026-10-01', height: 75, weight: 9.5, createdAt: 1 },
   ])
-  store[VACCINES_KEY] = JSON.stringify([
-    {
-      id: 'v1',
-      name: '乙肝疫苗（第1剂）',
-      month: 0,
-      type: '一类',
-      done: true,
-      date: '2025-01-02',
-      builtin: true,
-    },
-  ])
+  const vaccines = createBuiltinVaccines()
+  vaccines[0] = { ...vaccines[0], done: true, date: '2025-01-02' }
+  store[VACCINES_KEY] = JSON.stringify(vaccines)
   store[MILESTONES_KEY] = JSON.stringify([
     { id: 'ms1', date: '2026-06-01', title: '第一次翻身', note: '', createdAt: 1 },
   ])
@@ -86,7 +79,12 @@ describe('baby backup', () => {
     expect(payload.data.profile.name).toBe('小满')
     expect(payload.data.records['2026-10']).toBeTruthy()
     expect(payload.data.growth).toHaveLength(1)
-    expect(payload.data.vaccines).toHaveLength(1)
+    expect(payload.data.vaccines).toHaveLength(29)
+    expect(payload.data.vaccines.find((item) => item.done)).toMatchObject({
+      id: 'builtin-hep-b-1',
+      done: true,
+      date: '2025-01-02',
+    })
     expect(payload.data.milestones).toHaveLength(1)
     expect(payload.data.moods['2026-10-24']).toBe('happy')
     expect(payload.data.notes).toHaveLength(1)

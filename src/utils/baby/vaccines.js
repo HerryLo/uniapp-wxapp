@@ -38,12 +38,18 @@ function normalize(item) {
 
 export function loadVaccines() {
   const raw = readStorage(VACCINES_KEY, null)
+  const builtins = createBuiltinVaccines()
   if (!Array.isArray(raw)) {
-    const builtins = createBuiltinVaccines()
     writeStorage(VACCINES_KEY, builtins)
     return builtins
   }
-  return raw.map(normalize).filter(Boolean)
+  const list = raw.map(normalize).filter(Boolean)
+  const ids = new Set(list.map((item) => item.id))
+  const missing = builtins.filter((item) => !ids.has(item.id))
+  if (!missing.length) return list
+  const next = [...list, ...missing]
+  writeStorage(VACCINES_KEY, next)
+  return next
 }
 
 export function saveVaccines(list) {

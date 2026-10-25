@@ -34,8 +34,9 @@ function normalizeDay(entry) {
 export function validateMilk(input) {
   if (!parseLocalDateTime(input.time)) return '请选择喝奶时间'
   if (!MILK_TYPES.includes(input.type)) return '请选择喝奶类型'
-  if (input.amount !== '' && input.amount != null) {
-    const amount = Number(input.amount)
+  const amountText = String(input.amount == null ? '' : input.amount).trim()
+  if (amountText !== '') {
+    const amount = Number(amountText)
     if (!Number.isInteger(amount) || amount < 0) return '奶量需为非负整数'
   }
   return ''
@@ -66,11 +67,12 @@ function validateRecord(kind, input) {
 
 function makeRecord(kind, input, now) {
   if (kind === 'milk') {
+    const amountText = String(input.amount == null ? '' : input.amount).trim()
     return {
       id: makeId(now),
       time: input.time,
       type: input.type,
-      amount: input.amount === '' || input.amount == null ? null : Number(input.amount),
+      amount: amountText === '' ? null : Number(amountText),
       createdAt: now,
     }
   }

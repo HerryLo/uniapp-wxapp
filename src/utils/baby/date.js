@@ -89,7 +89,8 @@ export function durationMinutes(start, end) {
 }
 
 export function formatDuration(minutes) {
-  const total = Math.max(0, Math.round(Number(minutes) || 0))
+  const numeric = Number(minutes)
+  const total = Number.isFinite(numeric) ? Math.max(0, Math.round(numeric)) : 0
   const hours = Math.floor(total / 60)
   const rest = total % 60
   if (hours && rest) return `${hours} 小时 ${rest} 分钟`
@@ -98,8 +99,15 @@ export function formatDuration(minutes) {
 }
 
 export function formatMonthAge(month) {
-  if (month == null || !Number.isFinite(Number(month))) return '未设置'
   const value = Number(month)
+  if (
+    month == null ||
+    !Number.isFinite(value) ||
+    !Number.isInteger(value) ||
+    value < 0
+  ) {
+    return '未设置'
+  }
   if (value === 0) return '出生时'
   if (value < 12) return `${value} 月龄`
   const years = Math.floor(value / 12)

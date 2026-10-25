@@ -50,7 +50,7 @@ export function listRecordMonths() {
     return keys
       .filter((key) => typeof key === 'string' && key.startsWith(RECORDS_PREFIX))
       .map((key) => key.slice(RECORDS_PREFIX.length))
-      .filter((month) => /^\d{4}-\d{2}$/.test(month))
+      .filter((month) => /^\d{4}-(0[1-9]|1[0-2])$/.test(month))
       .sort()
   } catch (e) {
     return []
@@ -165,7 +165,7 @@ export function restoreData(data, now = new Date()) {
   if (Array.isArray(data.notes)) writes.push(writeStorage(NOTES_KEY, data.notes))
   if (data.moods) writes.push(writeStorage(MOODS_KEY, data.moods))
   for (const [month, value] of Object.entries(data.records || {})) {
-    if (/^\d{4}-\d{2}$/.test(month)) {
+    if (/^\d{4}-(0[1-9]|1[0-2])$/.test(month)) {
       writes.push(writeStorage(recordsKey(month), value))
     }
   }
