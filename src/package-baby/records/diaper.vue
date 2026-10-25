@@ -12,7 +12,7 @@
           <text class="record-stat-label">排便次数</text>
         </view>
         <view class="record-stat">
-          <text class="record-stat-value text">{{ latestText(list) }}</text>
+          <text class="record-stat-value is-text">{{ latestText(list) }}</text>
           <text class="record-stat-label">最近一次</text>
         </view>
       </view>
@@ -28,9 +28,3 @@ function latestText(list) {
   return `${list[0].type} · ${list[0].color}`
 }
 </script>
-
-<style scoped>
-.record-stat-value.text {
-  font-size: 26rpx;
-}
-</style>

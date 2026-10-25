@@ -12,7 +12,7 @@
           <text class="record-stat-label">睡眠次数</text>
         </view>
         <view class="record-stat">
-          <text class="record-stat-value time">{{ formatDuration(summary.sleepMinutes) }}</text>
+          <text class="record-stat-value is-text">{{ formatDuration(summary.sleepMinutes) }}</text>
           <text class="record-stat-label">总时长</text>
         </view>
       </view>
@@ -24,9 +24,3 @@
 import RecordPage from '../../components/baby/records/RecordPage.vue'
 import { formatDuration } from '../../utils/baby/date.js'
 </script>
-
-<style scoped>
-.record-stat-value.time {
-  font-size: 26rpx;
-}
-</style>

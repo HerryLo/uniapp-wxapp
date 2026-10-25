@@ -12,7 +12,7 @@
           <text class="record-stat-label">用药次数</text>
         </view>
         <view class="record-stat">
-          <text class="record-stat-value text">{{ latestName(list) }}</text>
+          <text class="record-stat-value is-text">{{ latestName(list) }}</text>
           <text class="record-stat-label">最近药品</text>
         </view>
       </view>
@@ -27,9 +27,3 @@ function latestName(list) {
   return list.length ? list[0].name : '暂无'
 }
 </script>
-
-<style scoped>
-.record-stat-value.text {
-  font-size: 26rpx;
-}
-</style>
