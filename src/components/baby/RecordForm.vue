@@ -138,9 +138,9 @@ const diaperType = ref('小便')
 const diaperColor = ref('正常')
 
 const title = computed(() => {
-  if (props.kind === 'sleep') return '记录睡眠'
-  if (props.kind === 'diaper') return '记录排便'
-  return '记录喝奶'
+  if (props.kind === 'sleep') return '😴 记录睡眠'
+  if (props.kind === 'diaper') return '💧 记录排便'
+  return '🍼 记录喝奶'
 })
 
 function reset() {
@@ -224,7 +224,7 @@ function submit() {
   overflow-y: auto;
   padding: 32rpx 32rpx calc(32rpx + env(safe-area-inset-bottom));
   background: var(--surface);
-  border-radius: 40rpx 40rpx 0 0;
+  border-radius: 48rpx 48rpx 0 0;
 }
 .form-head {
   display: flex;
@@ -260,9 +260,9 @@ function submit() {
   display: flex;
   align-items: center;
   padding: 0 20rpx;
-  background: #FFFFFF;
+  background: var(--cream);
   border: 1rpx solid var(--border);
-  border-radius: 24rpx;
+  border-radius: 28rpx;
   font-size: 30rpx;
   color: var(--text);
 }

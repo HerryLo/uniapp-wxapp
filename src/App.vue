@@ -18,7 +18,10 @@ page {
   --success: #3E9B6B;
   --accent: #B5E4CA;
   --accent-warm: #FFD93D;
+  --peach: #FFB6C1;
+  --cream: #FFFDFC;
   background-color: var(--bg);
+  background-image: linear-gradient(180deg, #FFF3F5 0%, #FFF9F5 320rpx);
   color: var(--text);
   font-size: 28rpx;
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
@@ -52,9 +55,10 @@ picker {
 .card {
   margin-top: 24rpx;
   background: var(--surface);
-  border-radius: 40rpx;
+  border-radius: 48rpx;
   padding: 32rpx;
-  box-shadow: 0 8rpx 24rpx rgba(255, 143, 163, 0.12);
+  border: 1rpx solid rgba(255, 228, 225, 0.9);
+  box-shadow: 0 10rpx 30rpx rgba(255, 143, 163, 0.14);
 }
 
 .card-title {
@@ -74,9 +78,9 @@ picker {
   width: 100%;
   height: 80rpx;
   padding: 0 20rpx;
-  background: #FFFFFF;
+  background: var(--cream);
   border: 1rpx solid var(--border);
-  border-radius: 24rpx;
+  border-radius: 28rpx;
   font-size: 30rpx;
   color: var(--text);
 }
@@ -85,9 +89,9 @@ picker {
   width: 100%;
   min-height: 200rpx;
   padding: 20rpx;
-  background: #FFFFFF;
+  background: var(--cream);
   border: 1rpx solid var(--border);
-  border-radius: 24rpx;
+  border-radius: 28rpx;
   font-size: 30rpx;
   line-height: 1.6;
   color: var(--text);
@@ -99,9 +103,9 @@ picker {
   justify-content: space-between;
   height: 80rpx;
   padding: 0 20rpx;
-  background: #FFFFFF;
+  background: var(--cream);
   border: 1rpx solid var(--border);
-  border-radius: 24rpx;
+  border-radius: 28rpx;
   font-size: 30rpx;
 }
 
@@ -125,12 +129,18 @@ picker {
   background: #FFF1F3;
   color: var(--text-secondary);
   font-size: 28rpx;
+  transition: transform 0.12s ease, opacity 0.12s ease;
 }
 
 .chip.active {
-  background: var(--primary-soft);
+  background: linear-gradient(135deg, #FFE4E1, #FFD6DE);
   color: var(--primary-strong);
   font-weight: 600;
+}
+
+.chip:active {
+  transform: scale(0.97);
+  opacity: 0.9;
 }
 
 .btn-row {
@@ -145,13 +155,15 @@ picker {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 24rpx;
+  border-radius: 999rpx;
   font-size: 30rpx;
+  transition: transform 0.12s ease, opacity 0.12s ease;
 }
 
 .btn-primary {
-  background: var(--primary-strong);
+  background: linear-gradient(135deg, #FF9FB1, var(--primary-strong));
   color: #FFFFFF;
+  box-shadow: 0 8rpx 20rpx rgba(232, 111, 135, 0.25);
 }
 
 .btn-ghost {
@@ -161,14 +173,16 @@ picker {
 }
 
 .btn:active {
-  opacity: 0.8;
+  transform: scale(0.97);
+  opacity: 0.9;
 }
 
 .result-box {
   margin-top: 24rpx;
   padding: 24rpx;
-  background: #FFF9F5;
-  border-radius: 16rpx;
+  background: var(--cream);
+  border: 1rpx solid var(--border);
+  border-radius: 32rpx;
 }
 
 .result-row {
@@ -199,7 +213,9 @@ picker {
 
 .empty-tip {
   margin-top: 24rpx;
+  text-align: center;
   font-size: 26rpx;
+  line-height: 1.7;
   color: var(--text-secondary);
 }
 

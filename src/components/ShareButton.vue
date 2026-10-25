@@ -37,16 +37,22 @@ function copyLink() {
   align-items: center;
   justify-content: center;
   margin: 0;
-  padding: 12rpx 28rpx;
-  border: 1rpx solid var(--border);
-  border-radius: 24rpx;
-  background: #FFF1F3;
-  color: var(--primary-strong);
+  padding: 12rpx 32rpx;
+  border: none;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, #FF9FB1, var(--primary-strong));
+  color: #FFFFFF;
   font-size: 26rpx;
   line-height: 1.4;
   white-space: nowrap;
+  box-shadow: 0 8rpx 20rpx rgba(232, 111, 135, 0.22);
+  transition: transform 0.12s ease, opacity 0.12s ease;
 }
 .share-btn::after {
   border: none;
+}
+.share-btn:active {
+  transform: scale(0.97);
+  opacity: 0.9;
 }
 </style>
