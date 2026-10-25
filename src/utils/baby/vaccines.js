@@ -16,6 +16,7 @@ export function createBuiltinVaccines() {
     type: item.type,
     done: false,
     date: '',
+    skipped: false,
     builtin: true,
   }))
 }
@@ -32,6 +33,7 @@ function normalize(item) {
     type: item.type,
     done: !!item.done,
     date: typeof item.date === 'string' ? item.date : '',
+    skipped: !!item.skipped,
     builtin: !!item.builtin,
   }
 }
@@ -59,8 +61,16 @@ export function saveVaccines(list) {
 export function setVaccineDone(list, id, done, date = '') {
   return list.map((item) => {
     if (item.id !== id) return item
-    if (!done) return { ...item, done: false, date: '' }
-    return { ...item, done: true, date: date || item.date }
+    if (!done) return { ...item, done: false, date: '', skipped: false }
+    return { ...item, done: true, date: date || item.date, skipped: false }
+  })
+}
+
+export function setVaccineSkipped(list, id, skipped) {
+  return list.map((item) => {
+    if (item.id !== id) return item
+    if (!skipped) return { ...item, skipped: false }
+    return { ...item, done: false, date: '', skipped: true }
   })
 }
 
@@ -83,6 +93,7 @@ export function addCustomVaccine(list, input, now = Date.now()) {
     type: input.type,
     done: false,
     date: '',
+    skipped: false,
     builtin: false,
   }
   return { ok: true, list: [...list, vaccine], vaccine }
@@ -96,6 +107,7 @@ export function removeCustomVaccine(list, id) {
 }
 
 export function vaccineStatus(vaccine, totalMonths) {
+  if (vaccine.skipped) return { key: 'skipped', label: '暂不接种' }
   if (vaccine.done) return { key: 'done', label: '已接种' }
   if (vaccine.month == null || totalMonths == null) {
     return { key: 'pending', label: '未接种' }
@@ -104,9 +116,16 @@ export function vaccineStatus(vaccine, totalMonths) {
   return { key: 'overdue', label: '已超过参考月龄' }
 }
 
-export function nextVaccine(list, totalMonths) {
+export function nextVaccine(list, totalMonths, options = {}) {
   if (totalMonths == null) return null
-  const candidates = list.filter((item) => !item.done && item.month != null)
+  const type = options.type || null
+  const candidates = list.filter(
+    (item) =>
+      !item.done &&
+      !item.skipped &&
+      item.month != null &&
+      (!type || item.type === type)
+  )
   if (!candidates.length) return null
   candidates.sort((a, b) => {
     if (a.month !== b.month) return a.month - b.month

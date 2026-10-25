@@ -4,6 +4,7 @@ import {
   createBuiltinVaccines,
   loadVaccines,
   setVaccineDone,
+  setVaccineSkipped,
   addCustomVaccine,
   removeCustomVaccine,
   vaccineStatus,
@@ -116,5 +117,80 @@ describe('baby vaccines', () => {
     expect(groups.map((group) => group.type)).toEqual(['一类', '二类'])
     expect(groups[0].items.every((item) => item.type === '一类')).toBe(true)
     expect(groups[0].items[0].month).toBe(0)
+  })
+
+  it('skips and restores optional vaccines', () => {
+    const list = createBuiltinVaccines()
+    const target = list.find((item) => item.type === '二类')
+    const skipped = setVaccineSkipped(list, target.id, true)
+    expect(skipped.find((item) => item.id === target.id)).toMatchObject({
+      skipped: true,
+      done: false,
+      date: '',
+    })
+    expect(vaccineStatus(skipped.find((item) => item.id === target.id), 12)).toMatchObject({
+      key: 'skipped',
+      label: '暂不接种',
+    })
+
+    const restored = setVaccineSkipped(skipped, target.id, false)
+    expect(restored.find((item) => item.id === target.id).skipped).toBe(false)
+  })
+
+  it('only returns the requested type and ignores skipped vaccines', () => {
+    const list = [
+      { id: 'a', name: 'A', month: 6, type: '二类', done: false, skipped: false },
+      { id: 'b', name: 'B', month: 3, type: '一类', done: false, skipped: false },
+      { id: 'c', name: 'C', month: 2, type: '一类', done: false, skipped: true },
+    ]
+    expect(nextVaccine(list, 4, { type: '一类' }).id).toBe('b')
+    expect(nextVaccine(list, 4, { type: '二类' }).id).toBe('a')
+    expect(nextVaccine(list, 4)).toBeDefined()
+  })
+
+  it('clears skipped when marked as done', () => {
+    const list = [
+      {
+        id: 'a',
+        name: 'A',
+        month: 6,
+        type: '二类',
+        done: false,
+        skipped: true,
+        date: '',
+      },
+    ]
+    expect(setVaccineDone(list, 'a', true, '2026-10-24')[0]).toMatchObject({
+      done: true,
+      skipped: false,
+      date: '2026-10-24',
+    })
+  })
+
+  it('keeps skipped state from stored data and defaults it for old data', () => {
+    store[VACCINES_KEY] = JSON.stringify([
+      {
+        id: 'builtin-hep-b-1',
+        name: '乙肝疫苗（第1剂）',
+        month: 0,
+        type: '一类',
+        done: false,
+        date: '',
+        builtin: true,
+      },
+      {
+        id: 'custom-1',
+        name: '自费疫苗',
+        month: 12,
+        type: '二类',
+        done: false,
+        date: '',
+        skipped: true,
+        builtin: false,
+      },
+    ])
+    const list = loadVaccines()
+    expect(list.find((item) => item.id === 'custom-1').skipped).toBe(true)
+    expect(list.find((item) => item.id === 'builtin-hep-b-1').skipped).toBe(false)
   })
 })
