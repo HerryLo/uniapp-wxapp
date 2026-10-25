@@ -15,7 +15,7 @@
       </view>
 
       <view class="sidebar-toggle" @click="$emit('toggle')">
-        <text class="sidebar-toggle-text">‹</text>
+        <text class="sidebar-toggle-text">«</text>
         <text class="sidebar-toggle-label">收起</text>
       </view>
     </view>
