@@ -35,24 +35,24 @@
         <view class="add-btn" @click="openForm">+ 添加</view>
       </view>
 
-      <view v-if="!list.length" class="empty-tip">今天还没有记录</view>
+      <view v-if="!list.length" class="empty-tip">今天还没有记录，点“添加”记一笔吧 🐣</view>
 
       <view v-for="item in list" :key="item.id" class="record-item">
         <view class="record-body">
           <template v-if="kind === 'milk'">
-            <view class="record-main">{{ item.time.slice(11) }} · {{ item.type }}</view>
+            <view class="record-main">🍼 {{ item.time.slice(11) }} · {{ item.type }}</view>
             <view class="record-sub">
               {{ item.amount == null ? '奶量未记录' : `${item.amount} ml` }}
             </view>
           </template>
           <template v-else-if="kind === 'sleep'">
-            <view class="record-main">{{ item.start.slice(11) }} – {{ item.end.slice(11) }}</view>
+            <view class="record-main">😴 {{ item.start.slice(11) }} – {{ item.end.slice(11) }}</view>
             <view class="record-sub">
               {{ formatDuration(durationMinutes(item.start, item.end)) }}
             </view>
           </template>
           <template v-else>
-            <view class="record-main">{{ item.time.slice(11) }} · {{ item.type }}</view>
+            <view class="record-main">💧 {{ item.time.slice(11) }} · {{ item.type }}</view>
             <view class="record-sub">颜色：{{ item.color }}</view>
           </template>
         </view>
@@ -72,7 +72,7 @@
         </view>
       </view>
       <view v-if="showMilkChart" class="trend-chart">
-        <text class="trend-chart-title">近 7 天奶量趋势</text>
+        <text class="trend-chart-title">🍼 近 7 天奶量趋势</text>
         <LineChart :points="milkChart" unit="ml" :height="320" />
       </view>
     </view>
@@ -110,9 +110,9 @@ import {
 import { durationMinutes, formatDuration, todayKey } from '../../utils/baby/date.js'
 
 const kinds = [
-  { key: 'milk', label: '喝奶' },
-  { key: 'sleep', label: '睡眠' },
-  { key: 'diaper', label: '排便' },
+  { key: 'milk', label: '🍼 喝奶' },
+  { key: 'sleep', label: '😴 睡眠' },
+  { key: 'diaper', label: '💧 排便' },
 ]
 
 const today = ref(todayKey())
@@ -229,9 +229,18 @@ onShow(refresh)
   width: calc(33.33% - 10rpx);
   padding: 24rpx 8rpx;
   background: var(--surface);
-  border-radius: 24rpx;
+  border-radius: 32rpx;
   text-align: center;
   box-shadow: 0 8rpx 24rpx rgba(255, 143, 163, 0.1);
+}
+.stat-card:nth-child(1) {
+  background: #FFF1F3;
+}
+.stat-card:nth-child(2) {
+  background: #F0FAF4;
+}
+.stat-card:nth-child(3) {
+  background: #FFFAE6;
 }
 .stat-value {
   display: block;

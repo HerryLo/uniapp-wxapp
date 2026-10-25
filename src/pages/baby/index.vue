@@ -14,7 +14,7 @@
     </view>
 
     <view class="card">
-      <view class="card-title">今日记录</view>
+      <view class="card-title">🍼 今日记录</view>
       <view class="today-grid">
         <view class="today-cell">
           <text class="today-value">{{ summary.milkCount }}</text>
@@ -32,7 +32,7 @@
     </view>
 
     <view class="card">
-      <view class="card-title">下一条疫苗参考</view>
+      <view class="card-title">💉 下一条疫苗参考</view>
       <view v-if="nextVaccineItem" class="vaccine-preview">
         <view>
           <view class="preview-name">{{ nextVaccineItem.name }}</view>
@@ -50,7 +50,7 @@
     </view>
 
     <view class="card">
-      <view class="card-title">最近生长</view>
+      <view class="card-title">📈 最近生长</view>
       <view v-if="latest" class="growth-preview">
         <view>
           <view class="preview-name">{{ latest.date }}</view>
@@ -151,11 +151,37 @@ onShareTimeline(() => ({
   margin-top: 24rpx;
 }
 .profile-card {
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   padding: 32rpx;
   background: linear-gradient(135deg, #FFE4E1, #FFB6C1);
-  border-radius: 40rpx;
+  border-radius: 48rpx;
+}
+.profile-card > view {
+  position: relative;
+  z-index: 1;
+}
+.profile-card::before {
+  content: '';
+  position: absolute;
+  top: -70rpx;
+  right: -50rpx;
+  width: 190rpx;
+  height: 190rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+}
+.profile-card::after {
+  content: '';
+  position: absolute;
+  bottom: -40rpx;
+  right: 120rpx;
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
 }
 .avatar {
   width: 96rpx;
@@ -195,8 +221,17 @@ onShareTimeline(() => ({
   margin-top: 20rpx;
 }
 .today-cell {
-  width: 33%;
+  width: 31%;
+  padding: 20rpx 8rpx;
+  border-radius: 28rpx;
   text-align: center;
+  background: #FFF1F3;
+}
+.today-cell:nth-child(2) {
+  background: #F0FAF4;
+}
+.today-cell:nth-child(3) {
+  background: #FFFAE6;
 }
 .today-value {
   display: block;
