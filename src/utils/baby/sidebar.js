@@ -1,16 +1,16 @@
 export const SIDEBAR_ITEMS = [
-  { key: 'home', label: '首页', url: '/pages/baby/index' },
-  { key: 'milk', label: '喝奶', url: '/package-baby/records/milk' },
-  { key: 'sleep', label: '睡眠', url: '/package-baby/records/sleep' },
-  { key: 'diaper', label: '排便', url: '/package-baby/records/diaper' },
-  { key: 'food', label: '辅食', url: '/package-baby/records/food' },
-  { key: 'medicine', label: '用药', url: '/package-baby/records/medicine' },
-  { key: 'health', label: '疫苗', url: '/package-baby/health/index' },
-  { key: 'growth', label: '生长', url: '/package-baby/growth/index' },
-  { key: 'journal', label: '手记', url: '/package-baby/journal/index' },
-  { key: 'mom', label: '妈妈', url: '/package-baby/mom/index' },
-  { key: 'travel', label: '旅行', url: '/package-baby/travel/index' },
-  { key: 'settings', label: '设置', url: '/package-baby/settings/index' },
+  { key: 'home', label: '首页', icon: '🏠', url: '/pages/baby/index' },
+  { key: 'milk', label: '喝奶', icon: '🍼', url: '/package-baby/records/milk' },
+  { key: 'sleep', label: '睡眠', icon: '😴', url: '/package-baby/records/sleep' },
+  { key: 'diaper', label: '排便', icon: '💧', url: '/package-baby/records/diaper' },
+  { key: 'food', label: '辅食', icon: '🍚', url: '/package-baby/records/food' },
+  { key: 'medicine', label: '用药', icon: '💊', url: '/package-baby/records/medicine' },
+  { key: 'health', label: '疫苗', icon: '💉', url: '/package-baby/health/index' },
+  { key: 'growth', label: '生长', icon: '📈', url: '/package-baby/growth/index' },
+  { key: 'journal', label: '手记', icon: '📖', url: '/package-baby/journal/index' },
+  { key: 'mom', label: '妈妈', icon: '👩', url: '/package-baby/mom/index' },
+  { key: 'travel', label: '旅行', icon: '🧳', url: '/package-baby/travel/index' },
+  { key: 'settings', label: '设置', icon: '⚙️', url: '/package-baby/settings/index' },
 ]
 
 let sidebarCollapsed = false

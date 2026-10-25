@@ -49,6 +49,9 @@ describe('baby sidebar', () => {
     expect(SIDEBAR_ITEMS[6].url).toBe('/package-baby/health/index')
     expect(SIDEBAR_ITEMS[9].url).toBe('/package-baby/mom/index')
     expect(SIDEBAR_ITEMS[10].url).toBe('/package-baby/travel/index')
+    expect(
+      SIDEBAR_ITEMS.every((item) => typeof item.icon === 'string' && item.icon)
+    ).toBe(true)
   })
 
   it('uses unique sidebar labels', () => {

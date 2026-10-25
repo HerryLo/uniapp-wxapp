@@ -10,35 +10,45 @@
 ## 覆盖页面
 
 1. `pages/baby/index`：宝宝首页
-2. `package-baby/records/index`：日常记录
-3. `package-baby/growth/index`：生长曲线
-4. `package-baby/health/index`：疫苗参考
-5. `package-baby/journal/index`：成长手记
-6. `package-baby/settings/index`：数据与设置
+2. `package-baby/records/milk`：喝奶记录
+3. `package-baby/records/sleep`：睡眠记录
+4. `package-baby/records/diaper`：排便记录
+5. `package-baby/records/food`：辅食记录
+6. `package-baby/records/medicine`：用药记录
+7. `package-baby/growth/index`：生长曲线
+8. `package-baby/health/index`：疫苗参考
+9. `package-baby/journal/index`：成长手记
+10. `package-baby/mom/index`：妈妈记录
+11. `package-baby/travel/index`：旅行记录
+12. `package-baby/settings/index`：数据与设置
 
 侧栏不出现在工具页、关于页。
 
 ## 侧栏内容
 
-按以下顺序展示 8 个入口：
+按以下顺序展示 12 个入口：
 
-| key | 文案 | 目标 |
-|---|---|---|
-| home | 首页 | `/pages/baby/index` |
-| milk | 喝奶 | `/package-baby/records/index?type=milk` |
-| sleep | 睡眠 | `/package-baby/records/index?type=sleep` |
-| diaper | 排便 | `/package-baby/records/index?type=diaper` |
-| health | 疫苗 | `/package-baby/health/index` |
-| growth | 生长 | `/package-baby/growth/index` |
-| journal | 手记 | `/package-baby/journal/index` |
-| settings | 设置 | `/package-baby/settings/index` |
+| key | 图标 | 文案 | 目标 |
+|---|---|---|---|
+| home | 🏠 | 首页 | `/pages/baby/index` |
+| milk | 🍼 | 喝奶 | `/package-baby/records/milk` |
+| sleep | 😴 | 睡眠 | `/package-baby/records/sleep` |
+| diaper | 💧 | 排便 | `/package-baby/records/diaper` |
+| food | 🍚 | 辅食 | `/package-baby/records/food` |
+| medicine | 💊 | 用药 | `/package-baby/records/medicine` |
+| health | 💉 | 疫苗 | `/package-baby/health/index` |
+| growth | 📈 | 生长 | `/package-baby/growth/index` |
+| journal | 📖 | 手记 | `/package-baby/journal/index` |
+| mom | 👩 | 妈妈 | `/package-baby/mom/index` |
+| travel | 🧳 | 旅行 | `/package-baby/travel/index` |
+| settings | ⚙️ | 设置 | `/package-baby/settings/index` |
 
-喝奶/睡眠/排便进入日常记录后只切换到对应 Tab，不自动打开记录表单。
+喝奶/睡眠/排便/辅食进入独立记录页后只切换页面，不自动打开表单；用药从侧栏进入。
 
 ## 布局与交互
 
 - 侧栏固定在页面左侧，`position: fixed`，浅粉到奶油色渐变背景，右边框使用 `var(--border)`。
-- 默认展开：宽度 120rpx，只显示文案，文字居中，不显示图标。
+- 默认展开：宽度 120rpx，每个入口使用「图标在上、文字在下」的纵向布局，图标大、文字小，整体居中。
 - 收起：隐藏侧栏，内容区恢复全宽；左下角出现一个圆形悬浮图标。
 - 悬浮图标可拖动，位置限制在窗口范围内；点击图标重新展开侧栏。
 - 内容区通过 `margin-left` 跟随展开/收起变化，带 0.2s 过渡，避免遮挡内容。
@@ -70,7 +80,7 @@
   - `active: string`，默认空字符串
   - `collapsed: boolean`，默认 `false`
 - Emits：`toggle`
-- 展开时渲染 8 个入口和底部的收起按钮。
+- 展开时渲染 12 个入口（图标在上、文字在下）和底部的收起按钮。
 - 收起时渲染可拖动的圆形悬浮图标，点击后触发 `toggle` 展开。
 - 拖动使用 `touchstart/touchmove/touchend`，移动超过 4px 视为拖动并阻止误触展开。
 - 点击入口时按当前页面判断 `navigateTo`、`redirectTo` 或返回首页的 `switchTab`。
@@ -122,7 +132,7 @@
 ## 测试
 
 - `tests/baby-sidebar.test.js`：
-  - 8 个入口的顺序、文案与 URL 正确。
+  - 12 个入口的顺序、图标、文案与 URL 正确。
   - 默认展开。
   - 收起状态在当前会话内可保存并重新读取。
   - 悬浮图标位置可保存并重新读取。

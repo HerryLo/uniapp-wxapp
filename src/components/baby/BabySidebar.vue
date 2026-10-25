@@ -9,7 +9,8 @@
           :class="{ active: item.key === active }"
           @click="go(item)"
         >
-          <text class="sidebar-label">{{ item.label }}</text>
+          <text class="sidebar-icon">{{ item.icon }}</text>
+        <text class="sidebar-label">{{ item.label }}</text>
         </view>
       </view>
 
@@ -159,11 +160,12 @@ function onClick() {
 }
 .sidebar-item {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 80rpx;
-  margin-bottom: 8rpx;
-  padding: 0 8rpx;
+  height: 96rpx;
+  margin-bottom: 6rpx;
+  padding: 8rpx 4rpx;
   border-radius: 20rpx;
   color: var(--text-secondary);
   text-align: center;
@@ -174,9 +176,15 @@ function onClick() {
   font-weight: 600;
   box-shadow: inset 6rpx 0 0 var(--primary-strong);
 }
+.sidebar-icon {
+  font-size: 32rpx;
+  line-height: 1;
+}
 .sidebar-label {
   width: 100%;
-  font-size: 24rpx;
+  margin-top: 4rpx;
+  font-size: 20rpx;
+  line-height: 1.2;
   text-align: center;
 }
 .sidebar-toggle {
