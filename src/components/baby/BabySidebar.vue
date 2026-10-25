@@ -1,9 +1,5 @@
 <template>
   <view class="baby-sidebar" :class="{ collapsed }">
-    <view class="sidebar-head">
-      <text v-if="!collapsed" class="sidebar-title">宝宝</text>
-    </view>
-
     <view class="sidebar-list">
       <view
         v-for="item in SIDEBAR_ITEMS"
@@ -79,20 +75,8 @@ function go(item) {
   padding-left: 8rpx;
   padding-right: 8rpx;
 }
-.sidebar-head {
-  height: 56rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.sidebar-title {
-  font-size: 26rpx;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
 .sidebar-list {
   flex: 1;
-  margin-top: 12rpx;
   overflow-y: auto;
 }
 .sidebar-item {
