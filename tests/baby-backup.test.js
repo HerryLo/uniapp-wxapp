@@ -7,7 +7,7 @@ import {
   restoreData,
   clearBabyData,
   exportFileName,
-} from '../src/utils/baby/backup.js'
+} from '../src/package-baby/utils/backup.js'
 import {
   BACKUP_KEY,
   GROWTH_KEY,
@@ -22,8 +22,8 @@ import {
   recordsKey,
 } from '../src/utils/baby/keys.js'
 import { createBuiltinVaccines } from '../src/utils/baby/vaccines.js'
-import { loadMomEntries } from '../src/utils/baby/mom.js'
-import { loadTravels } from '../src/utils/baby/travel.js'
+import { loadMomEntries } from '../src/package-baby/utils/mom.js'
+import { loadTravels } from '../src/package-baby/utils/travel.js'
 
 let store
 

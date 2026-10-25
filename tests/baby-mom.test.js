@@ -4,7 +4,7 @@ import {
   loadMomEntries,
   saveMomEntry,
   removeMomEntry,
-} from '../src/utils/baby/mom.js'
+} from '../src/package-baby/utils/mom.js'
 import { MOM_KEY } from '../src/utils/baby/keys.js'
 
 let store

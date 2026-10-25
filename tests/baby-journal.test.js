@@ -9,11 +9,11 @@ import {
   loadNotes,
   addNote,
   removeNote,
-} from '../src/utils/baby/journal.js'
+} from '../src/package-baby/utils/journal.js'
 import {
   REFERENCE_MILESTONES,
   REFERENCE_MILESTONE_NOTE,
-} from '../src/data/referenceMilestones.js'
+} from '../src/package-baby/data/referenceMilestones.js'
 import { MILESTONES_KEY, MOODS_KEY, NOTES_KEY } from '../src/utils/baby/keys.js'
 
 let store

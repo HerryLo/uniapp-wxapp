@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { addTravel, loadTravels, removeTravel } from '../src/utils/baby/travel.js'
+import { addTravel, loadTravels, removeTravel } from '../src/package-baby/utils/travel.js'
 import { TRAVEL_KEY } from '../src/utils/baby/keys.js'
 
 let store

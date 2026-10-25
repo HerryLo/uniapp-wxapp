@@ -45,8 +45,8 @@
 import { computed, ref } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import AdBanner from '../../components/AdBanner.vue'
-import LineChart from '../../components/baby/LineChart.vue'
-import RecordPage from '../../components/baby/records/RecordPage.vue'
+import LineChart from '../components/LineChart.vue'
+import RecordPage from '../components/records/RecordPage.vue'
 import { todayKey } from '../../utils/baby/date.js'
 import { loadRecentMilkSummary, milkChartPoints } from '../../utils/baby/records.js'
 

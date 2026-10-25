@@ -60,7 +60,7 @@
 import { computed, ref } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import BabyPage from '../../components/baby/BabyPage.vue'
-import LineChart from '../../components/baby/LineChart.vue'
+import LineChart from '../components/LineChart.vue'
 import {
   chartPoints,
   loadGrowth,

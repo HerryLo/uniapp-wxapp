@@ -5,8 +5,8 @@ import {
   removeRecord,
   summarizeDay,
   sortRecords,
-} from '../utils/baby/records.js'
-import { todayKey } from '../utils/baby/date.js'
+} from '../../utils/baby/records.js'
+import { todayKey } from '../../utils/baby/date.js'
 
 export function useDayRecords(kind, options = {}) {
   const onChange =

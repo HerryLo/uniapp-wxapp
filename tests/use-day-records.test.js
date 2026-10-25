@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { useDayRecords } from '../src/composables/useDayRecords.js'
+import { useDayRecords } from '../src/package-baby/composables/useDayRecords.js'
 import { formatDateTime } from '../src/utils/baby/date.js'
 
 let store

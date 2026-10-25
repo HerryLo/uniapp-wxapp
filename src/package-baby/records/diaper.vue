@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import RecordPage from '../../components/baby/records/RecordPage.vue'
+import RecordPage from '../components/records/RecordPage.vue'
 
 function latestText(list) {
   if (!list.length) return '暂无'

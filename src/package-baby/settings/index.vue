@@ -105,7 +105,7 @@ import {
   exportFileName,
   restoreData,
   validateImportPayload,
-} from '../../utils/baby/backup.js'
+} from '../utils/backup.js'
 
 const form = ref({ name: '宝宝', birthDate: '', gender: 'boy' })
 const profileError = ref('')

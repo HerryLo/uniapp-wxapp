@@ -120,7 +120,7 @@ import BabyPage from '../../components/baby/BabyPage.vue'
 import {
   REFERENCE_MILESTONES,
   REFERENCE_MILESTONE_NOTE,
-} from '../../data/referenceMilestones.js'
+} from '../data/referenceMilestones.js'
 import { formatMonthAge, todayKey } from '../../utils/baby/date.js'
 import {
   MOODS,
@@ -132,7 +132,7 @@ import {
   removeMilestone,
   removeNote,
   setMood,
-} from '../../utils/baby/journal.js'
+} from '../utils/journal.js'
 
 const today = ref(todayKey())
 const milestones = ref([])

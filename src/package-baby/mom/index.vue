@@ -63,7 +63,7 @@ import {
   loadMomEntries,
   removeMomEntry,
   saveMomEntry,
-} from '../../utils/baby/mom.js'
+} from '../utils/mom.js'
 
 const entries = ref([])
 const error = ref('')

@@ -41,14 +41,14 @@ import {
   loadNotes,
   removeMilestone,
   setMood,
-} from '../src/utils/baby/journal.js'
+} from '../src/package-baby/utils/journal.js'
 import { loadProfile, saveProfile, validateProfile } from '../src/utils/baby/profile.js'
 import {
   MAX_IMPORT_BYTES,
   exportFileName,
   listRecordMonths,
   validateImportPayload,
-} from '../src/utils/baby/backup.js'
+} from '../src/package-baby/utils/backup.js'
 import { readStorage, writeStorage } from '../src/utils/storage.js'
 import {
   GROWTH_KEY,

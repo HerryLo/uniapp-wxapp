@@ -41,10 +41,10 @@
 
 <script setup>
 import { onMounted } from 'vue'
-import BabyPage from '../../baby/BabyPage.vue'
-import RecordForm from '../../baby/RecordForm.vue'
+import BabyPage from '../../../components/baby/BabyPage.vue'
+import RecordForm from '../RecordForm.vue'
 import RecordList from './RecordList.vue'
-import { useDayRecords } from '../../../composables/useDayRecords.js'
+import { useDayRecords } from '../../composables/useDayRecords.js'
 
 const props = defineProps({
   kind: { type: String, required: true },

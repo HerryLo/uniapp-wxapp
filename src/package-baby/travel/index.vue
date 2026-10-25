@@ -51,7 +51,7 @@ import { ref } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import BabyPage from '../../components/baby/BabyPage.vue'
 import { todayKey } from '../../utils/baby/date.js'
-import { addTravel, loadTravels, removeTravel } from '../../utils/baby/travel.js'
+import { addTravel, loadTravels, removeTravel } from '../utils/travel.js'
 
 const list = ref([])
 const error = ref('')

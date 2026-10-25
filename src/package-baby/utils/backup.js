@@ -1,4 +1,4 @@
-import { readStorage, writeStorage, removeStorage } from '../storage.js'
+import { readStorage, writeStorage, removeStorage } from '../../utils/storage.js'
 import {
   BACKUP_KEY,
   GROWTH_KEY,
@@ -13,11 +13,11 @@ import {
   VACCINES_KEY,
   isBabyKey,
   recordsKey,
-} from './keys.js'
-import { formatDateTime } from './date.js'
-import { loadProfile } from './profile.js'
-import { loadGrowth } from './growth.js'
-import { loadVaccines } from './vaccines.js'
+} from '../../utils/baby/keys.js'
+import { formatDateTime } from '../../utils/baby/date.js'
+import { loadProfile } from '../../utils/baby/profile.js'
+import { loadGrowth } from '../../utils/baby/growth.js'
+import { loadVaccines } from '../../utils/baby/vaccines.js'
 import { loadMilestones, loadMoods, loadNotes } from './journal.js'
 import { loadMomEntries } from './mom.js'
 import { loadTravels } from './travel.js'

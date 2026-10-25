@@ -21,6 +21,6 @@
 </template>
 
 <script setup>
-import RecordPage from '../../components/baby/records/RecordPage.vue'
+import RecordPage from '../components/records/RecordPage.vue'
 import { formatDuration } from '../../utils/baby/date.js'
 </script>
