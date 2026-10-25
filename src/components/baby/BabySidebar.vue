@@ -1,34 +1,82 @@
 <template>
-  <view class="baby-sidebar" :class="{ collapsed }">
-    <view class="sidebar-list">
-      <view
-        v-for="item in SIDEBAR_ITEMS"
-        :key="item.key"
-        class="sidebar-item"
-        :class="{ active: item.key === active }"
-        @click="go(item)"
-      >
-        <text v-if="collapsed" class="sidebar-emoji">{{ item.emoji }}</text>
-        <text v-else class="sidebar-label">{{ item.label }}</text>
+  <view>
+    <view v-if="!collapsed" class="baby-sidebar">
+      <view class="sidebar-list">
+        <view
+          v-for="item in SIDEBAR_ITEMS"
+          :key="item.key"
+          class="sidebar-item"
+          :class="{ active: item.key === active }"
+          @click="go(item)"
+        >
+          <text class="sidebar-label">{{ item.label }}</text>
+        </view>
+      </view>
+
+      <view class="sidebar-toggle" @click="$emit('toggle')">
+        <text class="sidebar-toggle-text">‹</text>
+        <text class="sidebar-toggle-label">收起</text>
       </view>
     </view>
 
-    <view class="sidebar-toggle" @click="$emit('toggle')">
-      <text class="sidebar-toggle-text">{{ collapsed ? '›' : '‹' }}</text>
-      <text v-if="!collapsed" class="sidebar-toggle-label">收起</text>
+    <view
+      v-else
+      class="sidebar-float"
+      :style="{ left: `${floatLeft}px`, top: `${floatTop}px` }"
+      @click="onClick"
+      @touchstart="onTouchStart"
+      @touchmove.stop.prevent="onTouchMove"
+      @touchend="onTouchEnd"
+    >
+      <text class="sidebar-float-icon">☰</text>
     </view>
   </view>
 </template>
 
 <script setup>
-import { SIDEBAR_ITEMS } from '../../utils/baby/sidebar.js'
+import { onMounted, ref } from 'vue'
+import {
+  SIDEBAR_ITEMS,
+  loadSidebarPosition,
+  saveSidebarPosition,
+} from '../../utils/baby/sidebar.js'
 
 const props = defineProps({
   active: { type: String, default: '' },
   collapsed: { type: Boolean, default: false },
 })
 
-defineEmits(['toggle'])
+const emit = defineEmits(['toggle'])
+
+const floatLeft = ref(16)
+const floatTop = ref(120)
+const windowWidth = ref(375)
+const windowHeight = ref(667)
+
+let startX = 0
+let startY = 0
+let originLeft = 0
+let originTop = 0
+let moved = false
+
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max)
+}
+
+function clampPosition() {
+  floatLeft.value = clamp(floatLeft.value, 8, windowWidth.value - 56)
+  floatTop.value = clamp(floatTop.value, 8, windowHeight.value - 56)
+}
+
+onMounted(() => {
+  const info = uni.getSystemInfoSync()
+  windowWidth.value = info.windowWidth || 375
+  windowHeight.value = info.windowHeight || 667
+  const saved = loadSidebarPosition()
+  floatLeft.value = saved ? saved.left : 16
+  floatTop.value = saved ? saved.top : windowHeight.value - 120
+  clampPosition()
+})
 
 function isSubpackagePage() {
   if (typeof getCurrentPages !== 'function') return false
@@ -53,6 +101,39 @@ function go(item) {
   }
   uni.navigateTo({ url: item.url })
 }
+
+function onTouchStart(event) {
+  const touch = event.touches && event.touches[0]
+  if (!touch) return
+  startX = touch.clientX
+  startY = touch.clientY
+  originLeft = floatLeft.value
+  originTop = floatTop.value
+  moved = false
+}
+
+function onTouchMove(event) {
+  const touch = event.touches && event.touches[0]
+  if (!touch) return
+  const deltaX = touch.clientX - startX
+  const deltaY = touch.clientY - startY
+  if (Math.abs(deltaX) > 4 || Math.abs(deltaY) > 4) moved = true
+  floatLeft.value = originLeft + deltaX
+  floatTop.value = originTop + deltaY
+  clampPosition()
+}
+
+function onTouchEnd() {
+  if (moved) saveSidebarPosition(floatLeft.value, floatTop.value)
+}
+
+function onClick() {
+  if (moved) {
+    moved = false
+    return
+  }
+  emit('toggle')
+}
 </script>
 
 <style scoped>
@@ -68,16 +149,9 @@ function go(item) {
   padding: 16rpx 12rpx calc(16rpx + env(safe-area-inset-bottom));
   background: var(--surface);
   border-right: 1rpx solid var(--border);
-  transition: width 0.2s ease;
-}
-.baby-sidebar.collapsed {
-  width: 64rpx;
-  padding-left: 8rpx;
-  padding-right: 8rpx;
 }
 .sidebar-list {
-  flex: 1;
-  overflow-y: auto;
+  margin-bottom: 8rpx;
 }
 .sidebar-item {
   display: flex;
@@ -88,18 +162,11 @@ function go(item) {
   border-radius: 20rpx;
   color: var(--text-secondary);
 }
-.baby-sidebar.collapsed .sidebar-item {
-  justify-content: center;
-  padding: 0;
-}
 .sidebar-item.active {
   background: var(--primary-soft);
   color: var(--primary-strong);
   font-weight: 600;
   box-shadow: inset 6rpx 0 0 var(--primary-strong);
-}
-.sidebar-emoji {
-  font-size: 30rpx;
 }
 .sidebar-label {
   font-size: 24rpx;
@@ -119,5 +186,22 @@ function go(item) {
 .sidebar-toggle-label {
   margin-left: 8rpx;
   font-size: 22rpx;
+}
+.sidebar-float {
+  position: fixed;
+  z-index: 240;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--primary-strong);
+  color: #FFFFFF;
+  box-shadow: 0 6rpx 20rpx rgba(232, 111, 135, 0.35);
+}
+.sidebar-float-icon {
+  font-size: 26px;
+  line-height: 1;
 }
 </style>

@@ -22,25 +22,26 @@
 
 按以下顺序展示 8 个入口：
 
-| key | 文案 | emoji | 目标 |
-|---|---|---|---|
-| home | 首页 | 🏠 | `/pages/baby/index` |
-| milk | 喝奶 | 🍼 | `/package-baby/records/index?type=milk` |
-| sleep | 睡眠 | 😴 | `/package-baby/records/index?type=sleep` |
-| diaper | 排便 | 💧 | `/package-baby/records/index?type=diaper` |
-| health | 疫苗 | 💉 | `/package-baby/health/index` |
-| growth | 生长 | 📈 | `/package-baby/growth/index` |
-| journal | 手记 | 📖 | `/package-baby/journal/index` |
-| settings | 设置 | ⚙️ | `/package-baby/settings/index` |
+| key | 文案 | 目标 |
+|---|---|---|
+| home | 首页 | `/pages/baby/index` |
+| milk | 喝奶 | `/package-baby/records/index?type=milk` |
+| sleep | 睡眠 | `/package-baby/records/index?type=sleep` |
+| diaper | 排便 | `/package-baby/records/index?type=diaper` |
+| health | 疫苗 | `/package-baby/health/index` |
+| growth | 生长 | `/package-baby/growth/index` |
+| journal | 手记 | `/package-baby/journal/index` |
+| settings | 设置 | `/package-baby/settings/index` |
 
 喝奶/睡眠/排便进入日常记录后会自动打开对应记录表单（复用现有 `onLoad` 的 `type` 参数逻辑）。
 
 ## 布局与交互
 
 - 侧栏固定在页面左侧，`position: fixed`，白色背景，右边框使用 `var(--border)`。
-- 默认展开：宽度 160rpx，只显示文案，不显示 emoji。
-- 收起：宽度 64rpx，只显示 emoji；点击底部「收起 / 展开」切换。
-- 内容区通过 `margin-left` 跟随侧栏宽度变化，带 0.2s 过渡，避免遮挡内容。
+- 默认展开：宽度 160rpx，只显示文案，不显示图标。
+- 收起：隐藏侧栏，内容区恢复全宽；左下角出现一个圆形悬浮图标。
+- 悬浮图标可拖动，位置限制在窗口范围内；点击图标重新展开侧栏。
+- 内容区通过 `margin-left` 跟随展开/收起变化，带 0.2s 过渡，避免遮挡内容。
 - 当前页面入口高亮：
   - 日常记录按当前 Tab 高亮喝奶/睡眠/排便
   - 生长、疫苗、成长、设置页高亮对应入口
@@ -50,7 +51,7 @@
 - 从宝宝首页进入分包页使用 `uni.navigateTo`；分包页之间切换使用 `uni.redirectTo`，避免页面栈持续增长。
 - 返回宝宝首页使用 `uni.switchTab`。
 - H5 环境对 `getCurrentPages` 做存在性判断，缺失时回退 `navigateTo`。
-- 收起状态保存在内存中：本次使用期间跨页面保持一致，重新打开小程序后恢复为默认展开。
+- 收起状态和悬浮图标位置保存在内存中：本次使用期间跨页面保持一致，重新打开小程序后恢复为默认展开、左下角默认位置。
 - 侧栏底部预留 `env(safe-area-inset-bottom)` 间距。
 
 ## 组件设计
@@ -60,6 +61,8 @@
 - `SIDEBAR_ITEMS`：上表 8 项数组。
 - `loadSidebarCollapsed(): boolean`：读取当前会话的收起状态，默认 `false`（展开）。
 - `saveSidebarCollapsed(collapsed: boolean): boolean`：更新当前会话的收起状态。
+- `loadSidebarPosition(): { left, top } | null`：读取悬浮图标位置。
+- `saveSidebarPosition(left, top): boolean`：保存悬浮图标位置。
 
 ### `src/components/baby/BabySidebar.vue`
 
@@ -67,7 +70,9 @@
   - `active: string`，默认空字符串
   - `collapsed: boolean`，默认 `false`
 - Emits：`toggle`
-- 渲染 8 个入口和底部的展开/收起按钮。
+- 展开时渲染 8 个入口和底部的收起按钮。
+- 收起时渲染可拖动的圆形悬浮图标，点击后触发 `toggle` 展开。
+- 拖动使用 `touchstart/touchmove/touchend`，移动超过 4px 视为拖动并阻止误触展开。
 - 点击入口时按当前页面判断 `navigateTo`、`redirectTo` 或返回首页的 `switchTab`。
 
 ### `src/components/baby/BabyPage.vue`
@@ -81,7 +86,7 @@
 
 - 每个宝宝页面用 `<BabyPage>` 包裹现有根节点。
 - `active` 传值：
-  - 首页：不传
+  - 首页：`active="home"`
   - 日常记录：`:active="kind"`
   - 生长：`active="growth"`
   - 疫苗：`active="health"`
@@ -120,12 +125,13 @@
   - 8 个入口的顺序、文案与 URL 正确。
   - 默认展开。
   - 收起状态在当前会话内可保存并重新读取。
-- 现有 125 个测试保持通过。
+  - 悬浮图标位置可保存并重新读取。
+- 现有测试保持通过。
 - `npm run build:mp-weixin`、`npm run build:h5` 成功。
 - 人工检查 6 个页面的侧栏展开/收起、高亮、跳转、表单自动打开和内容不被遮挡。
 
 ## 不在范围
 
-- 不改侧栏为抽屉或手势操作。
+- 不改侧栏为抽屉；手势只用于拖动悬浮图标。
 - 不改工具页、关于页。
 - 不调整现有业务数据和备份结构。

@@ -36,6 +36,6 @@ function toggle() {
   transition: margin-left 0.2s ease;
 }
 .baby-content.collapsed {
-  margin-left: 64rpx;
+  margin-left: 0;
 }
 </style>

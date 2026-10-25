@@ -2,11 +2,14 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import {
   SIDEBAR_ITEMS,
   loadSidebarCollapsed,
+  loadSidebarPosition,
   saveSidebarCollapsed,
+  saveSidebarPosition,
 } from '../src/utils/baby/sidebar.js'
 
 beforeEach(() => {
   saveSidebarCollapsed(false)
+  saveSidebarPosition(null, null)
 })
 
 describe('baby sidebar', () => {
@@ -47,5 +50,13 @@ describe('baby sidebar', () => {
     expect(loadSidebarCollapsed()).toBe(true)
     expect(saveSidebarCollapsed(false)).toBe(true)
     expect(loadSidebarCollapsed()).toBe(false)
+  })
+
+  it('remembers the floating icon position in memory', () => {
+    expect(loadSidebarPosition()).toBe(null)
+    expect(saveSidebarPosition(20, 300)).toBe(true)
+    expect(loadSidebarPosition()).toEqual({ left: 20, top: 300 })
+    saveSidebarPosition(null, null)
+    expect(loadSidebarPosition()).toBe(null)
   })
 })
