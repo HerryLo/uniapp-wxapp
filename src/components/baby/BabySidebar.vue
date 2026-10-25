@@ -145,9 +145,10 @@ function onClick() {
   left: 0;
   z-index: 220;
   width: 120rpx;
+  min-height: calc(100vh - var(--window-top, 0px) - var(--window-bottom, 0px));
   display: flex;
   flex-direction: column;
-  padding: 16rpx 12rpx calc(16rpx + env(safe-area-inset-bottom));
+  padding: 16rpx 12rpx calc(8rpx + env(safe-area-inset-bottom));
   background: linear-gradient(180deg, #FFE4E1 0%, #FFF3F5 60%, #FFF9F5 100%);
   border-right: 2rpx solid #FFD6DE;
   box-shadow: 8rpx 0 28rpx rgba(255, 143, 163, 0.12);
