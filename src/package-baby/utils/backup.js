@@ -8,7 +8,6 @@ import {
   MOM_KEY,
   NOTES_KEY,
   PROFILE_KEY,
-  RECORDS_PREFIX,
   TRAVEL_KEY,
   VACCINES_KEY,
   isBabyKey,
@@ -21,6 +20,10 @@ import { loadVaccines } from '../../utils/baby/vaccines.js'
 import { loadMilestones, loadMoods, loadNotes } from './journal.js'
 import { loadMomEntries } from './mom.js'
 import { loadTravels } from './travel.js'
+import {
+  setRecordMonthIndex,
+  syncRecordMonthIndex,
+} from '../../utils/baby/records.js'
 
 export const MAX_IMPORT_BYTES = 2 * 1024 * 1024
 
@@ -48,17 +51,7 @@ function utf8ByteLength(value) {
 }
 
 export function listRecordMonths() {
-  try {
-    const info = uni.getStorageInfoSync()
-    const keys = info && Array.isArray(info.keys) ? info.keys : []
-    return keys
-      .filter((key) => typeof key === 'string' && key.startsWith(RECORDS_PREFIX))
-      .map((key) => key.slice(RECORDS_PREFIX.length))
-      .filter((month) => /^\d{4}-(0[1-9]|1[0-2])$/.test(month))
-      .sort()
-  } catch (e) {
-    return []
-  }
+  return syncRecordMonthIndex()
 }
 
 export function buildExportPayload(now = new Date()) {
@@ -164,12 +157,7 @@ function clearExceptBackup(recordMonths = []) {
   }
 }
 
-export function restoreData(data, now = new Date()) {
-  const backup = buildExportPayload(now)
-  if (!writeStorage(BACKUP_KEY, backup)) {
-    return { ok: false, error: '备份当前数据失败，已取消导入' }
-  }
-  clearExceptBackup(Object.keys(backup.data.records || {}))
+function writeExportData(data) {
   const writes = []
   if (data.profile) writes.push(writeStorage(PROFILE_KEY, data.profile))
   if (Array.isArray(data.growth)) writes.push(writeStorage(GROWTH_KEY, data.growth))
@@ -187,10 +175,27 @@ export function restoreData(data, now = new Date()) {
     }
   }
   writes.push(writeStorage(META_KEY, { schemaVersion: 1 }))
-  if (writes.some((ok) => !ok)) {
-    return { ok: false, error: '部分数据写入失败，可重新导入' }
+  const ok = writes.every((item) => item)
+  if (ok) setRecordMonthIndex(Object.keys(data.records || {}))
+  return ok
+}
+
+export function restoreData(data, now = new Date()) {
+  const backup = buildExportPayload(now)
+  if (!writeStorage(BACKUP_KEY, backup)) {
+    return { ok: false, error: '备份当前数据失败，已取消导入' }
   }
-  return { ok: true }
+  clearExceptBackup(Object.keys(backup.data.records || {}))
+  if (writeExportData(data)) return { ok: true }
+
+  const saved = readStorage(BACKUP_KEY, null)
+  if (saved && saved.data) {
+    clearExceptBackup(Object.keys(saved.data.records || {}))
+    if (writeExportData(saved.data)) {
+      return { ok: false, error: '恢复失败，已还原到导入前状态' }
+    }
+  }
+  return { ok: false, error: '恢复失败，自动还原失败，请重新导入备份' }
 }
 
 export function clearBabyData() {

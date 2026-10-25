@@ -10,6 +10,7 @@ export const TRAVEL_KEY = 'baby.travel.v1'
 export const META_KEY = 'baby.meta.v1'
 export const BACKUP_KEY = 'baby.backup.v1'
 export const RECORDS_PREFIX = 'baby.records.v1.'
+export const RECORDS_INDEX_KEY = 'baby.records.index.v1'
 
 export function recordsKey(month) {
   return `${RECORDS_PREFIX}${month}`

@@ -8,12 +8,14 @@ import {
   removeRecord,
   summarizeDay,
   sortRecords,
+  syncRecordMonthIndex,
   validateFood,
   validateMedicine,
   validateMilk,
   validateSleep,
   validateDiaper,
 } from '../src/utils/baby/records.js'
+import { RECORDS_INDEX_KEY, recordsKey } from '../src/utils/baby/keys.js'
 
 let store
 
@@ -23,6 +25,7 @@ beforeEach(() => {
     getStorageSync: (key) => (key in store ? store[key] : ''),
     setStorageSync: (key, value) => { store[key] = value },
     removeStorageSync: (key) => { delete store[key] },
+    getStorageInfoSync: () => ({ keys: Object.keys(store) }),
   })
 })
 
@@ -195,6 +198,29 @@ describe('baby records', () => {
 
     expect(removeRecord('food', food.record.id, '2026-10-24').ok).toBe(true)
     expect(loadDay('2026-10-24').food).toHaveLength(0)
+  })
+
+  it('tracks record months in the index', () => {
+    const sep = addRecord('milk', { time: '2026-09-30 08:00', type: '母乳', amount: '' }, 1)
+    expect(JSON.parse(store[RECORDS_INDEX_KEY])).toEqual(['2026-09'])
+
+    const oct = addRecord('milk', { time: '2026-10-01 08:00', type: '母乳', amount: '' }, 2)
+    expect(JSON.parse(store[RECORDS_INDEX_KEY])).toEqual(['2026-09', '2026-10'])
+
+    expect(removeRecord('milk', oct.record.id, '2026-10-01').ok).toBe(true)
+    expect(JSON.parse(store[RECORDS_INDEX_KEY])).toEqual(['2026-09'])
+
+    expect(removeRecord('milk', sep.record.id, '2026-09-30').ok).toBe(true)
+    expect(JSON.parse(store[RECORDS_INDEX_KEY])).toEqual([])
+  })
+
+  it('rebuilds the month index from storage and survives storage info failure', () => {
+    store[recordsKey('2026-11')] = JSON.stringify({ '2026-11-01': {} })
+    expect(syncRecordMonthIndex()).toEqual(['2026-11'])
+    expect(JSON.parse(store[RECORDS_INDEX_KEY])).toEqual(['2026-11'])
+
+    uni.getStorageInfoSync = () => { throw new Error('fail') }
+    expect(syncRecordMonthIndex()).toEqual(['2026-11'])
   })
 
   it('keeps old record data without food and medicine arrays working', () => {

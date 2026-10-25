@@ -1,5 +1,9 @@
 import { readStorage, writeStorage } from '../storage.js'
-import { recordsKey } from './keys.js'
+import {
+  RECORDS_INDEX_KEY,
+  RECORDS_PREFIX,
+  recordsKey,
+} from './keys.js'
 import { durationMinutes, formatDate, monthKey, parseLocalDateTime } from './date.js'
 
 const KINDS = ['milk', 'sleep', 'diaper', 'food', 'medicine']
@@ -14,6 +18,50 @@ function makeId(now) {
 
 function emptyDay() {
   return { milk: [], sleep: [], diaper: [], food: [], medicine: [] }
+}
+
+const MONTH_PATTERN = /^\d{4}-(0[1-9]|1[0-2])$/
+
+function readMonthIndex() {
+  const raw = readStorage(RECORDS_INDEX_KEY, [])
+  if (!Array.isArray(raw)) return []
+  return [...new Set(raw.filter((month) => typeof month === 'string' && MONTH_PATTERN.test(month)))]
+}
+
+function writeMonthIndex(months) {
+  writeStorage(RECORDS_INDEX_KEY, [...new Set(months)].sort())
+}
+
+function updateMonthIndex(month, present) {
+  const months = new Set(readMonthIndex())
+  if (present) months.add(month)
+  else months.delete(month)
+  writeMonthIndex([...months])
+}
+
+export function setRecordMonthIndex(months) {
+  const valid = Array.isArray(months)
+    ? months.filter((month) => typeof month === 'string' && MONTH_PATTERN.test(month))
+    : []
+  writeMonthIndex(valid)
+}
+
+export function syncRecordMonthIndex() {
+  const months = new Set(readMonthIndex())
+  try {
+    const info = uni.getStorageInfoSync()
+    const keys = info && Array.isArray(info.keys) ? info.keys : []
+    for (const key of keys) {
+      if (typeof key !== 'string' || !key.startsWith(RECORDS_PREFIX)) continue
+      const month = key.slice(RECORDS_PREFIX.length)
+      if (MONTH_PATTERN.test(month)) months.add(month)
+    }
+  } catch (e) {
+    // 存储信息不可用时沿用已有索引
+  }
+  const sorted = [...months].sort()
+  writeMonthIndex(sorted)
+  return sorted
 }
 
 function sanitize(list, timeField) {
@@ -180,6 +228,7 @@ export function addRecord(kind, input, now = Date.now()) {
   day[kind] = [record, ...day[kind]]
   data[dateStr] = day
   if (!writeStorage(recordsKey(month), data)) return { ok: false, error: '保存失败' }
+  updateMonthIndex(month, true)
   return { ok: true, record, date: dateStr }
 }
 
@@ -199,9 +248,11 @@ export function removeRecord(kind, id, dateStr) {
   } else {
     data[dateStr] = nextDay
   }
-  return writeStorage(recordsKey(month), data)
-    ? { ok: true }
-    : { ok: false, error: '删除失败' }
+  if (!writeStorage(recordsKey(month), data)) {
+    return { ok: false, error: '删除失败' }
+  }
+  updateMonthIndex(month, Object.keys(data).length > 0)
+  return { ok: true }
 }
 
 export function summarizeDay(day) {

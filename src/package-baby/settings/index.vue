@@ -36,7 +36,7 @@
       <view class="row" @click="exportData">
         <view class="row-body">
           <view class="row-title">📤 导出数据</view>
-          <view class="row-desc">生成 JSON 备份，可保存到聊天或复制到剪贴板</view>
+          <view class="row-desc">生成 JSON 备份，可分享文件或下载</view>
         </view>
         <text class="row-arrow">›</text>
       </view>
@@ -148,10 +148,25 @@ function exportData() {
     // 文件导出失败时降级为剪贴板
   }
   copyText(text)
+  return
   // #endif
-  // #ifndef MP-WEIXIN
+  // #ifdef H5
+  try {
+    const blob = new Blob([text], { type: 'application/json;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = exportFileName()
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  } catch (e) {
+    copyText(text)
+  }
+  return
+  // #endif
   copyText(text)
-  // #endif
 }
 
 function restore() {

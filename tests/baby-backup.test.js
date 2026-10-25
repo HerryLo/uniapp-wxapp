@@ -7,6 +7,7 @@ import {
   restoreData,
   clearBabyData,
   exportFileName,
+  listRecordMonths,
 } from '../src/package-baby/utils/backup.js'
 import {
   BACKUP_KEY,
@@ -17,6 +18,7 @@ import {
   MOM_KEY,
   NOTES_KEY,
   PROFILE_KEY,
+  RECORDS_INDEX_KEY,
   TRAVEL_KEY,
   VACCINES_KEY,
   recordsKey,
@@ -198,6 +200,7 @@ describe('baby backup', () => {
     expect(store[recordsKey('2026-10')]).toBeUndefined()
     expect(store[recordsKey('2026-09')]).toBeUndefined()
     expect(store[recordsKey('2026-11')]).toBeTruthy()
+    expect(JSON.parse(store[RECORDS_INDEX_KEY])).toEqual(['2026-11'])
     expect(JSON.parse(store[META_KEY])).toEqual({ schemaVersion: 1 })
   })
 
@@ -287,6 +290,50 @@ describe('baby backup', () => {
     })
     expect(res.ok).toBe(true)
     expect(store[recordsKey('2026-10')]).toBeUndefined()
+  })
+
+  it('uses the month index when storage info is unavailable', () => {
+    store[recordsKey('2026-10')] = JSON.stringify({
+      '2026-10-24': { milk: [], sleep: [], diaper: [], food: [], medicine: [] },
+    })
+    store[RECORDS_INDEX_KEY] = JSON.stringify(['2026-10'])
+    uni.getStorageInfoSync = () => { throw new Error('fail') }
+
+    expect(listRecordMonths()).toEqual(['2026-10'])
+    const payload = buildExportPayload(new Date(2026, 9, 24, 10, 5))
+    expect(payload.data.records['2026-10']).toBeTruthy()
+  })
+
+  it('rolls back when importing data fails partway', () => {
+    seed()
+    const originalSet = uni.setStorageSync
+    let failed = false
+    uni.setStorageSync = (key, value) => {
+      if (key === PROFILE_KEY && !failed) {
+        failed = true
+        throw new Error('fail')
+      }
+      originalSet(key, value)
+    }
+
+    const res = restoreData({
+      profile: {
+        name: '新宝宝',
+        birthDate: '2026-01-01',
+        gender: 'boy',
+        createdAt: 2,
+        updatedAt: 2,
+      },
+      records: {},
+      growth: [],
+      vaccines: [],
+      milestones: [],
+      moods: {},
+      notes: [],
+    })
+
+    expect(res).toEqual({ ok: false, error: '恢复失败，已还原到导入前状态' })
+    expect(JSON.parse(store[PROFILE_KEY]).name).toBe('小满')
   })
 
   it('accepts old backups without mom and travel fields', () => {
