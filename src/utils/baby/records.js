@@ -2,17 +2,18 @@ import { readStorage, writeStorage } from '../storage.js'
 import { recordsKey } from './keys.js'
 import { durationMinutes, formatDate, monthKey, parseLocalDateTime } from './date.js'
 
-const KINDS = ['milk', 'sleep', 'diaper']
+const KINDS = ['milk', 'sleep', 'diaper', 'food', 'medicine']
 const MILK_TYPES = ['母乳', '配方奶', '混合']
 const DIAPER_TYPES = ['大便', '小便', '都有']
 const DIAPER_COLORS = ['正常', '绿色', '黑色', '白色', '带血']
+export const FOOD_REACTIONS = ['喜欢', '一般', '拒绝', '异常']
 
 function makeId(now) {
   return `${now}-${Math.random().toString(36).slice(2, 8)}`
 }
 
 function emptyDay() {
-  return { milk: [], sleep: [], diaper: [] }
+  return { milk: [], sleep: [], diaper: [], food: [], medicine: [] }
 }
 
 function sanitize(list, timeField) {
@@ -28,6 +29,8 @@ function normalizeDay(entry) {
     milk: sanitize(source.milk, 'time'),
     sleep: sanitize(source.sleep, 'start'),
     diaper: sanitize(source.diaper, 'time'),
+    food: sanitize(source.food, 'time'),
+    medicine: sanitize(source.medicine, 'time'),
   }
 }
 
@@ -58,10 +61,44 @@ export function validateDiaper(input) {
   return ''
 }
 
+function requiredTextError(value, label, max) {
+  const text = String(value || '').trim()
+  if (!text) return `请输入${label}`
+  if (text.length > max) return `${label}最多 ${max} 个字`
+  return ''
+}
+
+function optionalTextError(value, label, max) {
+  const text = String(value || '').trim()
+  if (text.length > max) return `${label}最多 ${max} 个字`
+  return ''
+}
+
+export function validateFood(input) {
+  if (!parseLocalDateTime(input.time)) return '请选择辅食时间'
+  const nameError = requiredTextError(input.name, '食物名称', 30)
+  if (nameError) return nameError
+  const amountError = optionalTextError(input.amount, '份量', 20)
+  if (amountError) return amountError
+  if (!FOOD_REACTIONS.includes(input.reaction)) return '请选择进食反应'
+  return optionalTextError(input.note, '备注', 200)
+}
+
+export function validateMedicine(input) {
+  if (!parseLocalDateTime(input.time)) return '请选择用药时间'
+  const nameError = requiredTextError(input.name, '药品名称', 30)
+  if (nameError) return nameError
+  const amountError = optionalTextError(input.amount, '用量', 20)
+  if (amountError) return amountError
+  return optionalTextError(input.note, '备注', 200)
+}
+
 function validateRecord(kind, input) {
   if (kind === 'milk') return validateMilk(input)
   if (kind === 'sleep') return validateSleep(input)
   if (kind === 'diaper') return validateDiaper(input)
+  if (kind === 'food') return validateFood(input)
+  if (kind === 'medicine') return validateMedicine(input)
   return '未知记录类型'
 }
 
@@ -73,6 +110,27 @@ function makeRecord(kind, input, now) {
       time: input.time,
       type: input.type,
       amount: amountText === '' ? null : Number(amountText),
+      createdAt: now,
+    }
+  }
+  if (kind === 'food') {
+    return {
+      id: makeId(now),
+      time: input.time,
+      name: String(input.name).trim(),
+      amount: String(input.amount || '').trim(),
+      reaction: input.reaction,
+      note: String(input.note || '').trim(),
+      createdAt: now,
+    }
+  }
+  if (kind === 'medicine') {
+    return {
+      id: makeId(now),
+      time: input.time,
+      name: String(input.name).trim(),
+      amount: String(input.amount || '').trim(),
+      note: String(input.note || '').trim(),
       createdAt: now,
     }
   }

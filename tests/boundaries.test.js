@@ -200,7 +200,13 @@ describe('record boundaries', () => {
       ok: false,
       error: '参数错误',
     })
-    expect(loadDay('bad')).toEqual({ milk: [], sleep: [], diaper: [] })
+    expect(loadDay('bad')).toEqual({
+      milk: [],
+      sleep: [],
+      diaper: [],
+      food: [],
+      medicine: [],
+    })
   })
 
   it('builds a seven-day window across a year boundary', () => {

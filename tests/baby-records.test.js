@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import {
+  FOOD_REACTIONS,
   addRecord,
   loadDay,
   loadRecentMilkSummary,
@@ -7,6 +8,8 @@ import {
   removeRecord,
   summarizeDay,
   sortRecords,
+  validateFood,
+  validateMedicine,
   validateMilk,
   validateSleep,
   validateDiaper,
@@ -132,5 +135,81 @@ describe('baby records', () => {
       )
     ).toBe(true)
     expect(milkChartPoints(summary)).toEqual([])
+  })
+
+  it('validates food and medicine inputs', () => {
+    expect(FOOD_REACTIONS).toEqual(['喜欢', '一般', '拒绝', '异常'])
+    expect(
+      validateFood({
+        time: '2026-10-24 08:00',
+        name: ' 米糊 ',
+        amount: '',
+        reaction: '喜欢',
+        note: '',
+      })
+    ).toBe('')
+    expect(validateFood({ time: '', name: '米糊', reaction: '喜欢' })).toContain('时间')
+    expect(
+      validateFood({ time: '2026-10-24 08:00', name: '', reaction: '喜欢' })
+    ).toContain('食物名称')
+    expect(
+      validateFood({ time: '2026-10-24 08:00', name: '米糊', reaction: '好吃' })
+    ).toContain('反应')
+    expect(validateMedicine({ time: '2026-10-24 08:00', name: '药', amount: '', note: '' })).toBe('')
+    expect(
+      validateMedicine({ time: '2026-10-24 08:00', name: '', amount: '' })
+    ).toContain('药品名称')
+  })
+
+  it('adds and removes food and medicine records', () => {
+    const food = addRecord(
+      'food',
+      {
+        time: '2026-10-24 08:00',
+        name: ' 米糊 ',
+        amount: '半碗',
+        reaction: '喜欢',
+        note: '吃完',
+      },
+      1
+    )
+    expect(food.ok).toBe(true)
+    expect(food.record).toMatchObject({
+      name: '米糊',
+      amount: '半碗',
+      reaction: '喜欢',
+      note: '吃完',
+    })
+
+    const medicine = addRecord(
+      'medicine',
+      { time: '2026-10-24 09:00', name: '维生素', amount: '5 滴', note: '' },
+      2
+    )
+    expect(medicine.ok).toBe(true)
+
+    const day = loadDay('2026-10-24')
+    expect(day.food).toHaveLength(1)
+    expect(day.medicine).toHaveLength(1)
+    expect(day.milk).toHaveLength(0)
+
+    expect(removeRecord('food', food.record.id, '2026-10-24').ok).toBe(true)
+    expect(loadDay('2026-10-24').food).toHaveLength(0)
+  })
+
+  it('keeps old record data without food and medicine arrays working', () => {
+    store['baby.records.v1.2026-10'] = JSON.stringify({
+      '2026-10-24': {
+        milk: [
+          { id: 'm', time: '2026-10-24 08:00', type: '母乳', amount: null, createdAt: 1 },
+        ],
+        sleep: [],
+        diaper: [],
+      },
+    })
+    const day = loadDay('2026-10-24')
+    expect(day.milk).toHaveLength(1)
+    expect(day.food).toEqual([])
+    expect(day.medicine).toEqual([])
   })
 })
