@@ -1,4 +1,4 @@
-import { readStorage, writeStorage } from '../storage.js'
+import { readStorage, storageKeys, writeStorage } from '../storage.js'
 import {
   RECORDS_INDEX_KEY,
   RECORDS_PREFIX,
@@ -49,8 +49,7 @@ export function setRecordMonthIndex(months) {
 export function syncRecordMonthIndex() {
   const months = new Set(readMonthIndex())
   try {
-    const info = uni.getStorageInfoSync()
-    const keys = info && Array.isArray(info.keys) ? info.keys : []
+    const keys = storageKeys()
     for (const key of keys) {
       if (typeof key !== 'string' || !key.startsWith(RECORDS_PREFIX)) continue
       const month = key.slice(RECORDS_PREFIX.length)

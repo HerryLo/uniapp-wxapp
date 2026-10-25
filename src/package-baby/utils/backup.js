@@ -1,4 +1,9 @@
-import { readStorage, writeStorage, removeStorage } from '../../utils/storage.js'
+import {
+  readStorage,
+  removeStorage,
+  storageKeys,
+  writeStorage,
+} from '../../utils/storage.js'
 import {
   BACKUP_KEY,
   GROWTH_KEY,
@@ -132,28 +137,35 @@ export function backupCurrent(now = new Date()) {
   return writeStorage(BACKUP_KEY, buildExportPayload(now))
 }
 
+function clearFixedKeys(recordMonths) {
+  for (const key of [
+    PROFILE_KEY,
+    GROWTH_KEY,
+    VACCINES_KEY,
+    MILESTONES_KEY,
+    MOODS_KEY,
+    NOTES_KEY,
+    MOM_KEY,
+    TRAVEL_KEY,
+    META_KEY,
+    ...recordMonths.map((month) => recordsKey(month)),
+  ]) {
+    removeStorage(key)
+  }
+}
+
 function clearExceptBackup(recordMonths = []) {
   try {
-    const info = uni.getStorageInfoSync()
-    const keys = info && Array.isArray(info.keys) ? info.keys : []
+    const keys = storageKeys()
+    if (!keys.length) {
+      clearFixedKeys(recordMonths)
+      return
+    }
     for (const key of keys) {
       if (isBabyKey(key) && key !== BACKUP_KEY) removeStorage(key)
     }
   } catch (e) {
-    for (const key of [
-      PROFILE_KEY,
-      GROWTH_KEY,
-      VACCINES_KEY,
-      MILESTONES_KEY,
-      MOODS_KEY,
-      NOTES_KEY,
-      MOM_KEY,
-      TRAVEL_KEY,
-      META_KEY,
-      ...recordMonths.map((month) => recordsKey(month)),
-    ]) {
-      removeStorage(key)
-    }
+    clearFixedKeys(recordMonths)
   }
 }
 

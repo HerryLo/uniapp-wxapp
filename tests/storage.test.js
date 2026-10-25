@@ -1,5 +1,13 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { readStorage, writeStorage, removeStorage } from '../src/utils/storage.js'
+import {
+  getStorageDriver,
+  onStorageChange,
+  readStorage,
+  removeStorage,
+  setStorageDriver,
+  storageKeys,
+  writeStorage,
+} from '../src/utils/storage.js'
 
 let store
 
@@ -9,10 +17,12 @@ beforeEach(() => {
     getStorageSync: vi.fn((key) => (key in store ? store[key] : '')),
     setStorageSync: vi.fn((key, value) => { store[key] = value }),
     removeStorageSync: vi.fn((key) => { delete store[key] }),
+    getStorageInfoSync: vi.fn(() => ({ keys: Object.keys(store) })),
   })
 })
 
 afterEach(() => {
+  setStorageDriver(null)
   vi.unstubAllGlobals()
 })
 
@@ -56,6 +66,50 @@ describe('storage', () => {
   it('returns true on successful writes and removes', () => {
     expect(writeStorage('k', 1)).toBe(true)
     expect(removeStorage('k')).toBe(true)
+  })
+
+  it('delegates to a custom storage driver', () => {
+    const memory = new Map()
+    setStorageDriver({
+      get: (key) => (memory.has(key) ? memory.get(key) : ''),
+      set: (key, value) => { memory.set(key, value) },
+      remove: (key) => { memory.delete(key) },
+      keys: () => [...memory.keys()],
+    })
+    expect(getStorageDriver()).not.toBe(null)
+
+    expect(writeStorage('k', { a: 1 })).toBe(true)
+    expect(readStorage('k', null)).toEqual({ a: 1 })
+    expect(storageKeys()).toEqual(['k'])
+    expect(removeStorage('k')).toBe(true)
+    expect(readStorage('k', 'fb')).toBe('fb')
+  })
+
+  it('validates custom storage drivers', () => {
+    expect(() => setStorageDriver({ get() {} })).toThrow('storage driver is missing set()')
+  })
+
+  it('emits change events and supports unsubscribe', () => {
+    const events = []
+    const off = onStorageChange((event) => events.push(event))
+    writeStorage('a', 1)
+    removeStorage('a')
+    expect(events).toEqual([
+      { type: 'write', key: 'a' },
+      { type: 'remove', key: 'a' },
+    ])
+    off()
+    writeStorage('b', 2)
+    expect(events).toHaveLength(2)
+  })
+
+  it('does not emit a change event when writing fails', () => {
+    const events = []
+    const off = onStorageChange((event) => events.push(event))
+    uni.setStorageSync = () => { throw new Error('fail') }
+    expect(writeStorage('a', 1)).toBe(false)
+    expect(events).toHaveLength(0)
+    off()
   })
 
   it('shows one warning when stored JSON is corrupt', async () => {
