@@ -63,7 +63,7 @@
   "globalStyle": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "宝宝记录与工具箱",
-    "navigationBarBackgroundColor": "#FFF9F5",
+    "navigationBarBackgroundColor": "#FFF3F5",
     "backgroundColor": "#FFF9F5"
   },
   "tabBar": {
