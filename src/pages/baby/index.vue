@@ -1,5 +1,5 @@
 <template>
-  <BabyPage>
+  <BabyPage active="home">
     <view class="baby-page">
       <view class="profile-card">
       <view class="avatar">👶</view>

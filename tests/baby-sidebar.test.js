@@ -24,8 +24,9 @@ afterEach(() => {
 })
 
 describe('baby sidebar', () => {
-  it('ships the seven entries in order', () => {
+  it('ships the eight entries in order', () => {
     expect(SIDEBAR_ITEMS.map((item) => item.key)).toEqual([
+      'home',
       'milk',
       'sleep',
       'diaper',
@@ -35,6 +36,7 @@ describe('baby sidebar', () => {
       'settings',
     ])
     expect(SIDEBAR_ITEMS.map((item) => item.label)).toEqual([
+      '宝宝首页',
       '喝奶',
       '睡眠',
       '排便',
@@ -43,8 +45,9 @@ describe('baby sidebar', () => {
       '成长',
       '设置',
     ])
-    expect(SIDEBAR_ITEMS[0].url).toBe('/package-baby/records/index?type=milk')
-    expect(SIDEBAR_ITEMS[3].url).toBe('/package-baby/health/index')
+    expect(SIDEBAR_ITEMS[0].url).toBe('/pages/baby/index')
+    expect(SIDEBAR_ITEMS[1].url).toBe('/package-baby/records/index?type=milk')
+    expect(SIDEBAR_ITEMS[4].url).toBe('/package-baby/health/index')
   })
 
   it('uses a UI key outside the baby data prefix', () => {

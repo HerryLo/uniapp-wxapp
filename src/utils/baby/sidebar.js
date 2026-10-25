@@ -4,6 +4,12 @@ export const SIDEBAR_STATE_KEY = 'ui.baby-sidebar.v1'
 
 export const SIDEBAR_ITEMS = [
   {
+    key: 'home',
+    label: '宝宝首页',
+    emoji: '🏠',
+    url: '/pages/baby/index',
+  },
+  {
     key: 'milk',
     label: '喝奶',
     emoji: '🍼',

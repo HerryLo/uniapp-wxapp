@@ -12,8 +12,8 @@
         :class="{ active: item.key === active }"
         @click="go(item)"
       >
-        <text class="sidebar-emoji">{{ item.emoji }}</text>
-        <text v-if="!collapsed" class="sidebar-label">{{ item.label }}</text>
+        <text v-if="collapsed" class="sidebar-emoji">{{ item.emoji }}</text>
+        <text v-else class="sidebar-label">{{ item.label }}</text>
       </view>
     </view>
 
@@ -47,6 +47,10 @@ function isSubpackagePage() {
 
 function go(item) {
   if (item.key === props.active) return
+  if (item.key === 'home') {
+    uni.switchTab({ url: item.url })
+    return
+  }
   if (isSubpackagePage()) {
     uni.redirectTo({ url: item.url })
     return
@@ -62,7 +66,7 @@ function go(item) {
   bottom: var(--window-bottom, 0);
   left: 0;
   z-index: 220;
-  width: 200rpx;
+  width: 160rpx;
   display: flex;
   flex-direction: column;
   padding: 16rpx 12rpx calc(16rpx + env(safe-area-inset-bottom));
@@ -71,7 +75,7 @@ function go(item) {
   transition: width 0.2s ease;
 }
 .baby-sidebar.collapsed {
-  width: 76rpx;
+  width: 64rpx;
   padding-left: 8rpx;
   padding-right: 8rpx;
 }
@@ -105,16 +109,16 @@ function go(item) {
   padding: 0;
 }
 .sidebar-item.active {
-  background: #FFF1F3;
+  background: var(--primary-soft);
   color: var(--primary-strong);
   font-weight: 600;
+  box-shadow: inset 6rpx 0 0 var(--primary-strong);
 }
 .sidebar-emoji {
   font-size: 30rpx;
 }
 .sidebar-label {
-  margin-left: 12rpx;
-  font-size: 26rpx;
+  font-size: 24rpx;
 }
 .sidebar-toggle {
   display: flex;
