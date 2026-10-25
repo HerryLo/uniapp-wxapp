@@ -131,6 +131,7 @@ function save() {
   profileError.value = ''
   refresh()
   uni.showToast({ title: '已保存', icon: 'none' })
+  uni.switchTab({ url: '/pages/baby/index' })
 }
 
 function exportData() {
