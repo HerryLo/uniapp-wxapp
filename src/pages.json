@@ -58,6 +58,12 @@
           }
         },
         {
+          "path": "travel/index",
+          "style": {
+            "navigationBarTitleText": "旅行记录"
+          }
+        },
+        {
           "path": "settings/index",
           "style": {
             "navigationBarTitleText": "数据与设置"
