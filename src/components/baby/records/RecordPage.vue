@@ -1,6 +1,16 @@
 <template>
   <BabyPage :active="kind">
     <view class="record-page">
+      <view class="record-switch">
+        <view
+          v-for="item in RECORD_SWITCH_ITEMS"
+          :key="item.key"
+          class="record-switch-item"
+          :class="{ active: item.key === kind }"
+          @click="switchKind(item)"
+        >{{ item.label }}</view>
+      </view>
+
       <view class="card">
         <view class="record-head">
           <text class="record-title">{{ emoji }} {{ title }}</text>
@@ -45,6 +55,18 @@ const props = defineProps({
 
 const emit = defineEmits(['change'])
 
+const RECORD_SWITCH_ITEMS = [
+  { key: 'milk', label: '🍼 喝奶', url: '/package-baby/records/milk' },
+  { key: 'sleep', label: '😴 睡眠', url: '/package-baby/records/sleep' },
+  { key: 'diaper', label: '💧 排便', url: '/package-baby/records/diaper' },
+  { key: 'food', label: '🍚 辅食', url: '/package-baby/records/food' },
+]
+
+function switchKind(item) {
+  if (item.key === props.kind) return
+  uni.redirectTo({ url: item.url })
+}
+
 const {
   today,
   day,
@@ -65,6 +87,27 @@ onMounted(refresh)
 <style scoped>
 .record-page {
   padding: 24rpx 32rpx 64rpx;
+}
+.record-switch {
+  display: flex;
+  padding: 8rpx;
+  background: #FFF1F3;
+  border-radius: 999rpx;
+}
+.record-switch-item {
+  flex: 1;
+  padding: 14rpx 0;
+  text-align: center;
+  border-radius: 999rpx;
+  font-size: 24rpx;
+  color: var(--text-secondary);
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.record-switch-item.active {
+  background: #FFFFFF;
+  color: var(--primary-strong);
+  font-weight: 600;
+  box-shadow: 0 4rpx 12rpx rgba(255, 143, 163, 0.18);
 }
 .record-head {
   display: flex;
