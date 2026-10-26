@@ -24,7 +24,8 @@ export function chooseAvatarImage(options = {}) {
           resolve({ ok: false, error: '未选择图片' })
           return
         }
-        compressToDataUrl(path)
+        const file = res.tempFiles && res.tempFiles[0]
+        compressToDataUrl(path, file)
           .then((dataUrl) => {
             if (!isValidAvatar(dataUrl)) {
               resolve({ ok: false, error: '图片过大，请换一张' })
@@ -39,8 +40,20 @@ export function chooseAvatarImage(options = {}) {
   })
 }
 
-function compressToDataUrl(path) {
+function compressToDataUrl(path, file) {
   // #ifdef MP-WEIXIN
+  return compressMpToDataUrl(path, 70, 400).then((dataUrl) =>
+    isValidAvatar(dataUrl) ? dataUrl : compressMpToDataUrl(path, 60, 320)
+  )
+  // #endif
+
+  // #ifdef H5
+  return resizeImageInH5(path).catch(() => readImageFileAsDataUrl(file))
+  // #endif
+}
+
+// #ifdef MP-WEIXIN
+function compressMpToDataUrl(path, quality, compressedWidth) {
   return new Promise((resolve, reject) => {
     const read = (source) => {
       try {
@@ -58,8 +71,8 @@ function compressToDataUrl(path) {
     if (typeof wx !== 'undefined' && typeof wx.compressImage === 'function') {
       wx.compressImage({
         src: path,
-        quality: 70,
-        compressedWidth: 400,
+        quality,
+        compressedWidth,
         success: (res) => read(res.tempFilePath),
         fail: () => read(path),
       })
@@ -67,12 +80,28 @@ function compressToDataUrl(path) {
     }
     read(path)
   })
-  // #endif
-
-  // #ifdef H5
-  return resizeImageInH5(path)
-  // #endif
 }
+// #endif
+
+// #ifdef H5
+function readImageFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const blob = file && (file.file || file)
+    if (typeof FileReader === 'undefined' || !blob) {
+      reject(new Error('image read failed'))
+      return
+    }
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = () => reject(new Error('image read failed'))
+    try {
+      reader.readAsDataURL(blob)
+    } catch (e) {
+      reject(e)
+    }
+  })
+}
+// #endif
 
 // #ifdef H5
 function resizeImageInH5(path) {
