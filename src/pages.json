@@ -9,6 +9,12 @@
       }
     },
     {
+      "path": "pages/mine/index",
+      "style": {
+        "navigationBarTitleText": "我的"
+      }
+    },
+    {
       "path": "pages/tools/index",
       "style": {
         "navigationBarTitleText": "工具箱",
@@ -121,10 +127,10 @@
         "text": "宝宝"
       },
       {
-        "pagePath": "pages/tools/index",
-        "iconPath": "static/tab-tools.png",
-        "selectedIconPath": "static/tab-tools-active.png",
-        "text": "工具"
+        "pagePath": "pages/mine/index",
+        "iconPath": "static/tab-mine.png",
+        "selectedIconPath": "static/tab-mine-active.png",
+        "text": "我的"
       }
     ]
   }

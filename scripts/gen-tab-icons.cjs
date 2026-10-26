@@ -92,6 +92,40 @@ function heartCoverage(x, y) {
   return hit / (samples * samples)
 }
 
+function filledCircleCoverage(x, y, cx, cy, r) {
+  const samples = 4
+  let hit = 0
+  for (let sy = 0; sy < samples; sy++) {
+    for (let sx = 0; sx < samples; sx++) {
+      const px = x - 0.5 + (sx + 0.5) / samples
+      const py = y - 0.5 + (sy + 0.5) / samples
+      if (Math.hypot(px - cx, py - cy) <= r) hit += 1
+    }
+  }
+  return hit / (samples * samples)
+}
+
+function filledRoundedRectCoverage(x, y, left, top, right, bottom, radius) {
+  const samples = 4
+  let hit = 0
+  for (let sy = 0; sy < samples; sy++) {
+    for (let sx = 0; sx < samples; sx++) {
+      const px = x - 0.5 + (sx + 0.5) / samples
+      const py = y - 0.5 + (sy + 0.5) / samples
+      const cx = Math.min(Math.max(px, left + radius), right - radius)
+      const cy = Math.min(Math.max(py, top + radius), bottom - radius)
+      if (Math.hypot(px - cx, py - cy) <= radius) hit += 1
+    }
+  }
+  return hit / (samples * samples)
+}
+
+function personCoverage(x, y) {
+  const head = filledCircleCoverage(x, y, 40.5, 27, 14)
+  const body = filledRoundedRectCoverage(x, y, 17, 47, 64, 74, 13)
+  return Math.max(head, body)
+}
+
 function paint(coverageFn, color) {
   const rgba = Buffer.alloc(SIZE * SIZE * 4)
   for (let y = 0; y < SIZE; y++) {
@@ -110,10 +144,10 @@ function paint(coverageFn, color) {
 
 const outDir = path.join(__dirname, '..', 'src', 'static')
 const outputs = [
-  ['tab-tools.png', paint(toolsCoverage, NORMAL)],
-  ['tab-tools-active.png', paint(toolsCoverage, ACTIVE)],
   ['tab-baby.png', paint(heartCoverage, NORMAL)],
   ['tab-baby-active.png', paint(heartCoverage, ACTIVE)],
+  ['tab-mine.png', paint(personCoverage, NORMAL)],
+  ['tab-mine-active.png', paint(personCoverage, ACTIVE)],
 ]
 
 for (const [name, rgba] of outputs) {
