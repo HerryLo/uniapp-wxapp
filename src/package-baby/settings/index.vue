@@ -3,6 +3,20 @@
     <view class="settings-page">
       <view class="card form-card">
       <view class="card-title">👶 宝宝资料</view>
+      <view class="avatar-row" @click="editAvatar">
+        <image
+          v-if="form.avatar"
+          class="avatar-preview"
+          :src="form.avatar"
+          mode="aspectFill"
+        />
+        <view v-else class="avatar-preview avatar-placeholder">👶</view>
+        <view class="avatar-meta">
+          <view class="avatar-title">宝宝头像</view>
+          <view class="avatar-desc">点击更换或移除</view>
+        </view>
+        <text class="row-arrow">›</text>
+      </view>
       <view class="label">昵称</view>
       <input class="input" v-model="form.name" maxlength="20" placeholder="宝宝昵称" />
       <view class="label">出生日期</view>
@@ -97,6 +111,7 @@ import { ref } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import BabyPage from '../../components/baby/BabyPage.vue'
 import { copyText } from '../../utils/clipboard.js'
+import { chooseAvatarImage } from '../../utils/baby/avatar.js'
 import { loadProfile, saveProfile } from '../../utils/baby/profile.js'
 import {
   MAX_IMPORT_BYTES,
@@ -107,7 +122,7 @@ import {
   validateImportPayload,
 } from '../utils/backup.js'
 
-const form = ref({ name: '宝宝', birthDate: '', gender: 'boy' })
+const form = ref({ name: '宝宝', birthDate: '', gender: 'boy', avatar: '' })
 const profileError = ref('')
 const pasteOpen = ref(false)
 const importText = ref('')
@@ -118,8 +133,31 @@ function refresh() {
     name: profile.name,
     birthDate: profile.birthDate,
     gender: profile.gender,
+    avatar: profile.avatar,
   }
   profileError.value = ''
+}
+
+function editAvatar() {
+  uni.showActionSheet({
+    itemList: ['从相册选择', '拍照', '移除头像'],
+    success: async (res) => {
+      if (res.tapIndex === 2) {
+        form.value.avatar = ''
+        return
+      }
+      const picked = await chooseAvatarImage({
+        sourceType: res.tapIndex === 1 ? ['camera'] : ['album'],
+      })
+      if (!picked.ok) {
+        if (picked.error !== '未选择图片') {
+          uni.showToast({ title: picked.error, icon: 'none' })
+        }
+        return
+      }
+      form.value.avatar = picked.dataUrl
+    },
+  })
 }
 
 function save() {
@@ -264,6 +302,37 @@ onShow(refresh)
 }
 .form-card {
   margin-top: 0;
+}
+.avatar-row {
+  display: flex;
+  align-items: center;
+  padding: 8rpx 0 24rpx;
+  border-bottom: 1rpx solid var(--border);
+}
+.avatar-preview {
+  width: 104rpx;
+  height: 104rpx;
+  border-radius: 50%;
+  background: #FFF1F3;
+}
+.avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52rpx;
+}
+.avatar-meta {
+  flex: 1;
+  margin-left: 20rpx;
+}
+.avatar-title {
+  font-size: 30rpx;
+  color: var(--text);
+}
+.avatar-desc {
+  margin-top: 6rpx;
+  font-size: 24rpx;
+  color: var(--text-secondary);
 }
 .row {
   display: flex;

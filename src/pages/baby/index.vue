@@ -2,7 +2,16 @@
   <BabyPage active="home">
     <view class="baby-page">
       <view class="profile-card">
-      <view class="avatar">👶</view>
+      <view class="avatar" :class="{ 'has-image': profile.avatar }" @click="changeAvatar">
+        <image
+          v-if="profile.avatar"
+          class="avatar-image"
+          :src="profile.avatar"
+          mode="aspectFill"
+        />
+        <text v-else class="avatar-emoji">👶</text>
+        <view class="avatar-camera">📷</view>
+      </view>
       <view class="profile-info">
         <view class="profile-name">{{ profile.name }}</view>
         <view v-if="age" class="profile-age">
@@ -83,9 +92,10 @@ import AdBanner from '../../components/AdBanner.vue'
 import ShareButton from '../../components/ShareButton.vue'
 import BabyPage from '../../components/baby/BabyPage.vue'
 import Disclaimer from '../../components/baby/Disclaimer.vue'
+import { chooseAvatarImage } from '../../utils/baby/avatar.js'
 import { ageInfo, formatMonthAge, todayKey } from '../../utils/baby/date.js'
 import { latestGrowth, loadGrowth } from '../../utils/baby/growth.js'
-import { loadProfile } from '../../utils/baby/profile.js'
+import { loadProfile, saveAvatar } from '../../utils/baby/profile.js'
 import { loadDay, summarizeDay } from '../../utils/baby/records.js'
 import { loadVaccines, nextVaccine, vaccineStatus } from '../../utils/baby/vaccines.js'
 
@@ -120,6 +130,23 @@ function goPage(url) {
 
 function goSettings() {
   uni.navigateTo({ url: '/package-baby/settings/index' })
+}
+
+async function changeAvatar() {
+  const picked = await chooseAvatarImage()
+  if (!picked.ok) {
+    if (picked.error !== '未选择图片') {
+      uni.showToast({ title: picked.error, icon: 'none' })
+    }
+    return
+  }
+  const res = saveAvatar(picked.dataUrl)
+  if (!res.ok) {
+    uni.showToast({ title: res.error || '保存失败', icon: 'none' })
+    return
+  }
+  refresh()
+  uni.showToast({ title: '头像已更新', icon: 'none' })
 }
 
 onLoad(() => {
@@ -185,14 +212,37 @@ onShareTimeline(() => ({
   background: rgba(255, 255, 255, 0.25);
 }
 .avatar {
+  position: relative;
   width: 96rpx;
   height: 96rpx;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
   border-radius: 50%;
   background: #FFFFFF;
   font-size: 52rpx;
+}
+.avatar-image {
+  width: 100%;
+  height: 100%;
+}
+.avatar-emoji {
+  font-size: 52rpx;
+}
+.avatar-camera {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 34rpx;
+  height: 34rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #FFFFFF;
+  font-size: 18rpx;
+  box-shadow: 0 2rpx 8rpx rgba(31, 41, 55, 0.18);
 }
 .profile-info {
   flex: 1;
