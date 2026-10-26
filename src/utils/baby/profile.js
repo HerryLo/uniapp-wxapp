@@ -1,7 +1,7 @@
 import { readStorage, writeStorage } from '../storage.js'
 import { PROFILE_KEY } from './keys.js'
 import { isFutureDate, parseLocalDate } from './date.js'
-import { MAX_AVATAR_CHARS, isValidAvatar } from './avatar.js'
+import { avatarErrorMessage, isValidAvatar } from './avatar.js'
 
 const DEFAULT_PROFILE = {
   name: '宝宝',
@@ -36,9 +36,7 @@ export function validateProfile(input) {
   if (!parseLocalDate(input.birthDate)) return '出生日期格式不正确'
   if (isFutureDate(input.birthDate)) return '出生日期不能晚于今天'
   if (input.avatar !== undefined && !isValidAvatar(input.avatar)) {
-    return typeof input.avatar === 'string' && input.avatar.length > MAX_AVATAR_CHARS
-      ? '头像图片过大，请换一张'
-      : '头像格式不正确'
+    return avatarErrorMessage(input.avatar)
   }
   return ''
 }
@@ -63,13 +61,7 @@ export function saveProfile(input, now = Date.now()) {
 
 export function saveAvatar(avatar, now = Date.now()) {
   if (!isValidAvatar(avatar)) {
-    return {
-      ok: false,
-      error:
-        typeof avatar === 'string' && avatar.length > MAX_AVATAR_CHARS
-          ? '头像图片过大，请换一张'
-          : '头像格式不正确',
-    }
+    return { ok: false, error: avatarErrorMessage(avatar) }
   }
   const previous = loadProfile()
   const profile = { ...previous, avatar: avatar || '', updatedAt: now }

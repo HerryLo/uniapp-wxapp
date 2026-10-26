@@ -5,8 +5,15 @@ const AVATAR_PATTERN = /^data:image\/(jpeg|png|webp);base64,/
 export function isValidAvatar(value) {
   if (value === '' || value == null) return true
   if (typeof value !== 'string') return false
+  if (value.trim() === '') return false
   if (value.length > MAX_AVATAR_CHARS) return false
   return AVATAR_PATTERN.test(value)
+}
+
+export function avatarErrorMessage(value) {
+  return typeof value === 'string' && value.length > MAX_AVATAR_CHARS
+    ? '头像图片过大，请换一张'
+    : '头像格式不正确'
 }
 
 export function chooseAvatarImage(options = {}) {
@@ -27,8 +34,16 @@ export function chooseAvatarImage(options = {}) {
         const file = res.tempFiles && res.tempFiles[0]
         compressToDataUrl(path, file)
           .then((dataUrl) => {
-            if (!isValidAvatar(dataUrl)) {
+            if (typeof dataUrl !== 'string' || !dataUrl) {
+              resolve({ ok: false, error: '图片处理失败，请重试' })
+              return
+            }
+            if (dataUrl.length > MAX_AVATAR_CHARS) {
               resolve({ ok: false, error: '图片过大，请换一张' })
+              return
+            }
+            if (!isValidAvatar(dataUrl)) {
+              resolve({ ok: false, error: '图片格式不支持，请换一张' })
               return
             }
             resolve({ ok: true, dataUrl })
@@ -50,6 +65,8 @@ function compressToDataUrl(path, file) {
   // #ifdef H5
   return resizeImageInH5(path).catch(() => readImageFileAsDataUrl(file))
   // #endif
+
+  return Promise.reject(new Error('unsupported platform'))
 }
 
 // #ifdef MP-WEIXIN

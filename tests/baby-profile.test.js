@@ -124,4 +124,37 @@ describe('baby profile', () => {
       updatedAt: 2000,
     })
   })
+
+  it('loads a legacy profile without avatar and keeps other fields', () => {
+    store[PROFILE_KEY] = JSON.stringify({
+      name: '宝宝',
+      birthDate: '2025-01-01',
+      gender: 'girl',
+      createdAt: 1000,
+      updatedAt: 2000,
+    })
+    expect(loadProfile()).toMatchObject({
+      name: '宝宝',
+      birthDate: '2025-01-01',
+      gender: 'girl',
+      avatar: '',
+      createdAt: 1000,
+      updatedAt: 2000,
+    })
+  })
+
+  it('rejects an invalid or oversized avatar in saveAvatar', () => {
+    expect(saveAvatar('bad')).toEqual({ ok: false, error: '头像格式不正确' })
+    expect(
+      saveAvatar(`data:image/jpeg;base64,${'a'.repeat(MAX_AVATAR_CHARS)}`)
+    ).toEqual({ ok: false, error: '头像图片过大，请换一张' })
+  })
+
+  it('reports saveAvatar write failure', () => {
+    uni.setStorageSync = () => { throw new Error('fail') }
+    expect(saveAvatar('data:image/png;base64,abc')).toEqual({
+      ok: false,
+      error: '保存失败',
+    })
+  })
 })
