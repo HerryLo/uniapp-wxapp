@@ -2,14 +2,16 @@
   <BabyPage active="home">
     <view class="baby-page">
       <view class="profile-card">
-      <view class="avatar" :class="{ 'has-image': profile.avatar }" @click="changeAvatar">
-        <image
-          v-if="profile.avatar"
-          class="avatar-image"
-          :src="profile.avatar"
-          mode="aspectFill"
-        />
-        <text v-else class="avatar-emoji">👶</text>
+      <view class="avatar" @click="changeAvatar">
+        <view class="avatar-clip">
+          <image
+            v-if="profile.avatar"
+            class="avatar-image"
+            :src="profile.avatar"
+            mode="aspectFill"
+          />
+          <text v-else class="avatar-emoji">👶</text>
+        </view>
         <view class="avatar-camera">📷</view>
       </view>
       <view class="profile-info">
@@ -215,6 +217,14 @@ onShareTimeline(() => ({
   position: relative;
   width: 96rpx;
   height: 96rpx;
+  flex-shrink: 0;
+}
+.avatar-clip {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -232,16 +242,17 @@ onShareTimeline(() => ({
 }
 .avatar-camera {
   position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 34rpx;
-  height: 34rpx;
+  right: -2rpx;
+  bottom: -2rpx;
+  z-index: 1;
+  width: 36rpx;
+  height: 36rpx;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   background: #FFFFFF;
-  font-size: 18rpx;
+  font-size: 20rpx;
   box-shadow: 0 2rpx 8rpx rgba(31, 41, 55, 0.18);
 }
 .profile-info {
