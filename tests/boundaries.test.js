@@ -206,6 +206,7 @@ describe('record boundaries', () => {
       diaper: [],
       food: [],
       medicine: [],
+      supplement: [],
     })
   })
 

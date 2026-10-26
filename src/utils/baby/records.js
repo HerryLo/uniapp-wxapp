@@ -6,7 +6,7 @@ import {
 } from './keys.js'
 import { durationMinutes, formatDate, monthKey, parseLocalDateTime } from './date.js'
 
-const KINDS = ['milk', 'sleep', 'diaper', 'food', 'medicine']
+const KINDS = ['milk', 'sleep', 'diaper', 'food', 'medicine', 'supplement']
 const MILK_TYPES = ['母乳', '配方奶', '混合']
 const DIAPER_TYPES = ['大便', '小便', '都有']
 const DIAPER_COLORS = ['正常', '绿色', '黑色', '白色', '带血']
@@ -17,7 +17,7 @@ function makeId(now) {
 }
 
 function emptyDay() {
-  return { milk: [], sleep: [], diaper: [], food: [], medicine: [] }
+  return { milk: [], sleep: [], diaper: [], food: [], medicine: [], supplement: [] }
 }
 
 const MONTH_PATTERN = /^\d{4}-(0[1-9]|1[0-2])$/
@@ -78,6 +78,7 @@ function normalizeDay(entry) {
     diaper: sanitize(source.diaper, 'time'),
     food: sanitize(source.food, 'time'),
     medicine: sanitize(source.medicine, 'time'),
+    supplement: sanitize(source.supplement, 'time'),
   }
 }
 
@@ -140,12 +141,22 @@ export function validateMedicine(input) {
   return optionalTextError(input.note, '备注', 200)
 }
 
+export function validateSupplement(input) {
+  if (!parseLocalDateTime(input.time)) return '请选择补剂时间'
+  const nameError = requiredTextError(input.name, '补剂名称', 30)
+  if (nameError) return nameError
+  const amountError = optionalTextError(input.amount, '用量', 20)
+  if (amountError) return amountError
+  return optionalTextError(input.note, '备注', 200)
+}
+
 function validateRecord(kind, input) {
   if (kind === 'milk') return validateMilk(input)
   if (kind === 'sleep') return validateSleep(input)
   if (kind === 'diaper') return validateDiaper(input)
   if (kind === 'food') return validateFood(input)
   if (kind === 'medicine') return validateMedicine(input)
+  if (kind === 'supplement') return validateSupplement(input)
   return '未知记录类型'
 }
 
@@ -171,7 +182,7 @@ function makeRecord(kind, input, now) {
       createdAt: now,
     }
   }
-  if (kind === 'medicine') {
+  if (kind === 'medicine' || kind === 'supplement') {
     return {
       id: makeId(now),
       time: input.time,
@@ -242,7 +253,7 @@ export function removeRecord(kind, id, dateStr) {
   const next = day[kind].filter((item) => item.id !== id)
   if (next.length === day[kind].length) return { ok: true }
   const nextDay = { ...day, [kind]: next }
-  if (!nextDay.milk.length && !nextDay.sleep.length && !nextDay.diaper.length) {
+  if (KINDS.every((recordKind) => !(nextDay[recordKind] || []).length)) {
     delete data[dateStr]
   } else {
     data[dateStr] = nextDay

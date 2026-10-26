@@ -14,6 +14,7 @@ import {
   validateMilk,
   validateSleep,
   validateDiaper,
+  validateSupplement,
 } from '../src/utils/baby/records.js'
 import { RECORDS_INDEX_KEY, recordsKey } from '../src/utils/baby/keys.js'
 
@@ -237,5 +238,75 @@ describe('baby records', () => {
     expect(day.milk).toHaveLength(1)
     expect(day.food).toEqual([])
     expect(day.medicine).toEqual([])
+    expect(day.supplement).toEqual([])
+  })
+
+  it('validates supplement inputs', () => {
+    expect(
+      validateSupplement({
+        time: '2026-10-24 08:00',
+        name: ' 维生素D ',
+        amount: '',
+        note: '',
+      })
+    ).toBe('')
+    expect(validateSupplement({ time: '', name: '维生素D' })).toContain('时间')
+    expect(validateSupplement({ time: '2026-10-24 08:00', name: '' })).toContain(
+      '补剂名称'
+    )
+    expect(
+      validateSupplement({ time: '2026-10-24 08:00', name: 'x'.repeat(31) })
+    ).toContain('补剂名称')
+    expect(
+      validateSupplement({
+        time: '2026-10-24 08:00',
+        name: '维生素D',
+        amount: 'x'.repeat(21),
+      })
+    ).toContain('用量')
+    expect(
+      validateSupplement({
+        time: '2026-10-24 08:00',
+        name: '维生素D',
+        note: 'x'.repeat(201),
+      })
+    ).toContain('备注')
+  })
+
+  it('stores supplement records separately from medicine', () => {
+    const medicine = addRecord(
+      'medicine',
+      { time: '2026-10-24 09:00', name: '退烧药', amount: '', note: '' },
+      1
+    )
+    const supplement = addRecord(
+      'supplement',
+      { time: '2026-10-24 10:00', name: ' 维生素D ', amount: '1 滴', note: '' },
+      2
+    )
+    expect(medicine.ok).toBe(true)
+    expect(supplement.ok).toBe(true)
+    expect(supplement.record.name).toBe('维生素D')
+
+    const day = loadDay('2026-10-24')
+    expect(day.medicine).toHaveLength(1)
+    expect(day.supplement).toHaveLength(1)
+
+    expect(
+      removeRecord('supplement', supplement.record.id, '2026-10-24').ok
+    ).toBe(true)
+    expect(loadDay('2026-10-24').supplement).toHaveLength(0)
+    expect(loadDay('2026-10-24').medicine).toHaveLength(1)
+  })
+
+  it('drops the day when the last record of any kind is removed', () => {
+    const medicine = addRecord(
+      'medicine',
+      { time: '2026-10-24 09:00', name: '退烧药', amount: '', note: '' },
+      1
+    )
+    expect(removeRecord('medicine', medicine.record.id, '2026-10-24').ok).toBe(true)
+    expect(JSON.parse(store[recordsKey('2026-10')])).toEqual({})
+    expect(JSON.parse(store[RECORDS_INDEX_KEY])).toEqual([])
   })
 })
