@@ -24,7 +24,9 @@
           <view class="record-sub">{{ foodDetail(item) }}</view>
         </template>
         <template v-else>
-          <view class="record-main">💊 {{ item.time.slice(11) }} · {{ item.name }}</view>
+          <view class="record-main">
+            {{ kind === 'supplement' ? '🌿' : '💊' }} {{ item.time.slice(11) }} · {{ item.name }}
+          </view>
           <view class="record-sub">
             {{ [item.amount, item.note].filter(Boolean).join(' · ') || '用量未记录' }}
           </view>

@@ -5,12 +5,12 @@ export const SIDEBAR_ITEMS = [
   { key: 'diaper', label: '排便', icon: '💧', url: '/package-baby/records/diaper' },
   { key: 'food', label: '辅食', icon: '🍚', url: '/package-baby/records/food' },
   { key: 'medicine', label: '用药', icon: '💊', url: '/package-baby/records/medicine' },
+  { key: 'supplement', label: '补剂', icon: '🌿', url: '/package-baby/records/supplement' },
   { key: 'health', label: '疫苗', icon: '💉', url: '/package-baby/health/index' },
   { key: 'growth', label: '生长', icon: '📈', url: '/package-baby/growth/index' },
   { key: 'journal', label: '手记', icon: '📖', url: '/package-baby/journal/index' },
   { key: 'mom', label: '妈妈', icon: '👩', url: '/package-baby/mom/index' },
   { key: 'travel', label: '旅行', icon: '🧳', url: '/package-baby/travel/index' },
-  { key: 'settings', label: '设置', icon: '⚙️', url: '/package-baby/settings/index' },
 ]
 
 let sidebarCollapsed = false

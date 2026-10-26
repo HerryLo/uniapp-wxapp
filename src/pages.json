@@ -58,6 +58,12 @@
           }
         },
         {
+          "path": "records/supplement",
+          "style": {
+            "navigationBarTitleText": "补剂记录"
+          }
+        },
+        {
           "path": "growth/index",
           "style": {
             "navigationBarTitleText": "生长曲线"

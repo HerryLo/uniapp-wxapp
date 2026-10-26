@@ -21,12 +21,12 @@ describe('baby sidebar', () => {
       'diaper',
       'food',
       'medicine',
+      'supplement',
       'health',
       'growth',
       'journal',
       'mom',
       'travel',
-      'settings',
     ])
     expect(SIDEBAR_ITEMS.map((item) => item.label)).toEqual([
       '首页',
@@ -35,20 +35,21 @@ describe('baby sidebar', () => {
       '排便',
       '辅食',
       '用药',
+      '补剂',
       '疫苗',
       '生长',
       '手记',
       '妈妈',
       '旅行',
-      '设置',
     ])
     expect(SIDEBAR_ITEMS[0].url).toBe('/pages/baby/index')
     expect(SIDEBAR_ITEMS[1].url).toBe('/package-baby/records/milk')
     expect(SIDEBAR_ITEMS[4].url).toBe('/package-baby/records/food')
     expect(SIDEBAR_ITEMS[5].url).toBe('/package-baby/records/medicine')
-    expect(SIDEBAR_ITEMS[6].url).toBe('/package-baby/health/index')
-    expect(SIDEBAR_ITEMS[9].url).toBe('/package-baby/mom/index')
-    expect(SIDEBAR_ITEMS[10].url).toBe('/package-baby/travel/index')
+    expect(SIDEBAR_ITEMS[6].url).toBe('/package-baby/records/supplement')
+    expect(SIDEBAR_ITEMS[7].url).toBe('/package-baby/health/index')
+    expect(SIDEBAR_ITEMS[10].url).toBe('/package-baby/mom/index')
+    expect(SIDEBAR_ITEMS[11].url).toBe('/package-baby/travel/index')
     expect(
       SIDEBAR_ITEMS.every((item) => typeof item.icon === 'string' && item.icon)
     ).toBe(true)

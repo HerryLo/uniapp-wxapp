@@ -105,7 +105,7 @@
         />
       </template>
 
-      <template v-else-if="kind === 'medicine'">
+      <template v-else-if="kind === 'medicine' || kind === 'supplement'">
         <view class="form-label">时间</view>
         <view class="form-row">
           <picker mode="date" :value="date" @change="date = $event.detail.value">
@@ -115,18 +115,29 @@
             <view class="form-picker">{{ time }}</view>
           </picker>
         </view>
-        <view class="form-label">药品名称（自定义）</view>
-        <input class="input" v-model="medicineName" maxlength="30" placeholder="输入药品名称" />
+        <view class="form-label">
+          {{ kind === 'medicine' ? '药品名称（自定义）' : '补剂名称（自定义）' }}
+        </view>
+        <input
+          class="input"
+          v-model="customName"
+          maxlength="30"
+          :placeholder="kind === 'medicine' ? '输入药品名称' : '输入补剂名称'"
+        />
         <view class="form-label">用量（可选，自行填写）</view>
-        <input class="input" v-model="medicineAmount" maxlength="20" placeholder="例如 5 ml" />
+        <input class="input" v-model="customAmount" maxlength="20" placeholder="例如 5 ml" />
         <view class="form-label">备注（可选）</view>
         <textarea
           class="textarea"
-          v-model="medicineNote"
+          v-model="customNote"
           maxlength="200"
-          placeholder="记录用药情况"
+          :placeholder="kind === 'medicine' ? '记录用药情况' : '记录补剂情况'"
         />
-        <view class="form-tip">仅记录用户输入，不提供用药建议，请遵医嘱。</view>
+        <view class="form-tip">
+          {{ kind === 'medicine'
+            ? '仅记录用户输入，不提供用药建议，请遵医嘱。'
+            : '仅记录用户输入，不提供补剂建议，请遵医嘱。' }}
+        </view>
       </template>
 
       <template v-else>
@@ -201,15 +212,16 @@ const foodName = ref('')
 const foodAmount = ref('')
 const foodReaction = ref('一般')
 const foodNote = ref('')
-const medicineName = ref('')
-const medicineAmount = ref('')
-const medicineNote = ref('')
+const customName = ref('')
+const customAmount = ref('')
+const customNote = ref('')
 
 const title = computed(() => {
   if (props.kind === 'sleep') return '😴 记录睡眠'
   if (props.kind === 'diaper') return '💧 记录排便'
   if (props.kind === 'food') return '🍚 记录辅食'
   if (props.kind === 'medicine') return '💊 记录用药'
+  if (props.kind === 'supplement') return '🌿 记录补剂'
   return '🍼 记录喝奶'
 })
 
@@ -231,9 +243,9 @@ function reset() {
   foodAmount.value = ''
   foodReaction.value = '一般'
   foodNote.value = ''
-  medicineName.value = ''
-  medicineAmount.value = ''
-  medicineNote.value = ''
+  customName.value = ''
+  customAmount.value = ''
+  customNote.value = ''
 }
 
 watch(
@@ -285,12 +297,12 @@ function submit() {
     })
     return
   }
-  if (props.kind === 'medicine') {
+  if (props.kind === 'medicine' || props.kind === 'supplement') {
     emit('submit', {
       time: `${date.value} ${time.value}`,
-      name: medicineName.value,
-      amount: medicineAmount.value,
-      note: medicineNote.value,
+      name: customName.value,
+      amount: customAmount.value,
+      note: customNote.value,
     })
     return
   }
