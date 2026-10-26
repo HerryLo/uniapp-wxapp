@@ -3,7 +3,7 @@
     <view class="hero">
       <image class="logo" src="../../static/logo.png" mode="aspectFit" />
       <view class="app-name">垣计算</view>
-      <view class="version">v1.3.0</view>
+      <view class="version">v1.4.0</view>
     </view>
 
     <view class="card">
