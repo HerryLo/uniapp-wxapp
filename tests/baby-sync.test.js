@@ -43,6 +43,16 @@ function seed() {
       diaper: [],
       food: [],
       medicine: [],
+      supplement: [
+        {
+          id: 'sup1',
+          time: '2026-10-24 12:00',
+          name: '维生素D',
+          amount: '1 滴',
+          note: '',
+          createdAt: 1,
+        },
+      ],
     },
   })
   store[MOM_KEY] = JSON.stringify([
@@ -77,6 +87,9 @@ describe('sync snapshot', () => {
     expect(payload.snapshot.app).toBe('toolbox-baby')
     expect(payload.snapshot.data.profile.name).toBe('小满')
     expect(payload.snapshot.data.records['2026-10']).toBeTruthy()
+    expect(
+      payload.snapshot.data.records['2026-10']['2026-10-24'].supplement
+    ).toHaveLength(1)
     expect(payload.snapshot.data.mom).toHaveLength(1)
     expect(payload.snapshot.data.travel).toHaveLength(1)
   })

@@ -49,6 +49,7 @@ function seed() {
     name: '小满',
     birthDate: '2025-01-02',
     gender: 'girl',
+    avatar: 'data:image/jpeg;base64,abc',
     createdAt: 1,
     updatedAt: 1,
   })
@@ -74,6 +75,16 @@ function seed() {
           time: '2026-10-24 11:00',
           name: '维生素',
           amount: '5 滴',
+          note: '',
+          createdAt: 1,
+        },
+      ],
+      supplement: [
+        {
+          id: 'sup1',
+          time: '2026-10-24 12:00',
+          name: '维生素D',
+          amount: '1 滴',
           note: '',
           createdAt: 1,
         },
@@ -256,6 +267,23 @@ describe('baby backup', () => {
     expect(res.ok).toBe(true)
     expect(loadMomEntries()[0].mood).toBe('happy')
     expect(loadTravels()[0].place).toBe('苏州')
+  })
+
+  it('round-trips supplement records and avatar', () => {
+    seed()
+    const payload = buildExportPayload(new Date(2026, 9, 24, 10, 5))
+    expect(payload.data.profile.avatar).toBe('data:image/jpeg;base64,abc')
+    expect(
+      payload.data.records['2026-10']['2026-10-24'].supplement
+    ).toHaveLength(1)
+
+    const res = restoreData(payload.data, new Date(2026, 9, 25, 9, 0))
+    expect(res.ok).toBe(true)
+    expect(loadDay('2026-10-24').supplement).toHaveLength(1)
+    expect(loadDay('2026-10-24').supplement[0].name).toBe('维生素D')
+    expect(JSON.parse(store[PROFILE_KEY]).avatar).toBe(
+      'data:image/jpeg;base64,abc'
+    )
   })
 
   it('round-trips food and medicine records', () => {
