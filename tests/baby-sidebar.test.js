@@ -3,6 +3,8 @@ import {
   SIDEBAR_ITEMS,
   loadSidebarCollapsed,
   loadSidebarPosition,
+  onSidebarCollapsedChange,
+  onSidebarPositionChange,
   saveSidebarCollapsed,
   saveSidebarPosition,
 } from '../src/utils/baby/sidebar.js'
@@ -20,8 +22,8 @@ describe('baby sidebar', () => {
       'sleep',
       'diaper',
       'food',
-      'medicine',
       'supplement',
+      'medicine',
       'health',
       'growth',
       'journal',
@@ -34,8 +36,8 @@ describe('baby sidebar', () => {
       '睡眠',
       '排便',
       '辅食',
-      '用药',
       '补剂',
+      '用药',
       '疫苗',
       '生长',
       '手记',
@@ -45,8 +47,8 @@ describe('baby sidebar', () => {
     expect(SIDEBAR_ITEMS[0].url).toBe('/pages/baby/index')
     expect(SIDEBAR_ITEMS[1].url).toBe('/package-baby/records/milk')
     expect(SIDEBAR_ITEMS[4].url).toBe('/package-baby/records/food')
-    expect(SIDEBAR_ITEMS[5].url).toBe('/package-baby/records/medicine')
-    expect(SIDEBAR_ITEMS[6].url).toBe('/package-baby/records/supplement')
+    expect(SIDEBAR_ITEMS[5].url).toBe('/package-baby/records/supplement')
+    expect(SIDEBAR_ITEMS[6].url).toBe('/package-baby/records/medicine')
     expect(SIDEBAR_ITEMS[7].url).toBe('/package-baby/health/index')
     expect(SIDEBAR_ITEMS[10].url).toBe('/package-baby/mom/index')
     expect(SIDEBAR_ITEMS[11].url).toBe('/package-baby/travel/index')
@@ -74,5 +76,28 @@ describe('baby sidebar', () => {
     expect(loadSidebarPosition()).toEqual({ left: 20, top: 300 })
     saveSidebarPosition(null, null)
     expect(loadSidebarPosition()).toBe(null)
+  })
+
+  it('notifies subscribers when the collapse state changes', () => {
+    const seen = []
+    const unsubscribe = onSidebarCollapsedChange((value) => seen.push(value))
+    saveSidebarCollapsed(true)
+    saveSidebarCollapsed(true)
+    saveSidebarCollapsed(false)
+    unsubscribe()
+    saveSidebarCollapsed(true)
+    expect(seen).toEqual([true, false])
+    saveSidebarCollapsed(false)
+  })
+
+  it('notifies subscribers when the floating position changes', () => {
+    const seen = []
+    const unsubscribe = onSidebarPositionChange((value) => seen.push(value))
+    saveSidebarPosition(20, 300)
+    saveSidebarPosition(null, null)
+    unsubscribe()
+    saveSidebarPosition(1, 2)
+    expect(seen).toEqual([{ left: 20, top: 300 }, null])
+    saveSidebarPosition(null, null)
   })
 })

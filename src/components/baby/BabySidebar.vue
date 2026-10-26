@@ -35,10 +35,11 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import {
   SIDEBAR_ITEMS,
   loadSidebarPosition,
+  onSidebarPositionChange,
   saveSidebarPosition,
 } from '../../utils/baby/sidebar.js'
 
@@ -69,14 +70,24 @@ function clampPosition() {
   floatTop.value = clamp(floatTop.value, 8, windowHeight.value - 56)
 }
 
+function applySavedPosition(saved) {
+  floatLeft.value = saved ? saved.left : 16
+  floatTop.value = saved ? saved.top : windowHeight.value - 120
+  clampPosition()
+}
+
+let positionUnsubscribe = null
+
 onMounted(() => {
   const info = uni.getSystemInfoSync()
   windowWidth.value = info.windowWidth || 375
   windowHeight.value = info.windowHeight || 667
-  const saved = loadSidebarPosition()
-  floatLeft.value = saved ? saved.left : 16
-  floatTop.value = saved ? saved.top : windowHeight.value - 120
-  clampPosition()
+  applySavedPosition(loadSidebarPosition())
+  positionUnsubscribe = onSidebarPositionChange(applySavedPosition)
+})
+
+onBeforeUnmount(() => {
+  if (positionUnsubscribe) positionUnsubscribe()
 })
 
 function isSubpackagePage() {

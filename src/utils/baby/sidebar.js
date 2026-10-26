@@ -16,12 +16,32 @@ export const SIDEBAR_ITEMS = [
 let sidebarCollapsed = false
 let sidebarPosition = null
 
+const collapseListeners = new Set()
+const positionListeners = new Set()
+
+function notify(listeners, value) {
+  listeners.forEach((listener) => listener(value))
+}
+
+export function onSidebarCollapsedChange(listener) {
+  collapseListeners.add(listener)
+  return () => collapseListeners.delete(listener)
+}
+
+export function onSidebarPositionChange(listener) {
+  positionListeners.add(listener)
+  return () => positionListeners.delete(listener)
+}
+
 export function loadSidebarCollapsed() {
   return sidebarCollapsed
 }
 
 export function saveSidebarCollapsed(collapsed) {
-  sidebarCollapsed = !!collapsed
+  const next = !!collapsed
+  const changed = next !== sidebarCollapsed
+  sidebarCollapsed = next
+  if (changed) notify(collapseListeners, sidebarCollapsed)
   return true
 }
 
@@ -32,5 +52,6 @@ export function loadSidebarPosition() {
 export function saveSidebarPosition(left, top) {
   sidebarPosition =
     left == null || top == null ? null : { left: Number(left), top: Number(top) }
+  notify(positionListeners, sidebarPosition)
   return true
 }

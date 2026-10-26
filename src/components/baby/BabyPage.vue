@@ -8,10 +8,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import BabySidebar from './BabySidebar.vue'
 import {
   loadSidebarCollapsed,
+  onSidebarCollapsedChange,
   saveSidebarCollapsed,
 } from '../../utils/baby/sidebar.js'
 
@@ -20,6 +21,19 @@ defineProps({
 })
 
 const collapsed = ref(loadSidebarCollapsed())
+
+// 主包标签页在切到分包页面时不会销毁，需订阅状态变化才能同步收起/展开
+let unsubscribe = null
+
+onMounted(() => {
+  unsubscribe = onSidebarCollapsedChange((value) => {
+    collapsed.value = value
+  })
+})
+
+onBeforeUnmount(() => {
+  if (unsubscribe) unsubscribe()
+})
 
 function toggle() {
   collapsed.value = !collapsed.value
