@@ -33,6 +33,7 @@ function seed() {
     name: '小满',
     birthDate: '2025-01-02',
     gender: 'girl',
+    avatar: 'data:image/jpeg;base64,abc',
     createdAt: 1,
     updatedAt: 1,
   })
@@ -86,6 +87,9 @@ describe('sync snapshot', () => {
     expect(payload.schemaVersion).toBe(SYNC_SCHEMA_VERSION)
     expect(payload.snapshot.app).toBe('toolbox-baby')
     expect(payload.snapshot.data.profile.name).toBe('小满')
+    expect(payload.snapshot.data.profile.avatar).toBe(
+      'data:image/jpeg;base64,abc'
+    )
     expect(payload.snapshot.data.records['2026-10']).toBeTruthy()
     expect(
       payload.snapshot.data.records['2026-10']['2026-10-24'].supplement

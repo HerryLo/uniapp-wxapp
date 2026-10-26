@@ -271,6 +271,17 @@ describe('baby records', () => {
         note: 'x'.repeat(201),
       })
     ).toContain('备注')
+    expect(
+      validateSupplement({
+        time: '2026-10-24 08:00',
+        name: 'x'.repeat(30),
+        amount: 'x'.repeat(20),
+        note: 'x'.repeat(200),
+      })
+    ).toBe('')
+    expect(
+      validateSupplement({ time: '2026-10-24 08:00', name: '   ' })
+    ).toContain('补剂名称')
   })
 
   it('stores supplement records separately from medicine', () => {

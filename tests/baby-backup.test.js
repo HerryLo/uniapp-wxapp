@@ -27,6 +27,7 @@ import { createBuiltinVaccines } from '../src/utils/baby/vaccines.js'
 import { loadMomEntries } from '../src/package-baby/utils/mom.js'
 import { loadTravels } from '../src/package-baby/utils/travel.js'
 import { loadDay } from '../src/utils/baby/records.js'
+import { loadProfile } from '../src/utils/baby/profile.js'
 
 let store
 
@@ -281,9 +282,7 @@ describe('baby backup', () => {
     expect(res.ok).toBe(true)
     expect(loadDay('2026-10-24').supplement).toHaveLength(1)
     expect(loadDay('2026-10-24').supplement[0].name).toBe('维生素D')
-    expect(JSON.parse(store[PROFILE_KEY]).avatar).toBe(
-      'data:image/jpeg;base64,abc'
-    )
+    expect(loadProfile().avatar).toBe('data:image/jpeg;base64,abc')
   })
 
   it('round-trips food and medicine records', () => {

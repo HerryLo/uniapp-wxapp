@@ -3,7 +3,6 @@ const path = require('path')
 const zlib = require('zlib')
 
 const SIZE = 81
-const STROKE = 5
 const NORMAL = [136, 136, 136]
 const ACTIVE = [255, 143, 163]
 
@@ -55,25 +54,6 @@ function encodePng(rgba) {
     chunk('IDAT', zlib.deflateSync(raw)),
     chunk('IEND', Buffer.alloc(0)),
   ])
-}
-
-function roundedRectDistance(px, py, cx, cy, size, radius) {
-  const qx = Math.abs(px - cx) - (size / 2 - radius)
-  const qy = Math.abs(py - cy) - (size / 2 - radius)
-  return Math.hypot(Math.max(qx, 0), Math.max(qy, 0)) + Math.min(Math.max(qx, qy), 0) - radius
-}
-
-function strokeCoverage(distance) {
-  return Math.max(0, Math.min(1, 0.5 + (STROKE / 2 - distance)))
-}
-
-function toolsCoverage(x, y) {
-  const centers = [[24, 24], [57, 24], [24, 57], [57, 57]]
-  let best = 0
-  for (const [cx, cy] of centers) {
-    best = Math.max(best, strokeCoverage(Math.abs(roundedRectDistance(x, y, cx, cy, 22, 6))))
-  }
-  return best
 }
 
 function heartCoverage(x, y) {
