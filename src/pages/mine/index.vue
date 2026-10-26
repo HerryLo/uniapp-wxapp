@@ -36,10 +36,17 @@
     </view>
 
     <view class="card">
-      <view class="row" @click="openSettings">
+      <view class="row" @click="openProfile">
         <view class="row-body">
-          <view class="row-title">⚙️ 数据与设置</view>
-          <view class="row-desc">宝宝资料、导出恢复与清理</view>
+          <view class="row-title">👶 宝宝资料</view>
+          <view class="row-desc">头像、昵称与出生日期</view>
+        </view>
+        <text class="row-arrow">›</text>
+      </view>
+      <view class="row" @click="openData">
+        <view class="row-body">
+          <view class="row-title">📦 数据管理</view>
+          <view class="row-desc">导出备份、恢复与清空</view>
         </view>
         <text class="row-arrow">›</text>
       </view>
@@ -67,8 +74,12 @@ function openTool(key) {
   uni.navigateTo({ url: `/pages/tools/index?tool=${key}` })
 }
 
-function openSettings() {
+function openProfile() {
   uni.navigateTo({ url: '/package-baby/settings/index' })
+}
+
+function openData() {
+  uni.navigateTo({ url: '/package-baby/settings/data' })
 }
 
 function openAbout() {

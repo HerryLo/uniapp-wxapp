@@ -102,7 +102,13 @@
         {
           "path": "settings/index",
           "style": {
-            "navigationBarTitleText": "数据与设置"
+            "navigationBarTitleText": "宝宝资料"
+          }
+        },
+        {
+          "path": "settings/data",
+          "style": {
+            "navigationBarTitleText": "数据管理"
           }
         }
       ]
