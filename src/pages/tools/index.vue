@@ -75,15 +75,15 @@ onLoad((options) => {
 })
 
 onShareAppMessage(() => ({
-  title: '垣计算 · 日常计算工具箱',
+  title: '本地优先的宝宝记录工具',
   path: `/pages/tools/index?tool=${active.value}`,
-  imageUrl: '/static/logo.png',
+  imageUrl: '/static/垣计算-分享默认图.png',
 }))
 
 onShareTimeline(() => ({
-  title: '垣计算 · 日常计算工具箱',
+  title: '本地优先的宝宝记录工具',
   query: `tool=${active.value}`,
-  imageUrl: '/static/logo.png',
+  imageUrl: '/static/垣计算-分享默认图.png',
 }))
 
 function pickTool(key) {

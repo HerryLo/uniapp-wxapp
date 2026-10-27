@@ -63,6 +63,8 @@
 </template>
 
 <script setup>
+import { onLoad, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
+
 const tools = [
   { key: 'vat', emoji: '🧮', name: '增值税', desc: '含税 / 不含税' },
   { key: 'unit', emoji: '📐', name: '单位换算', desc: '长度 / 重量 / 温度' },
@@ -89,6 +91,23 @@ function openAbout() {
 function syncSoon() {
   uni.showToast({ title: '数据同步即将上线', icon: 'none' })
 }
+
+onLoad(() => {
+  // #ifdef MP-WEIXIN
+  uni.showShareMenu({ menus: ['shareAppMessage', 'shareTimeline'] })
+  // #endif
+})
+
+onShareAppMessage(() => ({
+  title: '本地优先的宝宝记录工具',
+  path: '/pages/mine/index',
+  imageUrl: '/static/垣计算-分享默认图.png',
+}))
+
+onShareTimeline(() => ({
+  title: '本地优先的宝宝记录工具',
+  imageUrl: '/static/垣计算-分享默认图.png',
+}))
 </script>
 
 <style scoped>

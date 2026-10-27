@@ -160,14 +160,14 @@ onLoad(() => {
 onShow(refresh)
 
 onShareAppMessage(() => ({
-  title: '垣计算 · 记录宝宝成长',
+  title: '本地优先的宝宝记录工具',
   path: '/pages/baby/index',
-  imageUrl: '/static/logo.png',
+  imageUrl: '/static/垣计算-分享默认图.png',
 }))
 
 onShareTimeline(() => ({
-  title: '垣计算 · 记录宝宝成长',
-  imageUrl: '/static/logo.png',
+  title: '本地优先的宝宝记录工具',
+  imageUrl: '/static/垣计算-分享默认图.png',
 }))
 </script>
 
