@@ -1,77 +1,66 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+本文件为在本仓库中工作的 Claude Code 提供指引。
 
-## Project overview
+## 项目概览
 
-uni-app + Vue 3 + Vite mini-program ("垣计算"): a local-first baby log plus a small calculator toolbox. There is no backend — every record is stored in `uni` local storage and every calculation runs on-device. WeChat mini-program is the primary target; H5 exists only for local debugging and file export.
+uni-app + Vue 3 + Vite 小程序「垣计算」：本地优先的宝宝记录 + 计算工具箱。没有后端，所有记录存在 `uni` 本地存储，所有计算在设备上完成。微信小程序是主目标，H5 只用于本地调试和文件导出。
 
-## Commands
+## 常用命令
 
 ```bash
 npm install
 
-# 微信小程序开发（产物在 dist/dev/mp-weixin，用微信开发者工具导入）
-npm run dev:mp-weixin
-
-# H5 本地调试（http://localhost:5173）
-npm run dev:h5
-
-# 单元测试
-npm test
-# 单个测试文件
-npx vitest run tests/baby-records.test.js
-# 按用例名过滤
-npx vitest run -t "adds, groups and summarizes a day"
-
-# 生产构建
+npm run dev:mp-weixin   # 小程序开发，产物 dist/dev/mp-weixin，用微信开发者工具导入
+npm run dev:h5          # H5 调试，http://localhost:5173
+npm test                # 单元测试（vitest run，单次执行）
+npx vitest run tests/baby-records.test.js   # 单个测试文件
 npm run build:mp-weixin
 npm run build:h5
 ```
 
-The scripts are plain npm scripts; `yarn` works as an equivalent and `README.md` notes that. `npm test` maps to `vitest run` (single pass, not watch mode). Bare `npm run build` / `npm run serve` alias the **H5** targets — use the `:mp-weixin` variants for the mini-program. `dist/` is gitignored but the WeChat devtools project points at `dist/dev/mp-weixin`.
+- `npm run build` / `npm run serve` 等同于 H5 目标，小程序要用 `:mp-weixin` 变体。
+- 没有 lint / format / typecheck 脚本，不要自行添加；`jsconfig.json` 只用于编辑器类型提示。
 
-`package.json` has no lint/format/typecheck scripts — do not invent one. `jsconfig.json` only enables `@dcloudio/types` for editor IntelliSense.
+## 架构
 
-## Architecture
+### 应用外壳与路由
 
-### App shell and routing
+- `src/main.js` 用 `createSSRApp`；`src/App.vue` 放全局 CSS 变量、页面背景和共享的 `.card` / `.btn` / 表单样式（粉奶油主题，`rpx` 单位）。
+- `src/pages.json` 定义全部路由：两个 tabBar 页（`pages/baby/index`、`pages/mine/index`）、非 tab 的 `pages/tools/index` 与 `pages/about/about`，以及 `package-baby` 分包。新增宝宝页放在 `package-baby/` 下并在 `pages.json` 注册。
+- 平台差异用条件编译（`// #ifdef MP-WEIXIN`、`// #ifdef H5`），模板和脚本都要保留；H5 路径需能用于本地调试。
 
-- `src/main.js` uses `createSSRApp` (uni-app requirement); `src/App.vue` holds global CSS variables, `page` background, and shared `.card` / `.btn` / form classes. The pink/cream theme (`--primary`, `--surface`, …) and `rpx` units are used throughout.
-- `src/pages.json` defines the whole route tree: two tabBar pages (`pages/baby/index`, `pages/mine/index`), the non-tab `pages/tools/index`, `pages/about/about`, and a `package-baby` subpackage containing all baby sub-pages. WeChat subpackage optimization is enabled in `manifest.json`. Add new baby pages under `package-baby/` and register them in `pages.json`.
-- Platform-specific code uses uni-app conditional compilation (`// #ifdef MP-WEIXIN`, `// #ifdef H5`) in both templates and scripts — e.g. share menus, file export/restore, ads. Keep H5 paths working for local debugging.
+### 宝宝数据层
 
-### Baby data layer (the core abstraction)
+- `src/utils/storage.js` 是唯一存储入口（JSON 序列化 + try/catch，返回兜底值），支持替换驱动与变更订阅。功能模块不要直接调用 `uni.getStorageSync`。
+- `src/utils/baby/keys.js` 集中管理存储 key（`baby.` 前缀）：单例功能各一个 key，日常记录按月分桶（`baby.records.v1.YYYY-MM`）并有索引 key。
+- `src/utils/baby/*` 基本是纯同步逻辑，`avatar.js` 是异步、依赖平台的例外。持久化函数统一「校验 → 读取 → 转换 → 写入」，返回 `{ ok: true, ... }` 或 `{ ok: false, error }`（中文提示）。
+- 头像以压缩后的 base64 data URL 存在 `profile.avatar`，随备份一起导出。
+- 记录：`records.js` 维护六类（`milk`、`sleep`、`diaper`、`food`、`medicine`、`supplement`），按天分组放在按月对象里；`normalizeDay` 必须兼容缺少新字段的旧数据。界面只编辑**当天**记录，按月分桶用于趋势汇总与备份。
+- 疫苗：内置项来自 `src/data/vaccinePlan.js`，首次加载时写入；内置项不可删除，只有自定义项可删。参考内容与免责声明写在数据文件里，编辑时保留原措辞。
+- 备份/恢复（`src/package-baby/utils/backup.js`）：结构为 `{ app, schemaVersion: 1, exportedAt, data }`，上限 2 MB；恢复前先备份当前数据，写入失败则回滚。`sync.js` 只是同步载荷的占位封装，不是已实现的同步功能。
 
-- `src/utils/storage.js` is the only storage gateway: JSON-serialized `uni.getStorageSync`/`setStorageSync` wrapped in try/catch, returning fallbacks instead of throwing. It supports a swappable driver (`setStorageDriver`), a change-listener bus (`onStorageChange`), and a one-time "corrupt data skipped" toast. All feature modules must go through it, not call `uni.getStorageSync` directly.
-- `src/utils/baby/keys.js` is the single source of storage key names, all prefixed `baby.`: one key per singleton feature (profile, growth, vaccines, milestones, moods, notes, mom, travel, backup) and monthly buckets for daily records (`baby.records.v1.YYYY-MM`) plus an index key (`baby.records.index.v1`) so backups can enumerate months without scanning unrelated storage.
-- Most of `src/utils/baby/*` is pure, synchronous domain logic (date parsing, age, record validation, growth, vaccine status, sidebar state); `avatar.js` is the async, platform-dependent exception. `src/package-baby/utils/*` contains feature logic tied to the subpackage (backup/restore, sync wrapper, journal, mom, travel). Every persistence function follows the same contract: validate → read → transform → write, returning `{ ok: true, ... }` or `{ ok: false, error: '…' }` with a Chinese user-facing message. Keep this shape when adding features.
-- `profile.avatar` stores a compressed base64 data URL (max `MAX_AVATAR_CHARS` in `src/utils/baby/avatar.js`); `saveAvatar()` updates only the avatar so the home page can change it before birth date is filled. Avatars travel inside the existing backup payload.
-- Records: `records.js` keeps six kinds (`milk`, `sleep`, `diaper`, `food`, `medicine`, `supplement`) grouped by day inside a monthly object. `normalizeDay` must stay backward-compatible with older data missing newer arrays. Deleting the last record of a day drops the day and updates the month index. Note the UI only edits **today's** records (`useDayRecords` hardcodes `todayKey()`); monthly buckets exist for trend summaries and backups, not for browsing history.
-- Vaccines: built-in entries are seeded from `src/data/vaccinePlan.js` on first load; `loadVaccines` re-adds any missing built-ins while preserving user state. Items carry `done`, `date`, `skipped`, `builtin`. Optional (二类) vaccines can be skipped one-by-one or in bulk; built-ins cannot be deleted, only custom ones.
-- Static reference content lives in data files, not components: `src/data/vaccinePlan.js` (immunization reference) and `src/package-baby/data/referenceMilestones.js` (developmental milestones). Both are explicitly framed as non-medical-advice; keep the disclaimer wording when editing them.
-- Backup/restore (`src/package-baby/utils/backup.js`): payload shape is `{ app: 'toolbox-baby', schemaVersion: 1, exportedAt, data }`, max 2 MB. `restoreData` always snapshots current data to `BACKUP_KEY` first and rolls back if any write fails. `sync.js` wraps the same payload as a versioned sync snapshot — a seam for future sync, not an implemented sync feature.
+### 界面组合
 
-### UI composition
+- `src/components/baby/BabyPage.vue` 是所有宝宝页的标准外壳：内容区 + `BabySidebar`（可收起为悬浮按钮），传 `active="<侧栏 key>"`。侧栏导航：首页用 `switchTab`，分包页之间用 `redirectTo`，从 tab 页进入用 `navigateTo`。
+- 侧栏收起状态与悬浮按钮位置是 `src/utils/baby/sidebar.js` 里的内存状态（不持久化），通过 `onSidebarCollapsedChange` / `onSidebarPositionChange` 订阅同步，保证已挂载的 tab 页跟上分包页的收起与拖动。
+- `SIDEBAR_ITEMS` 也在 `sidebar.js`：新增宝宝页通常要同时加侧栏条目和 `pages.json` 路由。设置不在侧栏，从「我的」或宝宝首页资料卡进入。
+- 宝宝资料（`package-baby/settings/index`）与数据管理（`package-baby/settings/data`）是两个页，都从「我的」进入；数据管理是一级入口，因为本地数据只能靠导出备份保住。
+- 六个日常记录页都是 `package-baby/components/records/RecordPage.vue` 的薄封装。新增记录类型要改 `KINDS`、`records.js` 的校验、`RecordForm.vue`、`RecordList.vue`，需要出现在顶部切换器时再改 `RecordPage.vue`。
+- 工具页 `pages/tools/index.vue` 从「我的」进入，四个面板用 `v-show` 常驻；计算逻辑在 `src/utils/{vat,units,text,radix}.js`，保持与 UI 无关。
+- 其他共享组件：`ShareButton.vue`、`AdBanner.vue`（仅微信）、`Disclaimer.vue`；图表 `LineChart.vue` 用 `type="2d"` canvas。
 
-- `src/components/baby/BabyPage.vue` is the standard shell for all baby pages: a content area plus `BabySidebar` (fixed left rail, collapsible to a draggable floating button). Pass `active="<sidebar key>"`. Sidebar navigation uses `switchTab` for home, `redirectTo` between subpackage pages, and `navigateTo` when coming from a tab page. Collapse state and floating-button position are module-level in-memory state (`src/utils/baby/sidebar.js`), not persisted; both expose change subscriptions (`onSidebarCollapsedChange` / `onSidebarPositionChange`) so a still-mounted tab page reflects toggles and drags made on a subpackage page.
-- `src/utils/baby/sidebar.js` also owns `SIDEBAR_ITEMS`; a new baby page usually needs an entry there **and** in `pages.json`. Settings is intentionally not in the sidebar — it is reached from the 「我的」 tab or the baby home profile card.
-- Profile editing (`package-baby/settings/index`) and data management (`package-baby/settings/data`) are separate pages, both entered from the 「我的」 tab. Data management is deliberately a first-level entry because backup is the only safeguard when local storage is cleared.
-- The six daily-record pages are thin wrappers around `src/package-baby/components/records/RecordPage.vue`, which combines `useDayRecords(kind)` (state + add/remove/refresh), `RecordList`, and `RecordForm`. To add a record kind: extend `KINDS`, validation/creation in `records.js`, the form branches in `RecordForm.vue`, the list rendering in `RecordList.vue`, and, if the kind should appear in the top switcher, the switch items in `RecordPage.vue`.
-- Toolbox: `pages/tools/index.vue` is opened from the 「我的」 tab (not a tabBar page) and keeps all four panels mounted, toggling them with `v-show`; a floating button opens a bottom sheet to switch tools. Calculations live in `src/utils/{vat,units,text,radix}.js` and must stay UI-free.
-- Shared chrome: `ShareButton.vue` (WeChat `open-type="share"`, H5 copies the link), `AdBanner.vue` (WeChat `ad-custom`, two unit ids selected by the `unit` prop; renders nothing on H5), `Disclaimer.vue`.
-- Canvas chart: `src/package-baby/components/LineChart.vue` initializes a `type="2d"` canvas with retries and redraws on prop changes. It is used by growth and the 7-day milk trend.
+### 测试
 
-### Tests
+Vitest 跑 `tests/**/*.test.js`（node 环境，无 jsdom、不挂载组件）。测试用 `vi.stubGlobal` stub 全局 `uni`，直接测纯模块和 `useDayRecords`。新逻辑写成纯模块再测，避免模块导入时就依赖 `uni`。
 
-Vitest runs in a `node` environment over `tests/**/*.test.js` (see `vitest.config.js`). There is no jsdom and no component mounting: tests stub the global `uni` object with `vi.stubGlobal` and exercise pure modules plus the Vue composable directly (`useDayRecords`). When adding logic, put it in a pure module and test it there; avoid requiring `uni` at module import time so tests can stub it.
+## 约定与限制
 
-## Conventions and constraints
-
-- UI copy, comments, and validation messages are Chinese; keep that.
-- Product boundary: everything is local-only. Do not add network calls, login, or cloud sync — `sync.js` is a payload seam only.
-- Storage compatibility matters: users may have old local data, and backups embed `schemaVersion: 1`. Do not rename/remove storage keys or payload fields without a migration path.
-- Mini-program limits: 2 MB import cap, package size/subpackage split, WeChat ad component only inside `#ifdef MP-WEIXIN`.
-- The displayed version is duplicated in `src/manifest.json` (`versionName`/`versionCode`) and `src/pages/about/about.vue`; update both together.
-- `scripts/gen-tab-icons.cjs` is a standalone Node script that generates the four tabBar PNGs in `src/static/`; it is not part of the build.
-- Design specs and implementation plans live in `docs/superpowers/specs/` and `docs/superpowers/plans/` (date-prefixed Markdown). Read the relevant spec before changing behavior it covers.
+- 界面文案、注释、校验提示都用中文。
+- 产品边界：纯本地。不要加网络请求、登录或云同步，`sync.js` 只是载荷占位。
+- 存储兼容：旧数据和 `schemaVersion: 1` 的备份要能读，不要直接重命名或删除 key / 字段。
+- 小程序限制：导入上限 2 MB、分包体积、广告组件只在 `#ifdef MP-WEIXIN` 内使用。
+- 版本号同时出现在 `src/manifest.json`（`versionName` / `versionCode`）和 `src/pages/about/about.vue`，要一起改。
+- 版本更新：`src/utils/update.js` 在 `App.vue` 的 `onLaunch` 里启用，新版本下载完成后弹窗并 `applyUpdate` 强制重启；微信只在冷启动检查新版本，热启动不会触发。逻辑通过依赖注入测试（`tests/update-manager.test.js`）。
+- `scripts/gen-tab-icons.cjs` 是生成 tabBar 图标的独立脚本，不参与构建。
+- 设计文档与实施计划在 `docs/superpowers/specs/` 与 `docs/superpowers/plans/`，改相关行为前先读对应文档。
