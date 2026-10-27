@@ -1,6 +1,13 @@
 <script>
+import { setupUpdateManager } from './utils/update.js'
+
 export default {
-  onLaunch() {},
+  onLaunch() {
+    // 小程序端：新版本下载完成后弹窗强制重启，保证客户端是最新版本
+    // #ifdef MP-WEIXIN
+    setupUpdateManager()
+    // #endif
+  },
 }
 </script>
 
