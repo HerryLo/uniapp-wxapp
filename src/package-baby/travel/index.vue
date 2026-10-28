@@ -52,6 +52,9 @@ import { onShow } from '@dcloudio/uni-app'
 import BabyPage from '../../components/baby/BabyPage.vue'
 import { todayKey } from '../../utils/baby/date.js'
 import { addTravel, loadTravels, removeTravel } from '../utils/travel.js'
+import { useBabyShare } from '../../utils/share.js'
+
+useBabyShare('宝宝旅行记录', '/package-baby/travel/index')
 
 const list = ref([])
 const error = ref('')

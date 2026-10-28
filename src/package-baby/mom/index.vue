@@ -64,6 +64,9 @@ import {
   removeMomEntry,
   saveMomEntry,
 } from '../utils/mom.js'
+import { useBabyShare } from '../../utils/share.js'
+
+useBabyShare('妈妈记录', '/package-baby/mom/index')
 
 const entries = ref([])
 const error = ref('')

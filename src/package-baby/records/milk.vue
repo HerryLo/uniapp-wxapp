@@ -49,6 +49,9 @@ import LineChart from '../components/LineChart.vue'
 import RecordPage from '../components/records/RecordPage.vue'
 import { todayKey } from '../../utils/baby/date.js'
 import { loadRecentMilkSummary, milkChartPoints } from '../../utils/baby/records.js'
+import { useBabyShare } from '../../utils/share.js'
+
+useBabyShare('宝宝喝奶记录', '/package-baby/records/milk')
 
 const today = ref(todayKey())
 const recentMilk = ref(loadRecentMilkSummary(7))

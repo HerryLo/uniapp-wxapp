@@ -146,6 +146,9 @@ import {
   setVaccineSkipped,
   vaccineStatus,
 } from '../../utils/baby/vaccines.js'
+import { useBabyShare } from '../../utils/share.js'
+
+useBabyShare('宝宝疫苗参考', '/package-baby/health/index')
 
 const profile = ref(loadProfile())
 const list = ref([])

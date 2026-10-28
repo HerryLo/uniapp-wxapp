@@ -133,6 +133,9 @@ import {
   removeNote,
   setMood,
 } from '../utils/journal.js'
+import { useBabyShare } from '../../utils/share.js'
+
+useBabyShare('宝宝成长手记', '/package-baby/journal/index')
 
 const today = ref(todayKey())
 const milestones = ref([])

@@ -64,6 +64,7 @@
 
 <script setup>
 import { onLoad, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
+import { buildShareTitle, SHARE_IMAGE } from '../../utils/shareTitle.js'
 
 const tools = [
   { key: 'vat', emoji: '🧮', name: '增值税', desc: '含税 / 不含税' },
@@ -99,14 +100,14 @@ onLoad(() => {
 })
 
 onShareAppMessage(() => ({
-  title: '本地优先的宝宝记录工具',
+  title: buildShareTitle('宝宝记录与计算工具箱'),
   path: '/pages/mine/index',
-  imageUrl: '/static/垣计算-分享默认图.png',
+  imageUrl: SHARE_IMAGE,
 }))
 
 onShareTimeline(() => ({
-  title: '本地优先的宝宝记录工具',
-  imageUrl: '/static/垣计算-分享默认图.png',
+  title: buildShareTitle('宝宝记录与计算工具箱'),
+  imageUrl: SHARE_IMAGE,
 }))
 </script>
 

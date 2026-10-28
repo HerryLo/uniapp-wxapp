@@ -90,6 +90,7 @@ import {
   onShareTimeline,
   onShow,
 } from '@dcloudio/uni-app'
+import { buildShareTitle, SHARE_IMAGE } from '../../utils/shareTitle.js'
 import AdBanner from '../../components/AdBanner.vue'
 import ShareButton from '../../components/ShareButton.vue'
 import BabyPage from '../../components/baby/BabyPage.vue'
@@ -160,14 +161,14 @@ onLoad(() => {
 onShow(refresh)
 
 onShareAppMessage(() => ({
-  title: '本地优先的宝宝记录工具',
+  title: buildShareTitle('宝宝记录：喝奶睡眠疫苗生长'),
   path: '/pages/baby/index',
-  imageUrl: '/static/垣计算-分享默认图.png',
+  imageUrl: SHARE_IMAGE,
 }))
 
 onShareTimeline(() => ({
-  title: '本地优先的宝宝记录工具',
-  imageUrl: '/static/垣计算-分享默认图.png',
+  title: buildShareTitle('宝宝记录：喝奶睡眠疫苗生长'),
+  imageUrl: SHARE_IMAGE,
 }))
 </script>
 
