@@ -16,6 +16,7 @@ const KINDS = ['milk', 'sleep', 'diaper', 'food', 'medicine', 'supplement']
 const MILK_TYPES = ['母乳', '配方奶', '混合']
 const DIAPER_TYPES = ['大便', '小便', '都有']
 const DIAPER_COLORS = ['正常', '绿色', '黑色', '白色', '带血']
+export const DIAPER_SHAPES = ['水样', '偏稀', '糊状', '成形', '偏干']
 export const FOOD_REACTIONS = ['喜欢', '一般', '拒绝', '异常']
 
 function makeId(now) {
@@ -112,7 +113,10 @@ export function validateDiaper(input) {
   if (!parseLocalDateTime(input.time)) return '请选择排便时间'
   if (!DIAPER_TYPES.includes(input.type)) return '请选择排便类型'
   if (!DIAPER_COLORS.includes(input.color)) return '请选择颜色'
-  return ''
+  if (input.type !== '小便' && !DIAPER_SHAPES.includes(input.shape)) {
+    return '请选择排便形状'
+  }
+  return optionalTextError(input.note, '备注', 200)
 }
 
 function requiredTextError(value, label, max) {
@@ -206,6 +210,8 @@ function makeRecord(kind, input, now) {
     time: input.time,
     type: input.type,
     color: input.color,
+    shape: input.type === '小便' ? '' : input.shape,
+    note: String(input.note || '').trim(),
     createdAt: now,
   }
 }
