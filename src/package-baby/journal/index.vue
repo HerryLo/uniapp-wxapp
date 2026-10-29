@@ -37,11 +37,16 @@
     <view class="card">
       <view class="card-title">📖 里程碑时间线</view>
       <view v-if="!milestones.length" class="empty-tip">还没有里程碑记录 🌱</view>
-      <view v-for="item in milestones" :key="item.id" class="timeline-item">
+      <view
+        v-for="item in milestones"
+        :key="item.id"
+        class="timeline-item"
+        @click="openMilestoneEdit(item)"
+      >
         <view class="timeline-date">{{ item.date }}</view>
         <view class="timeline-title">{{ item.title }}</view>
-        <view v-if="item.note" class="timeline-note">{{ item.note }}</view>
-        <text class="timeline-delete" @click="removeMilestoneItem(item.id)">删除</text>
+        <view v-if="item.note" class="timeline-note">{{ shortText(item.note) }}</view>
+        <text class="timeline-delete" @click.stop="removeMilestoneItem(item.id)">删除</text>
       </view>
     </view>
 
@@ -100,14 +105,42 @@
         <view class="btn btn-primary" @click="saveNote">添加心得</view>
       </view>
       <view v-if="!notes.length" class="empty-tip">还没有心得记录 🌱</view>
-      <view v-for="item in notes" :key="item.id" class="note-item">
+      <view v-for="item in notes" :key="item.id" class="note-item" @click="openNoteEdit(item)">
         <view class="note-head">
           <text class="note-date">{{ item.date }}</text>
-          <text class="note-delete" @click="removeNoteItem(item.id)">删除</text>
+          <text class="note-delete" @click.stop="removeNoteItem(item.id)">删除</text>
         </view>
-        <view class="note-content">{{ item.content }}</view>
+        <view class="note-content">{{ shortText(item.content) }}</view>
       </view>
     </view>
+
+    <EditSheet
+      :visible="milestoneEdit.visible"
+      title="编辑里程碑"
+      @close="closeMilestoneEdit"
+      @save="saveMilestoneEdit"
+    >
+      <view class="label">日期</view>
+      <view class="readonly-field">{{ milestoneEdit.date }}</view>
+      <view class="label">标题</view>
+      <input class="input" v-model="milestoneEdit.title" maxlength="40" />
+      <view class="label">备注（可选）</view>
+      <textarea class="textarea" v-model="milestoneEdit.note" maxlength="200" />
+      <view v-if="milestoneEdit.error" class="error">{{ milestoneEdit.error }}</view>
+    </EditSheet>
+
+    <EditSheet
+      :visible="noteEdit.visible"
+      title="编辑心得"
+      @close="closeNoteEdit"
+      @save="saveNoteEdit"
+    >
+      <view class="label">日期</view>
+      <view class="readonly-field">{{ noteEdit.date }}</view>
+      <view class="label">内容</view>
+      <textarea class="textarea" v-model="noteEdit.content" maxlength="500" />
+      <view v-if="noteEdit.error" class="error">{{ noteEdit.error }}</view>
+    </EditSheet>
 
     </view>
   </BabyPage>
@@ -117,6 +150,7 @@
 import { ref } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import BabyPage from '../../components/baby/BabyPage.vue'
+import EditSheet from '../components/EditSheet.vue'
 import {
   REFERENCE_MILESTONES,
   REFERENCE_MILESTONE_NOTE,
@@ -132,7 +166,12 @@ import {
   removeMilestone,
   removeNote,
   setMood,
+  updateMilestone,
+  updateNote,
 } from '../utils/journal.js'
+import { useBabyShare } from '../../utils/share.js'
+
+useBabyShare('宝宝成长手记', '/package-baby/journal/index')
 
 const today = ref(todayKey())
 const milestones = ref([])
@@ -143,6 +182,15 @@ const milestoneError = ref('')
 const noteError = ref('')
 const milestoneForm = ref({ date: todayKey(), title: '', note: '' })
 const noteForm = ref({ date: todayKey(), content: '' })
+const milestoneEdit = ref({
+  visible: false,
+  id: '',
+  date: '',
+  title: '',
+  note: '',
+  error: '',
+})
+const noteEdit = ref({ visible: false, id: '', date: '', content: '', error: '' })
 
 function refresh() {
   today.value = todayKey()
@@ -214,6 +262,62 @@ function removeNoteItem(id) {
   })
 }
 
+function shortText(text, max = 30) {
+  const value = String(text || '')
+  return value.length > max ? `${value.slice(0, max)}…` : value
+}
+
+function openMilestoneEdit(item) {
+  milestoneEdit.value = {
+    visible: true,
+    id: item.id,
+    date: item.date,
+    title: item.title,
+    note: item.note,
+    error: '',
+  }
+}
+
+function closeMilestoneEdit() {
+  milestoneEdit.value = { ...milestoneEdit.value, visible: false, error: '' }
+}
+
+function saveMilestoneEdit() {
+  const { id, title, note } = milestoneEdit.value
+  const res = updateMilestone(id, { title, note })
+  if (!res.ok) {
+    milestoneEdit.value = { ...milestoneEdit.value, error: res.error }
+    return
+  }
+  milestones.value = res.list
+  closeMilestoneEdit()
+}
+
+function openNoteEdit(item) {
+  noteEdit.value = {
+    visible: true,
+    id: item.id,
+    date: item.date,
+    content: item.content,
+    error: '',
+  }
+}
+
+function closeNoteEdit() {
+  noteEdit.value = { ...noteEdit.value, visible: false, error: '' }
+}
+
+function saveNoteEdit() {
+  const { id, content } = noteEdit.value
+  const res = updateNote(id, { content })
+  if (!res.ok) {
+    noteEdit.value = { ...noteEdit.value, error: res.error }
+    return
+  }
+  notes.value = res.list
+  closeNoteEdit()
+}
+
 onShow(refresh)
 </script>
 
@@ -228,6 +332,21 @@ onShow(refresh)
   position: relative;
   padding: 24rpx 0 24rpx 28rpx;
   border-left: 4rpx solid var(--primary-soft);
+}
+.timeline-item:active,
+.note-item:active {
+  opacity: 0.7;
+}
+.readonly-field {
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  padding: 0 20rpx;
+  background: var(--cream);
+  border: 1rpx solid var(--border);
+  border-radius: 28rpx;
+  font-size: 30rpx;
+  color: var(--text-secondary);
 }
 .timeline-date {
   font-size: 24rpx;

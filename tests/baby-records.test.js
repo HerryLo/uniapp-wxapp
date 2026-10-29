@@ -3,10 +3,12 @@ import {
   FOOD_REACTIONS,
   addRecord,
   loadDay,
+  loadRecentDays,
   loadRecentMilkSummary,
   milkChartPoints,
   removeRecord,
   summarizeDay,
+  summarizeRecentDay,
   sortRecords,
   syncRecordMonthIndex,
   validateFood,
@@ -42,7 +44,9 @@ describe('baby records', () => {
     expect(validateMilk({ time: '2026-10-24 08:00', type: '母乳', amount: '-1' })).toContain('奶量')
     expect(validateSleep({ start: '2026-10-24 23:00', end: '2026-10-25 01:00' })).toBe('')
     expect(validateSleep({ start: '2026-10-24 23:00', end: '2026-10-24 22:00' })).toContain('晚于')
-    expect(validateDiaper({ time: '2026-10-24 08:00', type: '大便', color: '正常' })).toBe('')
+    expect(
+      validateDiaper({ time: '2026-10-24 08:00', type: '大便', color: '正常', shape: '糊状' })
+    ).toBe('')
   })
 
   it('adds, groups and summarizes a day', () => {
@@ -74,7 +78,11 @@ describe('baby records', () => {
   })
 
   it('removes a record and drops empty days', () => {
-    const added = addRecord('diaper', { time: '2026-10-24 09:00', type: '大便', color: '绿色' }, 1)
+    const added = addRecord(
+      'diaper',
+      { time: '2026-10-24 09:00', type: '大便', color: '绿色', shape: '糊状' },
+      1
+    )
     expect(removeRecord('diaper', added.record.id, '2026-10-24').ok).toBe(true)
     expect(loadDay('2026-10-24').diaper).toHaveLength(0)
   })
@@ -319,5 +327,146 @@ describe('baby records', () => {
     expect(removeRecord('medicine', medicine.record.id, '2026-10-24').ok).toBe(true)
     expect(JSON.parse(store[recordsKey('2026-10')])).toEqual({})
     expect(JSON.parse(store[RECORDS_INDEX_KEY])).toEqual([])
+  })
+
+  it('summarizes recent days for every record kind', () => {
+    addRecord('milk', { time: '2026-10-24 08:00', type: '母乳', amount: '100' }, 1)
+    addRecord('milk', { time: '2026-10-24 12:00', type: '配方奶', amount: '120' }, 2)
+    addRecord('sleep', { start: '2026-10-24 23:00', end: '2026-10-25 01:30' }, 3)
+    addRecord('diaper', { time: '2026-10-24 09:00', type: '大便', color: '正常', shape: '糊状' }, 4)
+    addRecord('diaper', { time: '2026-10-24 11:00', type: '小便', color: '正常' }, 5)
+    addRecord(
+      'food',
+      { time: '2026-10-24 10:00', name: '米糊', amount: '', reaction: '喜欢', note: '' },
+      6
+    )
+    addRecord(
+      'food',
+      { time: '2026-10-24 15:00', name: '蛋黄', amount: '', reaction: '异常', note: '' },
+      7
+    )
+    addRecord('supplement', { time: '2026-10-24 08:00', name: '维生素D', amount: '', note: '' }, 8)
+    addRecord('supplement', { time: '2026-10-24 09:00', name: '维生素D', amount: '', note: '' }, 9)
+    addRecord('supplement', { time: '2026-10-24 10:00', name: '钙', amount: '', note: '' }, 10)
+    addRecord('medicine', { time: '2026-10-24 08:00', name: '退烧药', amount: '', note: '' }, 11)
+    addRecord('medicine', { time: '2026-10-24 09:00', name: '益生菌', amount: '', note: '' }, 12)
+    addRecord('medicine', { time: '2026-10-24 10:00', name: '止咳药', amount: '', note: '' }, 13)
+
+    const day = loadDay('2026-10-24')
+    expect(summarizeRecentDay('milk', day)).toMatchObject({
+      count: 2,
+      hasData: true,
+      text: '220 ml · 2 次',
+    })
+    expect(summarizeRecentDay('sleep', day).text).toBe('2 小时 30 分钟 · 1 次')
+    expect(summarizeRecentDay('diaper', day)).toMatchObject({ count: 2, text: '2 次' })
+    expect(summarizeRecentDay('food', day).text).toBe('2 次 · 异常 1 次')
+    expect(summarizeRecentDay('supplement', day).text).toBe('钙、维生素D · 3 次')
+    expect(summarizeRecentDay('medicine', day).text).toBe('止咳药、益生菌 等 · 3 次')
+  })
+
+  it('marks milk days without amounts and empty kinds', () => {
+    addRecord('milk', { time: '2026-10-24 08:00', type: '母乳', amount: '' }, 1)
+    const day = loadDay('2026-10-24')
+    expect(summarizeRecentDay('milk', day)).toMatchObject({
+      count: 1,
+      text: '1 次 · 未记录奶量',
+    })
+
+    const empty = loadDay('2026-10-25')
+    for (const kind of ['milk', 'sleep', 'diaper', 'food', 'medicine', 'supplement']) {
+      expect(summarizeRecentDay(kind, empty)).toEqual({
+        count: 0,
+        hasData: false,
+        text: '未记录',
+      })
+    }
+  })
+
+  it('loads recent days with full day data and summaries', () => {
+    addRecord('milk', { time: '2026-09-28 08:00', type: '配方奶', amount: '100' }, 1)
+    addRecord('milk', { time: '2026-09-28 12:00', type: '母乳', amount: '' }, 2)
+    addRecord('milk', { time: '2026-10-01 09:00', type: '配方奶', amount: '120' }, 3)
+
+    const recent = loadRecentDays(7, new Date(2026, 9, 1))
+    expect(recent.map((item) => item.date)).toEqual([
+      '2026-09-25',
+      '2026-09-26',
+      '2026-09-27',
+      '2026-09-28',
+      '2026-09-29',
+      '2026-09-30',
+      '2026-10-01',
+    ])
+
+    const sep28 = recent.find((item) => item.date === '2026-09-28')
+    expect(sep28.day.milk).toHaveLength(2)
+    expect(sep28.summary).toMatchObject({ milkCount: 2, milkAmount: 100 })
+
+    const oct01 = recent.find((item) => item.date === '2026-10-01')
+    expect(oct01.summary.milkAmount).toBe(120)
+    expect(recent[0].day.milk).toEqual([])
+  })
+
+  it('validates diaper shape and note', () => {
+    expect(
+      validateDiaper({ time: '2026-10-24 08:00', type: '小便', color: '正常', shape: '水样' })
+    ).toBe('')
+    expect(
+      validateDiaper({ time: '2026-10-24 08:00', type: '大便', color: '正常', shape: '糊状' })
+    ).toBe('')
+    expect(
+      validateDiaper({ time: '2026-10-24 08:00', type: '大便', color: '正常' })
+    ).toBe('请选择排便形状')
+    expect(
+      validateDiaper({ time: '2026-10-24 08:00', type: '大便', color: '正常', shape: '很干' })
+    ).toBe('请选择排便形状')
+    expect(
+      validateDiaper({
+        time: '2026-10-24 08:00',
+        type: '大便',
+        color: '正常',
+        shape: '糊状',
+        note: 'x'.repeat(201),
+      })
+    ).toBe('备注最多 200 个字')
+  })
+
+  it('stores diaper shape and note, ignoring shape for urine', () => {
+    const stool = addRecord(
+      'diaper',
+      {
+        time: '2026-10-24 09:00',
+        type: '大便',
+        color: '正常',
+        shape: '成形',
+        note: '  有点干  ',
+      },
+      1
+    )
+    expect(stool.ok).toBe(true)
+    expect(stool.record).toMatchObject({ shape: '成形', note: '有点干' })
+
+    const urine = addRecord(
+      'diaper',
+      { time: '2026-10-24 10:00', type: '小便', color: '正常', shape: '水样', note: '' },
+      2
+    )
+    expect(urine.ok).toBe(true)
+    expect(urine.record.shape).toBe('')
+    expect(urine.record.note).toBe('')
+  })
+
+  it('loads legacy diaper records without shape or note', () => {
+    store[recordsKey('2026-10')] = JSON.stringify({
+      '2026-10-24': {
+        diaper: [
+          { id: 'old-1', time: '2026-10-24 09:00', type: '大便', color: '正常', createdAt: 1 },
+        ],
+      },
+    })
+    const day = loadDay('2026-10-24')
+    expect(day.diaper).toHaveLength(1)
+    expect(summarizeRecentDay('diaper', day).text).toBe('1 次')
   })
 })

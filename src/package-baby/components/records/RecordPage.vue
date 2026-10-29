@@ -22,10 +22,22 @@
           :list="list"
           :empty-text="emptyText"
           @remove="remove"
+          @select="openDetail"
         />
       </view>
 
+      <RecordsHistory
+        :kind="kind"
+        :days="recentDays"
+        :today="today"
+        @select="openDetail"
+      />
+
       <slot name="extra" :refresh="refresh" />
+
+      <view class="record-share">
+        <ShareButton label="推荐给家人" />
+      </view>
 
       <RecordForm
         :visible="formOpen"
@@ -35,16 +47,27 @@
         @close="closeForm"
         @submit="submitForm"
       />
+
+      <RecordDetail
+        :visible="!!detailRecord"
+        :kind="kind"
+        :record="detailRecord"
+        @close="closeDetail"
+      />
     </view>
   </BabyPage>
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import BabyPage from '../../../components/baby/BabyPage.vue'
 import RecordForm from '../RecordForm.vue'
+import RecordDetail from './RecordDetail.vue'
 import RecordList from './RecordList.vue'
+import RecordsHistory from './RecordsHistory.vue'
+import ShareButton from '../../../components/ShareButton.vue'
 import { useDayRecords } from '../../composables/useDayRecords.js'
+import { loadRecentDays } from '../../../utils/baby/records.js'
 
 const props = defineProps({
   kind: { type: String, required: true },
@@ -68,6 +91,21 @@ function switchKind(item) {
   uni.redirectTo({ url: item.url })
 }
 
+const recentDays = ref(loadRecentDays(7))
+const detailRecord = ref(null)
+
+function refreshRecentDays() {
+  recentDays.value = loadRecentDays(7)
+}
+
+function openDetail(record) {
+  detailRecord.value = record || null
+}
+
+function closeDetail() {
+  detailRecord.value = null
+}
+
 const {
   today,
   day,
@@ -80,7 +118,12 @@ const {
   closeForm,
   submitForm,
   remove,
-} = useDayRecords(props.kind, { onChange: () => emit('change') })
+} = useDayRecords(props.kind, {
+  onChange: () => {
+    emit('change')
+    refreshRecentDays()
+  },
+})
 
 onMounted(refresh)
 </script>
@@ -109,6 +152,11 @@ onMounted(refresh)
   color: var(--primary-strong);
   font-weight: 600;
   box-shadow: 0 4rpx 12rpx rgba(255, 143, 163, 0.18);
+}
+.record-share {
+  display: flex;
+  justify-content: center;
+  margin-top: 24rpx;
 }
 .record-head {
   display: flex;

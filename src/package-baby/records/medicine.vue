@@ -23,6 +23,9 @@
 
 <script setup>
 import RecordPage from '../components/records/RecordPage.vue'
+import { useBabyShare } from '../../utils/share.js'
+
+useBabyShare('宝宝用药记录', '/package-baby/records/medicine')
 
 function latestName(list) {
   return list.length ? list[0].name : '暂无'

@@ -48,6 +48,11 @@
 <script setup>
 import { ref } from 'vue'
 import { onLoad, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
+import {
+  SHARE_IMAGE,
+  toolNavTitle,
+  toolShareTitle,
+} from '../../utils/shareTitle.js'
 import AdBanner from '../../components/AdBanner.vue'
 import ShareButton from '../../components/ShareButton.vue'
 import VatPanel from '../../components/tools/VatPanel.vue'
@@ -69,26 +74,28 @@ onLoad((options) => {
   if (options && tools.some((tool) => tool.key === options.tool)) {
     active.value = options.tool
   }
+  uni.setNavigationBarTitle({ title: toolNavTitle(active.value) })
   // #ifdef MP-WEIXIN
   uni.showShareMenu({ menus: ['shareAppMessage', 'shareTimeline'] })
   // #endif
 })
 
 onShareAppMessage(() => ({
-  title: '本地优先的宝宝记录工具',
+  title: toolShareTitle(active.value),
   path: `/pages/tools/index?tool=${active.value}`,
-  imageUrl: '/static/垣计算-分享默认图.png',
+  imageUrl: SHARE_IMAGE,
 }))
 
 onShareTimeline(() => ({
-  title: '本地优先的宝宝记录工具',
+  title: toolShareTitle(active.value),
   query: `tool=${active.value}`,
-  imageUrl: '/static/垣计算-分享默认图.png',
+  imageUrl: SHARE_IMAGE,
 }))
 
 function pickTool(key) {
   active.value = key
   toolsOpen.value = false
+  uni.setNavigationBarTitle({ title: toolNavTitle(key) })
 }
 
 function openAbout() {

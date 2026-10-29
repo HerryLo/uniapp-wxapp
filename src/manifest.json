@@ -1,7 +1,7 @@
 {
 	"name": "宝宝记录与工具箱",
 	"appid": "wx51b1f4f41c89ec6f",
-	"description": "本地优先的宝宝记录工具与日常计算工具箱",
+	"description": "记录宝宝喝奶、睡眠、排便、辅食、用药、疫苗与身高体重，生成生长曲线；数据只存本机，无需登录。内置增值税、单位换算等计算工具。",
 	"versionName": "1.4.0",
 	"versionCode": "140",
 	"transformPx": false,

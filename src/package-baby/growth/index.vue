@@ -68,6 +68,9 @@ import {
   upsertGrowth,
 } from '../../utils/baby/growth.js'
 import { todayKey } from '../../utils/baby/date.js'
+import { useBabyShare } from '../../utils/share.js'
+
+useBabyShare('宝宝生长曲线', '/package-baby/growth/index')
 
 const list = ref([])
 const error = ref('')

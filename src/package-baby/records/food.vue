@@ -22,6 +22,9 @@
 
 <script setup>
 import RecordPage from '../components/records/RecordPage.vue'
+import { useBabyShare } from '../../utils/share.js'
+
+useBabyShare('宝宝辅食记录', '/package-baby/records/food')
 
 function abnormalCount(list) {
   return list.filter((item) => item.reaction === '异常').length

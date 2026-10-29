@@ -9,6 +9,8 @@ import {
   loadNotes,
   addNote,
   removeNote,
+  updateMilestone,
+  updateNote,
 } from '../src/package-baby/utils/journal.js'
 import {
   REFERENCE_MILESTONES,
@@ -72,6 +74,44 @@ describe('baby journal', () => {
     const removed = removeNote(res.list[0].id)
     expect(removed.ok).toBe(true)
     expect(loadNotes()).toHaveLength(0)
+  })
+
+  it('updates milestone content without changing its date', () => {
+    const created = addMilestone(
+      { date: '2026-10-24', title: '第一次翻身', note: '旧备注' },
+      1000
+    )
+    const id = created.list[0].id
+    const updated = updateMilestone(id, { title: ' 第一次走路 ', note: ' 新备注 ' })
+    expect(updated.ok).toBe(true)
+    expect(loadMilestones()[0]).toMatchObject({
+      id,
+      date: '2026-10-24',
+      title: '第一次走路',
+      note: '新备注',
+      createdAt: 1000,
+    })
+    expect(updateMilestone('missing', { title: 'a', note: '' }).error).toBe('记录不存在')
+    expect(updateMilestone(id, { title: '', note: '' }).error).toBe('请输入标题')
+    expect(updateMilestone(id, { title: 'a', note: 'x'.repeat(201) }).error).toBe(
+      '备注最多 200 个字'
+    )
+  })
+
+  it('updates note content without changing its date', () => {
+    const created = addNote({ date: '2026-10-24', content: '旧内容' }, 1000)
+    const id = created.list[0].id
+    const updated = updateNote(id, { content: ' 新内容 ' })
+    expect(updated.ok).toBe(true)
+    expect(loadNotes()[0]).toMatchObject({
+      id,
+      date: '2026-10-24',
+      content: '新内容',
+      createdAt: 1000,
+    })
+    expect(updateNote('missing', { content: 'x' }).error).toBe('记录不存在')
+    expect(updateNote(id, { content: '' }).error).toBe('请输入内容')
+    expect(updateNote(id, { content: 'x'.repeat(501) }).error).toBe('内容最多 500 个字')
   })
 
   it('filters corrupt journal data', () => {

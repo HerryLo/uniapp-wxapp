@@ -1,7 +1,13 @@
 <template>
   <view class="record-list">
     <view v-if="!list.length" class="empty-tip">{{ emptyText }}</view>
-    <view v-for="item in list" :key="item.id" class="record-item">
+    <view
+      v-for="item in list"
+      :key="item.id"
+      class="record-item"
+      :class="{ selectable: selectableKinds.includes(kind) }"
+      @click="onSelect(item)"
+    >
       <view class="record-body">
         <template v-if="kind === 'milk'">
           <view class="record-main">🍼 {{ item.time.slice(11) }} · {{ item.type }}</view>
@@ -32,7 +38,11 @@
           </view>
         </template>
       </view>
-      <text class="record-delete" @click="$emit('remove', item.id)">删除</text>
+      <text
+        v-if="!readonly"
+        class="record-delete"
+        @click.stop="$emit('remove', item.id)"
+      >删除</text>
     </view>
   </view>
 </template>
@@ -40,13 +50,21 @@
 <script setup>
 import { durationMinutes, formatDuration } from '../../../utils/baby/date.js'
 
-defineProps({
+const props = defineProps({
   kind: { type: String, required: true },
   list: { type: Array, default: () => [] },
   emptyText: { type: String, default: '今天还没有记录' },
+  readonly: { type: Boolean, default: false },
 })
 
-defineEmits(['remove'])
+const emit = defineEmits(['remove', 'select'])
+
+const selectableKinds = ['diaper', 'food', 'medicine', 'supplement']
+
+function onSelect(item) {
+  if (!selectableKinds.includes(props.kind)) return
+  emit('select', item)
+}
 
 function foodDetail(item) {
   const parts = []
@@ -61,6 +79,11 @@ function foodDetail(item) {
 .record-list {
   margin-top: 8rpx;
 }
+.record-body {
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+}
 .record-item {
   display: flex;
   align-items: center;
@@ -70,6 +93,9 @@ function foodDetail(item) {
 }
 .record-item:last-child {
   border-bottom: none;
+}
+.record-item.selectable:active {
+  opacity: 0.7;
 }
 .record-main {
   font-size: 30rpx;

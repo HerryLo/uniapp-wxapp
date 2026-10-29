@@ -23,4 +23,7 @@
 <script setup>
 import RecordPage from '../components/records/RecordPage.vue'
 import { formatDuration } from '../../utils/baby/date.js'
+import { useBabyShare } from '../../utils/share.js'
+
+useBabyShare('宝宝睡眠记录', '/package-baby/records/sleep')
 </script>

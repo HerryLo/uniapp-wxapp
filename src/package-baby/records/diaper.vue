@@ -22,9 +22,13 @@
 
 <script setup>
 import RecordPage from '../components/records/RecordPage.vue'
+import { useBabyShare } from '../../utils/share.js'
+
+useBabyShare('宝宝排便记录', '/package-baby/records/diaper')
 
 function latestText(list) {
   if (!list.length) return '暂无'
-  return `${list[0].type} · ${list[0].color}`
+  const { type, color, shape } = list[0]
+  return [type, color, shape].filter(Boolean).join(' · ')
 }
 </script>

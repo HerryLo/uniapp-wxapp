@@ -17,7 +17,7 @@
     {
       "path": "pages/tools/index",
       "style": {
-        "navigationBarTitleText": "工具箱",
+        "navigationBarTitleText": "日常计算工具箱",
         "enableShareAppMessage": true,
         "enableShareTimeline": true
       }
@@ -36,67 +36,89 @@
         {
           "path": "records/milk",
           "style": {
-            "navigationBarTitleText": "喝奶记录"
+            "navigationBarTitleText": "宝宝喝奶记录",
+            "enableShareAppMessage": true,
+            "enableShareTimeline": true
           }
         },
         {
           "path": "records/sleep",
           "style": {
-            "navigationBarTitleText": "睡眠记录"
+            "navigationBarTitleText": "宝宝睡眠记录",
+            "enableShareAppMessage": true,
+            "enableShareTimeline": true
           }
         },
         {
           "path": "records/diaper",
           "style": {
-            "navigationBarTitleText": "排便记录"
+            "navigationBarTitleText": "宝宝排便记录",
+            "enableShareAppMessage": true,
+            "enableShareTimeline": true
           }
         },
         {
           "path": "records/food",
           "style": {
-            "navigationBarTitleText": "辅食记录"
+            "navigationBarTitleText": "宝宝辅食记录",
+            "enableShareAppMessage": true,
+            "enableShareTimeline": true
           }
         },
         {
           "path": "records/medicine",
           "style": {
-            "navigationBarTitleText": "用药记录"
+            "navigationBarTitleText": "宝宝用药记录",
+            "enableShareAppMessage": true,
+            "enableShareTimeline": true
           }
         },
         {
           "path": "records/supplement",
           "style": {
-            "navigationBarTitleText": "补剂记录"
+            "navigationBarTitleText": "宝宝补剂记录",
+            "enableShareAppMessage": true,
+            "enableShareTimeline": true
           }
         },
         {
           "path": "growth/index",
           "style": {
-            "navigationBarTitleText": "生长曲线"
+            "navigationBarTitleText": "宝宝生长曲线",
+            "enableShareAppMessage": true,
+            "enableShareTimeline": true
           }
         },
         {
           "path": "health/index",
           "style": {
-            "navigationBarTitleText": "疫苗参考"
+            "navigationBarTitleText": "宝宝疫苗参考",
+            "enableShareAppMessage": true,
+            "enableShareTimeline": true
           }
         },
         {
           "path": "journal/index",
           "style": {
-            "navigationBarTitleText": "成长手记"
+            "navigationBarTitleText": "宝宝成长手记",
+            "enableShareAppMessage": true,
+            "enableShareTimeline": true
           }
         },
         {
           "path": "mom/index",
           "style": {
-            "navigationBarTitleText": "妈妈记录"
+            "navigationBarTitleText": "妈妈记录",
+            "enableShareAppMessage": true,
+            "enableShareTimeline": true
           }
         },
         {
           "path": "travel/index",
           "style": {
-            "navigationBarTitleText": "旅行记录"
+            "navigationBarTitleText": "宝宝旅行记录",
+            "enableShareAppMessage": true,
+            "enableShareTimeline": true
           }
         },
         {
@@ -108,7 +130,7 @@
         {
           "path": "settings/data",
           "style": {
-            "navigationBarTitleText": "数据管理"
+            "navigationBarTitleText": "宝宝数据管理"
           }
         }
       ]
