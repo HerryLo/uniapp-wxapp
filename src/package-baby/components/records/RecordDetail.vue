@@ -2,40 +2,71 @@
   <view v-if="visible && record" class="detail-mask" @click="$emit('close')">
     <view class="detail-sheet" @click.stop>
       <view class="detail-head">
-        <text class="detail-title">💧 排便详情</text>
+        <text class="detail-title">{{ title }}</text>
         <text class="detail-close" @click="$emit('close')">✕</text>
       </view>
-      <view class="detail-row">
-        <text class="detail-label">时间</text>
-        <text class="detail-value">{{ record.time }}</text>
-      </view>
-      <view class="detail-row">
-        <text class="detail-label">类型</text>
-        <text class="detail-value">{{ record.type }}</text>
-      </view>
-      <view class="detail-row">
-        <text class="detail-label">颜色</text>
-        <text class="detail-value">{{ record.color }}</text>
-      </view>
-      <view v-if="record.shape" class="detail-row">
-        <text class="detail-label">形状</text>
-        <text class="detail-value">{{ record.shape }}</text>
-      </view>
-      <view class="detail-row">
-        <text class="detail-label">备注</text>
-        <text class="detail-value note">{{ record.note || '无' }}</text>
+      <view v-for="row in rows" :key="row.label" class="detail-row">
+        <text class="detail-label">{{ row.label }}</text>
+        <text class="detail-value" :class="{ note: row.label === '备注' }">
+          {{ row.value }}
+        </text>
       </view>
     </view>
   </view>
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
   visible: { type: Boolean, default: false },
+  kind: { type: String, default: 'diaper' },
   record: { type: Object, default: null },
 })
 
 defineEmits(['close'])
+
+const TITLES = {
+  diaper: '💧 排便详情',
+  food: '🍚 辅食详情',
+  medicine: '💊 用药详情',
+  supplement: '🌿 补剂详情',
+}
+
+const title = computed(() => TITLES[props.kind] || '记录详情')
+
+const rows = computed(() => {
+  const record = props.record
+  if (!record) return []
+
+  if (props.kind === 'diaper') {
+    const list = [
+      { label: '时间', value: record.time },
+      { label: '类型', value: record.type },
+      { label: '颜色', value: record.color },
+    ]
+    if (record.shape) list.push({ label: '形状', value: record.shape })
+    list.push({ label: '备注', value: record.note || '无' })
+    return list
+  }
+
+  if (props.kind === 'food') {
+    return [
+      { label: '时间', value: record.time },
+      { label: '食物名称', value: record.name },
+      { label: '份量', value: record.amount || '未记录' },
+      { label: '进食反应', value: record.reaction || '未记录' },
+      { label: '备注', value: record.note || '无' },
+    ]
+  }
+
+  return [
+    { label: '时间', value: record.time },
+    { label: props.kind === 'medicine' ? '药品名称' : '补剂名称', value: record.name },
+    { label: '用量', value: record.amount || '未记录' },
+    { label: '备注', value: record.note || '无' },
+  ]
+})
 </script>
 
 <style scoped>
@@ -81,7 +112,7 @@ defineEmits(['close'])
   border-bottom: none;
 }
 .detail-label {
-  width: 120rpx;
+  width: 150rpx;
   flex-shrink: 0;
   font-size: 28rpx;
   color: var(--text-secondary);

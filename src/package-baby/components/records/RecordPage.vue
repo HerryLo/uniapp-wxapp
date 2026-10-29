@@ -50,6 +50,7 @@
 
       <RecordDetail
         :visible="!!detailRecord"
+        :kind="kind"
         :record="detailRecord"
         @close="closeDetail"
       />

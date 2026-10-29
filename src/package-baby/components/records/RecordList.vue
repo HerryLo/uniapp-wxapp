@@ -5,7 +5,7 @@
       v-for="item in list"
       :key="item.id"
       class="record-item"
-      :class="{ selectable: kind === 'diaper' }"
+      :class="{ selectable: selectableKinds.includes(kind) }"
       @click="onSelect(item)"
     >
       <view class="record-body">
@@ -59,8 +59,10 @@ const props = defineProps({
 
 const emit = defineEmits(['remove', 'select'])
 
+const selectableKinds = ['diaper', 'food', 'medicine', 'supplement']
+
 function onSelect(item) {
-  if (props.kind !== 'diaper') return
+  if (!selectableKinds.includes(props.kind)) return
   emit('select', item)
 }
 
