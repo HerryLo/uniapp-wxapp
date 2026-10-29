@@ -17,7 +17,7 @@
         </template>
         <template v-else-if="kind === 'diaper'">
           <view class="record-main">💧 {{ item.time.slice(11) }} · {{ item.type }}</view>
-          <view class="record-sub">颜色：{{ item.color }}</view>
+          <view class="record-sub">{{ diaperDetail(item) }}</view>
         </template>
         <template v-else-if="kind === 'food'">
           <view class="record-main">🍚 {{ item.time.slice(11) }} · {{ item.name }}</view>
@@ -53,6 +53,13 @@ function foodDetail(item) {
   const parts = []
   if (item.amount) parts.push(item.amount)
   parts.push(`反应：${item.reaction || '未记录'}`)
+  if (item.note) parts.push(item.note)
+  return parts.join(' · ')
+}
+
+function diaperDetail(item) {
+  const parts = [`颜色：${item.color}`]
+  if (item.shape) parts.push(`形状：${item.shape}`)
   if (item.note) parts.push(item.note)
   return parts.join(' · ')
 }
