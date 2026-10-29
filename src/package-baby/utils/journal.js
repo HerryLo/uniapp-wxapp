@@ -62,6 +62,21 @@ export function removeMilestone(id) {
   return { ok: true, list }
 }
 
+export function updateMilestone(id, input) {
+  const entries = loadMilestones()
+  if (!entries.some((item) => item.id === id)) {
+    return { ok: false, error: '记录不存在' }
+  }
+  const title = String(input.title || '').trim()
+  if (!title) return { ok: false, error: '请输入标题' }
+  if (title.length > 40) return { ok: false, error: '标题最多 40 个字' }
+  const note = String(input.note || '').trim()
+  if (note.length > 200) return { ok: false, error: '备注最多 200 个字' }
+  const list = entries.map((item) => (item.id === id ? { ...item, title, note } : item))
+  if (!writeStorage(MILESTONES_KEY, list)) return { ok: false, error: '保存失败' }
+  return { ok: true, list }
+}
+
 export function loadMoods() {
   const raw = readStorage(MOODS_KEY, {})
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {}
@@ -116,5 +131,18 @@ export function addNote(input, now = Date.now()) {
 export function removeNote(id) {
   const list = loadNotes().filter((item) => item.id !== id)
   if (!writeStorage(NOTES_KEY, list)) return { ok: false, error: '删除失败' }
+  return { ok: true, list }
+}
+
+export function updateNote(id, input) {
+  const entries = loadNotes()
+  if (!entries.some((item) => item.id === id)) {
+    return { ok: false, error: '记录不存在' }
+  }
+  const content = String(input.content || '').trim()
+  if (!content) return { ok: false, error: '请输入内容' }
+  if (content.length > 500) return { ok: false, error: '内容最多 500 个字' }
+  const list = entries.map((item) => (item.id === id ? { ...item, content } : item))
+  if (!writeStorage(NOTES_KEY, list)) return { ok: false, error: '保存失败' }
   return { ok: true, list }
 }
