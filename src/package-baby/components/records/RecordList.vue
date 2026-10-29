@@ -32,7 +32,7 @@
           </view>
         </template>
       </view>
-      <text class="record-delete" @click="$emit('remove', item.id)">删除</text>
+      <text v-if="!readonly" class="record-delete" @click="$emit('remove', item.id)">删除</text>
     </view>
   </view>
 </template>
@@ -44,6 +44,7 @@ defineProps({
   kind: { type: String, required: true },
   list: { type: Array, default: () => [] },
   emptyText: { type: String, default: '今天还没有记录' },
+  readonly: { type: Boolean, default: false },
 })
 
 defineEmits(['remove'])
