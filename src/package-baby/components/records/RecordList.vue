@@ -1,7 +1,13 @@
 <template>
   <view class="record-list">
     <view v-if="!list.length" class="empty-tip">{{ emptyText }}</view>
-    <view v-for="item in list" :key="item.id" class="record-item">
+    <view
+      v-for="item in list"
+      :key="item.id"
+      class="record-item"
+      :class="{ selectable: kind === 'diaper' }"
+      @click="onSelect(item)"
+    >
       <view class="record-body">
         <template v-if="kind === 'milk'">
           <view class="record-main">🍼 {{ item.time.slice(11) }} · {{ item.type }}</view>
@@ -17,7 +23,7 @@
         </template>
         <template v-else-if="kind === 'diaper'">
           <view class="record-main">💧 {{ item.time.slice(11) }} · {{ item.type }}</view>
-          <view class="record-sub">{{ diaperDetail(item) }}</view>
+          <view class="record-sub">颜色：{{ item.color }}</view>
         </template>
         <template v-else-if="kind === 'food'">
           <view class="record-main">🍚 {{ item.time.slice(11) }} · {{ item.name }}</view>
@@ -32,7 +38,11 @@
           </view>
         </template>
       </view>
-      <text v-if="!readonly" class="record-delete" @click="$emit('remove', item.id)">删除</text>
+      <text
+        v-if="!readonly"
+        class="record-delete"
+        @click.stop="$emit('remove', item.id)"
+      >删除</text>
     </view>
   </view>
 </template>
@@ -40,14 +50,19 @@
 <script setup>
 import { durationMinutes, formatDuration } from '../../../utils/baby/date.js'
 
-defineProps({
+const props = defineProps({
   kind: { type: String, required: true },
   list: { type: Array, default: () => [] },
   emptyText: { type: String, default: '今天还没有记录' },
   readonly: { type: Boolean, default: false },
 })
 
-defineEmits(['remove'])
+const emit = defineEmits(['remove', 'select'])
+
+function onSelect(item) {
+  if (props.kind !== 'diaper') return
+  emit('select', item)
+}
 
 function foodDetail(item) {
   const parts = []
@@ -56,18 +71,16 @@ function foodDetail(item) {
   if (item.note) parts.push(item.note)
   return parts.join(' · ')
 }
-
-function diaperDetail(item) {
-  const parts = [`颜色：${item.color}`]
-  if (item.shape) parts.push(`形状：${item.shape}`)
-  if (item.note) parts.push(item.note)
-  return parts.join(' · ')
-}
 </script>
 
 <style scoped>
 .record-list {
   margin-top: 8rpx;
+}
+.record-body {
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
 }
 .record-item {
   display: flex;
@@ -78,6 +91,9 @@ function diaperDetail(item) {
 }
 .record-item:last-child {
   border-bottom: none;
+}
+.record-item.selectable:active {
+  opacity: 0.7;
 }
 .record-main {
   font-size: 30rpx;

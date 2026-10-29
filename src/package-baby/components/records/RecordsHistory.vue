@@ -18,7 +18,12 @@
           </text>
         </view>
         <view v-if="canExpand(item) && expandedDate === item.date" class="history-detail">
-          <RecordList :kind="kind" :list="sortedList(item)" readonly />
+          <RecordList
+            :kind="kind"
+            :list="sortedList(item)"
+            readonly
+            @select="$emit('select', $event)"
+          />
         </view>
       </view>
     </view>
@@ -35,6 +40,8 @@ const props = defineProps({
   days: { type: Array, default: () => [] },
   today: { type: String, required: true },
 })
+
+defineEmits(['select'])
 
 const HEADINGS = {
   milk: '🍼 最近 7 天奶量',
@@ -128,6 +135,6 @@ watch(() => props.kind, () => {
   color: var(--text-secondary);
 }
 .history-detail {
-  padding: 0 0 16rpx 110rpx;
+  padding: 0 0 16rpx 20rpx;
 }
 </style>

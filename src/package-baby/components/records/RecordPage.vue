@@ -22,10 +22,16 @@
           :list="list"
           :empty-text="emptyText"
           @remove="remove"
+          @select="openDetail"
         />
       </view>
 
-      <RecordsHistory :kind="kind" :days="recentDays" :today="today" />
+      <RecordsHistory
+        :kind="kind"
+        :days="recentDays"
+        :today="today"
+        @select="openDetail"
+      />
 
       <slot name="extra" :refresh="refresh" />
 
@@ -41,6 +47,12 @@
         @close="closeForm"
         @submit="submitForm"
       />
+
+      <RecordDetail
+        :visible="!!detailRecord"
+        :record="detailRecord"
+        @close="closeDetail"
+      />
     </view>
   </BabyPage>
 </template>
@@ -49,6 +61,7 @@
 import { onMounted, ref } from 'vue'
 import BabyPage from '../../../components/baby/BabyPage.vue'
 import RecordForm from '../RecordForm.vue'
+import RecordDetail from './RecordDetail.vue'
 import RecordList from './RecordList.vue'
 import RecordsHistory from './RecordsHistory.vue'
 import ShareButton from '../../../components/ShareButton.vue'
@@ -78,9 +91,18 @@ function switchKind(item) {
 }
 
 const recentDays = ref(loadRecentDays(7))
+const detailRecord = ref(null)
 
 function refreshRecentDays() {
   recentDays.value = loadRecentDays(7)
+}
+
+function openDetail(record) {
+  detailRecord.value = record || null
+}
+
+function closeDetail() {
+  detailRecord.value = null
 }
 
 const {
