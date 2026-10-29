@@ -335,6 +335,18 @@ function uniqueRecordNames(list) {
   return names
 }
 
+export function loadRecentDays(days = 7, now = new Date()) {
+  const count = Math.max(1, Math.floor(Number(days) || 0))
+  const result = []
+  for (let offset = count - 1; offset >= 0; offset -= 1) {
+    const date = new Date(now.getFullYear(), now.getMonth(), now.getDate() - offset)
+    const dateStr = formatDate(date)
+    const day = loadDay(dateStr)
+    result.push({ date: dateStr, day, summary: summarizeDay(day) })
+  }
+  return result
+}
+
 export function summarizeRecentDay(kind, day) {
   const source = normalizeDay(day)
   const list = source[kind] || []

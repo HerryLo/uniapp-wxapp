@@ -3,6 +3,7 @@ import {
   FOOD_REACTIONS,
   addRecord,
   loadDay,
+  loadRecentDays,
   loadRecentMilkSummary,
   milkChartPoints,
   removeRecord,
@@ -374,5 +375,30 @@ describe('baby records', () => {
         text: '未记录',
       })
     }
+  })
+
+  it('loads recent days with full day data and summaries', () => {
+    addRecord('milk', { time: '2026-09-28 08:00', type: '配方奶', amount: '100' }, 1)
+    addRecord('milk', { time: '2026-09-28 12:00', type: '母乳', amount: '' }, 2)
+    addRecord('milk', { time: '2026-10-01 09:00', type: '配方奶', amount: '120' }, 3)
+
+    const recent = loadRecentDays(7, new Date(2026, 9, 1))
+    expect(recent.map((item) => item.date)).toEqual([
+      '2026-09-25',
+      '2026-09-26',
+      '2026-09-27',
+      '2026-09-28',
+      '2026-09-29',
+      '2026-09-30',
+      '2026-10-01',
+    ])
+
+    const sep28 = recent.find((item) => item.date === '2026-09-28')
+    expect(sep28.day.milk).toHaveLength(2)
+    expect(sep28.summary).toMatchObject({ milkCount: 2, milkAmount: 100 })
+
+    const oct01 = recent.find((item) => item.date === '2026-10-01')
+    expect(oct01.summary.milkAmount).toBe(120)
+    expect(recent[0].day.milk).toEqual([])
   })
 })
