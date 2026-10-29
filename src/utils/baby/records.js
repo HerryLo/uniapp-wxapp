@@ -4,7 +4,13 @@ import {
   RECORDS_PREFIX,
   recordsKey,
 } from './keys.js'
-import { durationMinutes, formatDate, monthKey, parseLocalDateTime } from './date.js'
+import {
+  durationMinutes,
+  formatDate,
+  formatDuration,
+  monthKey,
+  parseLocalDateTime,
+} from './date.js'
 
 const KINDS = ['milk', 'sleep', 'diaper', 'food', 'medicine', 'supplement']
 const MILK_TYPES = ['母乳', '配方奶', '混合']
@@ -315,4 +321,62 @@ export function milkChartPoints(summary) {
   return summary
     .filter((item) => item && item.hasMilkAmount)
     .map((item) => ({ date: item.date, value: item.milkAmount }))
+}
+
+function uniqueRecordNames(list) {
+  const seen = new Set()
+  const names = []
+  for (const item of sortRecords(list, 'medicine')) {
+    const name = typeof item.name === 'string' ? item.name.trim() : ''
+    if (!name || seen.has(name)) continue
+    seen.add(name)
+    names.push(name)
+  }
+  return names
+}
+
+export function summarizeRecentDay(kind, day) {
+  const source = normalizeDay(day)
+  const list = source[kind] || []
+  const count = list.length
+  const hasData = count > 0
+  if (!hasData) return { count: 0, hasData: false, text: '未记录' }
+
+  if (kind === 'milk') {
+    const hasAmount = list.some(
+      (item) => typeof item.amount === 'number' && Number.isFinite(item.amount)
+    )
+    if (!hasAmount) return { count, hasData, text: `${count} 次 · 未记录奶量` }
+    const total = list.reduce(
+      (sum, item) => sum + (Number.isFinite(item.amount) ? item.amount : 0),
+      0
+    )
+    return { count, hasData, text: `${total} ml · ${count} 次` }
+  }
+
+  if (kind === 'sleep') {
+    const minutes = list.reduce(
+      (sum, item) => sum + durationMinutes(item.start, item.end),
+      0
+    )
+    return { count, hasData, text: `${formatDuration(minutes)} · ${count} 次` }
+  }
+
+  if (kind === 'diaper') {
+    return { count, hasData, text: `${count} 次` }
+  }
+
+  if (kind === 'food') {
+    const abnormal = list.filter((item) => item.reaction === '异常').length
+    return {
+      count,
+      hasData,
+      text: abnormal ? `${count} 次 · 异常 ${abnormal} 次` : `${count} 次`,
+    }
+  }
+
+  const names = uniqueRecordNames(list)
+  const shown =
+    names.length > 2 ? `${names.slice(0, 2).join('、')} 等` : names.join('、')
+  return { count, hasData, text: shown ? `${shown} · ${count} 次` : `${count} 次` }
 }

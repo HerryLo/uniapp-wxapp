@@ -7,6 +7,7 @@ import {
   milkChartPoints,
   removeRecord,
   summarizeDay,
+  summarizeRecentDay,
   sortRecords,
   syncRecordMonthIndex,
   validateFood,
@@ -319,5 +320,59 @@ describe('baby records', () => {
     expect(removeRecord('medicine', medicine.record.id, '2026-10-24').ok).toBe(true)
     expect(JSON.parse(store[recordsKey('2026-10')])).toEqual({})
     expect(JSON.parse(store[RECORDS_INDEX_KEY])).toEqual([])
+  })
+
+  it('summarizes recent days for every record kind', () => {
+    addRecord('milk', { time: '2026-10-24 08:00', type: '母乳', amount: '100' }, 1)
+    addRecord('milk', { time: '2026-10-24 12:00', type: '配方奶', amount: '120' }, 2)
+    addRecord('sleep', { start: '2026-10-24 23:00', end: '2026-10-25 01:30' }, 3)
+    addRecord('diaper', { time: '2026-10-24 09:00', type: '大便', color: '正常' }, 4)
+    addRecord('diaper', { time: '2026-10-24 11:00', type: '小便', color: '正常' }, 5)
+    addRecord(
+      'food',
+      { time: '2026-10-24 10:00', name: '米糊', amount: '', reaction: '喜欢', note: '' },
+      6
+    )
+    addRecord(
+      'food',
+      { time: '2026-10-24 15:00', name: '蛋黄', amount: '', reaction: '异常', note: '' },
+      7
+    )
+    addRecord('supplement', { time: '2026-10-24 08:00', name: '维生素D', amount: '', note: '' }, 8)
+    addRecord('supplement', { time: '2026-10-24 09:00', name: '维生素D', amount: '', note: '' }, 9)
+    addRecord('supplement', { time: '2026-10-24 10:00', name: '钙', amount: '', note: '' }, 10)
+    addRecord('medicine', { time: '2026-10-24 08:00', name: '退烧药', amount: '', note: '' }, 11)
+    addRecord('medicine', { time: '2026-10-24 09:00', name: '益生菌', amount: '', note: '' }, 12)
+    addRecord('medicine', { time: '2026-10-24 10:00', name: '止咳药', amount: '', note: '' }, 13)
+
+    const day = loadDay('2026-10-24')
+    expect(summarizeRecentDay('milk', day)).toMatchObject({
+      count: 2,
+      hasData: true,
+      text: '220 ml · 2 次',
+    })
+    expect(summarizeRecentDay('sleep', day).text).toBe('2 小时 30 分钟 · 1 次')
+    expect(summarizeRecentDay('diaper', day)).toMatchObject({ count: 2, text: '2 次' })
+    expect(summarizeRecentDay('food', day).text).toBe('2 次 · 异常 1 次')
+    expect(summarizeRecentDay('supplement', day).text).toBe('钙、维生素D · 3 次')
+    expect(summarizeRecentDay('medicine', day).text).toBe('止咳药、益生菌 等 · 3 次')
+  })
+
+  it('marks milk days without amounts and empty kinds', () => {
+    addRecord('milk', { time: '2026-10-24 08:00', type: '母乳', amount: '' }, 1)
+    const day = loadDay('2026-10-24')
+    expect(summarizeRecentDay('milk', day)).toMatchObject({
+      count: 1,
+      text: '1 次 · 未记录奶量',
+    })
+
+    const empty = loadDay('2026-10-25')
+    for (const kind of ['milk', 'sleep', 'diaper', 'food', 'medicine', 'supplement']) {
+      expect(summarizeRecentDay(kind, empty)).toEqual({
+        count: 0,
+        hasData: false,
+        text: '未记录',
+      })
+    }
   })
 })
