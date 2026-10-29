@@ -25,6 +25,8 @@
         />
       </view>
 
+      <RecordsHistory :kind="kind" :days="recentDays" :today="today" />
+
       <slot name="extra" :refresh="refresh" />
 
       <view class="record-share">
@@ -44,12 +46,14 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import BabyPage from '../../../components/baby/BabyPage.vue'
 import RecordForm from '../RecordForm.vue'
 import RecordList from './RecordList.vue'
+import RecordsHistory from './RecordsHistory.vue'
 import ShareButton from '../../../components/ShareButton.vue'
 import { useDayRecords } from '../../composables/useDayRecords.js'
+import { loadRecentDays } from '../../../utils/baby/records.js'
 
 const props = defineProps({
   kind: { type: String, required: true },
@@ -73,6 +77,12 @@ function switchKind(item) {
   uni.redirectTo({ url: item.url })
 }
 
+const recentDays = ref(loadRecentDays(7))
+
+function refreshRecentDays() {
+  recentDays.value = loadRecentDays(7)
+}
+
 const {
   today,
   day,
@@ -85,7 +95,12 @@ const {
   closeForm,
   submitForm,
   remove,
-} = useDayRecords(props.kind, { onChange: () => emit('change') })
+} = useDayRecords(props.kind, {
+  onChange: () => {
+    emit('change')
+    refreshRecentDays()
+  },
+})
 
 onMounted(refresh)
 </script>

@@ -8,7 +8,6 @@
           :class="{
             expandable: canExpand(item),
             empty: !item.info.hasData,
-            open: expandedDate === item.date,
           }"
           @click="toggle(item)"
         >
@@ -34,7 +33,7 @@ import { sortRecords, summarizeRecentDay } from '../../../utils/baby/records.js'
 const props = defineProps({
   kind: { type: String, required: true },
   days: { type: Array, default: () => [] },
-  today: { type: String, default: '' },
+  today: { type: String, required: true },
 })
 
 const HEADINGS = {
