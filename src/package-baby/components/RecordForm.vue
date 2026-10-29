@@ -170,6 +170,25 @@
             @click="diaperColor = item"
           >{{ item }}</view>
         </view>
+        <template v-if="diaperType !== '小便'">
+          <view class="form-label">形状</view>
+          <view class="chip-row">
+            <view
+              v-for="item in DIAPER_SHAPES"
+              :key="item"
+              class="chip"
+              :class="{ active: diaperShape === item }"
+              @click="diaperShape = item"
+            >{{ item }}</view>
+          </view>
+        </template>
+        <view class="form-label">备注（可选）</view>
+        <textarea
+          class="textarea"
+          v-model="diaperNote"
+          maxlength="200"
+          placeholder="记录排便情况"
+        />
       </template>
 
       <view class="btn-row">
@@ -183,7 +202,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { formatDateTime, todayKey } from '../../utils/baby/date.js'
-import { FOOD_REACTIONS } from '../../utils/baby/records.js'
+import { DIAPER_SHAPES, FOOD_REACTIONS } from '../../utils/baby/records.js'
 
 const props = defineProps({
   visible: { type: Boolean, default: false },
@@ -208,6 +227,8 @@ const sleepEndDate = ref('')
 const sleepEndTime = ref('')
 const diaperType = ref('小便')
 const diaperColor = ref('正常')
+const diaperShape = ref('糊状')
+const diaperNote = ref('')
 const foodName = ref('')
 const foodAmount = ref('')
 const foodReaction = ref('一般')
@@ -239,6 +260,8 @@ function reset() {
   sleepEndTime.value = end.slice(11, 16)
   diaperType.value = '小便'
   diaperColor.value = '正常'
+  diaperShape.value = '糊状'
+  diaperNote.value = ''
   foodName.value = ''
   foodAmount.value = ''
   foodReaction.value = '一般'
@@ -310,6 +333,8 @@ function submit() {
     time: `${date.value} ${time.value}`,
     type: diaperType.value,
     color: diaperColor.value,
+    shape: diaperType.value === '小便' ? '' : diaperShape.value,
+    note: diaperNote.value,
   })
 }
 </script>
